@@ -1,0 +1,5 @@
+sudo apt-get install graphviz libgraphviz-dev
+pip install eralchemy
+pip install SQLAlchemy==1.2.4
+eralchemy -i sqlite:///MessageApp.db -o my_new_er_diagram.pdf
+ sqlite3 FamilyTree.db < FamilyTreeCreation.sql.
