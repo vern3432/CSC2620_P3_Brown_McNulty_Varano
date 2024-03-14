@@ -1,39 +1,45 @@
-CREATE TABLE Clients (
-  client_id INTEGER PRIMARY KEY,
-  client_name TEXT
-);
+Table Clients {
+  client_id  integer [primary key]
+  client_name  text
+}
 
-CREATE TABLE FamilyMembers (
-  member_id INTEGER PRIMARY KEY,
-  name TEXT,
-  birth_date DATE,
-  death_date DATE,
-  is_deceased BOOLEAN,
-  current_residence TEXT,
-  client_id INTEGER,
-  FOREIGN KEY (client_id) REFERENCES Clients(client_id)
-);
+Table FamilyMembers {
+  member_id  integer [primary key]
+  name  text
+  birth_date  date
+  death_date  date
+  is_deceased  boolean
+  current_residence  text
+  client_id  integer [ref: < Clients.client_id]
+}
 
-CREATE TABLE Relationships (
-  relationship_id INTEGER PRIMARY KEY,
-  member_id INTEGER,
-  related_member_id INTEGER,
-  relation_type TEXT,
-  FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id),
-  FOREIGN KEY (related_member_id) REFERENCES FamilyMembers(member_id)
-);
+Table Relationships {
+  relationship_id  integer [primary key]
+  member_id  integer [ref: < FamilyMembers.member_id]
+  related_member_id  integer [ref: < FamilyMembers.member_id]
+  relation_type  text
+}
 
-CREATE TABLE Addresses (
-  address_id INTEGER PRIMARY KEY,
-  city TEXT,
-  member_id INTEGER,
-  FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
-);
+Table Addresses {
+  address_id  integer [primary key]
+  city  text
+  member_id  integer [ref: < FamilyMembers.member_id]
+}
 
-CREATE TABLE Events (
-  event_id INTEGER PRIMARY KEY,
-  event_date DATE,
-  event_type TEXT,
-  member_id INTEGER,
-  FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
-);
+Table Events {
+  event_id  integer [primary key]
+  event_date  date
+  event_type  text
+  // member_id  integer [ref: < FamilyMembers.member_id]
+}
+
+Table EventAttendee {
+  member_id  integer [ref: < FamilyMembers.member_id]
+  event_id  integer [ref: < Events.event_id]
+
+}
+
+
+
+
+
