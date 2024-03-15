@@ -1,20 +1,48 @@
 package com.familytree;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileWriter; 
 import java.io.FileReader; 
-import java.io.IOException; 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.*; 
 public class FamilyDatabase {
     private Connection connection;
+    private static final String DB_FILE_NAME = "FamilyTree.db";
+    private static final String DB_FILE_PATH = "/Databases/" + DB_FILE_NAME;
 
-    public FamilyDatabase(String dbFilePath) {
+    public FamilyDatabase(String dbFilePath) throws ClassNotFoundException, IOException {
+
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
+         String url = "jdbc:sqlite:" + new File(DB_FILE_PATH).getAbsolutePath();
+             Class.forName("org.sqlite.JDBC");
+             System.out.println("Loading Input Stream");
+
+                // Get the input stream of the database file
+                InputStream inputStream = FamilyDatabase.class.getResourceAsStream(DB_FILE_PATH);
+                if (inputStream == null) {
+                    throw new IOException("Unable to load database file: " + DB_FILE_PATH);
+                }
+                // Create a temporary file to copy the input stream
+                File tempFile = File.createTempFile("temp", ".db");
+                tempFile.deleteOnExit(); // Delete the temporary file when the JVM exits
+                System.out.println("Temp File Loaded");
+                // Copy the input stream to the temporary file
+                Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                System.out.println("Loaded Input Stream");
+
+                // Create the connection
+                connection = DriverManager.getConnection("jdbc:sqlite:" + tempFile.getAbsolutePath());
+
+            connection = DriverManager.getConnection(url);
+            System.out.println("Loaded Connection");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -160,8 +188,9 @@ public class FamilyDatabase {
         }
     }
 
-    public static void main(String[] args) {
-        FamilyDatabase familyDatabase = new FamilyDatabase("family.db");
+    public static void main(String[] args) throws ClassNotFoundException, IOException {
+        FamilyDatabase familyDatabase = new FamilyDatabase("FamilyTree.db");
+        System.out.println("Main CLass formed");
 
         // Example usage
         familyDatabase.insertClient(1, "John Doe");
