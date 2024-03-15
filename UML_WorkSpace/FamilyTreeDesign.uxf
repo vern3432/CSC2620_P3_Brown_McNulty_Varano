@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>800</x>
+      <y>40</y>
+      <w>330</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Stereotype&gt;&gt;
+Package::FamilyTree
+{Some Properties}
+--
+Objects
+--
+_object: FamilyTreeContainer_
+--
+members: List&lt;FamilyMember&gt;
+--
+# addMember(member: FamilyMember): void
+# removeMember(member: FamilyMember): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>160</x>
+      <y>280</y>
+      <w>610</w>
+      <h>430</h>
+    </coordinates>
+    <panel_attributes>_object: FamilyMember_
+--
+name: String
+birthDate: Date
+parents: List&lt;FamilyMember&gt;
+children: List&lt;FamilyMember&gt;
+spouse: FamilyMember
+isLiving: boolean
+currentResidence: String
+deathDate: Date
+--
++ FamilyMember()
++ getName(): String
++ setName(name: String): void
++ getBirthDate(): Date
++ setBirthDate(date: Date): void
++ getParents(): List&lt;FamilyMember&gt;
++ addChild(child: FamilyMember): void
++ removeChild(child: FamilyMember): void
++ getSpouse(): FamilyMember
++ setSpouse(spouse: FamilyMember): void
++ isLiving(): boolean
++ setLiving(living: boolean): void
++ getCurrentResidence(): String
++ setCurrentResidence(residence: String): void
++ getDeathDate(): Date
++ setDeathDate(date: Date): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1280</x>
+      <y>340</y>
+      <w>320</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>_object: FamilyTreeContainer_
+--
+members: HasMap&lt;String,FamilyMember&gt;
+--
++ FamilyTree(members:List&lt;FamilyMember&gt;)
++ addMember(member: FamilyMember): void
++ removeMember(member: FamilyMember): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

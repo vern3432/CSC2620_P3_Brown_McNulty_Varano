@@ -1,0 +1,53 @@
+sudo apt-get install graphviz libgraphviz-dev
+pip install eralchemy
+pip install SQLAlchemy==1.2.4
+eralchemy -i sqlite:///MessageApp.db -o my_new_er_diagram.pdf
+ sqlite3 FamilyTree.db < FamilyTreeCreation.sql.
+
+ UseFull Links: 
+    https://stackoverflow.com/questions/9357668/how-to-store-image-in-sqlite-database
+    https://bigomega.medium.com/building-my-family-tree-ef0be1fba775
+https://www.sciencedirect.com/science/article/pii/S0097849304000275
+
+Visulizations: 
+https://www.cg.tuwien.ac.at/courses/InfoVis/HallOfFame/2010/Gruppe08/Homepage/
+
+
+
+
+Backup 
+Table Clients {
+  client_id  integer [primary key]
+  client_name  text
+}
+
+Table FamilyMembers {
+  member_id  integer [primary key]
+  name  text
+  birth_date  date
+  death_date  date
+  is_deceased  boolean
+  current_residence  text
+  client_id  integer [ref: < Clients.client_id]
+}
+
+Table Relationships {
+  relationship_id  integer [primary key]
+  member_id  integer [ref: < FamilyMembers.member_id]
+  related_member_id  integer [ref: < FamilyMembers.member_id]
+  relation_type  text
+}
+
+Table Addresses {
+  address_id  integer [primary key]
+  city  text
+  member_id  integer [ref: < FamilyMembers.member_id]
+}
+
+Table Events {
+  event_id  integer [primary key]
+  event_date  date
+  event_type  text
+  member_id  integer [ref: < FamilyMembers.member_id]
+}
+
