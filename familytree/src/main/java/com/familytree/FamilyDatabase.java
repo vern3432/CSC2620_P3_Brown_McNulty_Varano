@@ -35,6 +35,10 @@ public class FamilyDatabase {
              DatabaseMetaData metaData = connection.getMetaData();
 
              ResultSet tables = metaData.getTables(null, null, "%", types);
+             while (tables.next()) {
+                String tableName = tables.getString("TABLE_NAME");
+                System.out.println(tableName);
+            }
 
             System.out.println("Loaded Connection");
 
