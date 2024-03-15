@@ -2,15 +2,17 @@ sudo apt-get install graphviz libgraphviz-dev
 pip install eralchemy
 pip install SQLAlchemy==1.2.4
 eralchemy -i sqlite:///MessageApp.db -o my_new_er_diagram.pdf
+
+UMLet VS CODe extension
  sqlite3 FamilyTree.db < FamilyTreeCreation.sql.
 
  UseFull Links: 
-    https://stackoverflow.com/questions/9357668/how-to-store-image-in-sqlite-database
-    https://bigomega.medium.com/building-my-family-tree-ef0be1fba775
-https://www.sciencedirect.com/science/article/pii/S0097849304000275
+      https://stackoverflow.com/questions/9357668/how-to-store-image-in-sqlite-database
+      https://bigomega.medium.com/building-my-family-tree-ef0be1fba775
+  https://www.sciencedirect.com/science/article/pii/S0097849304000275
 
-Visulizations: 
-https://www.cg.tuwien.ac.at/courses/InfoVis/HallOfFame/2010/Gruppe08/Homepage/
+  Visulizations: 
+  https://www.cg.tuwien.ac.at/courses/InfoVis/HallOfFame/2010/Gruppe08/Homepage/
 
 
 

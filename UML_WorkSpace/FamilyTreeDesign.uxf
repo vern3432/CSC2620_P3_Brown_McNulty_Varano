@@ -1,15 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<diagram program="umlet" version="15.1">
-  <zoom_level>10</zoom_level>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>800</x>
-      <y>40</y>
-      <w>330</w>
-      <h>200</h>
-    </coordinates>
-    <panel_attributes>&lt;&lt;Stereotype&gt;&gt;
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>270</x><y>30</y><w>330</w><h>200</h></coordinates><panel_attributes>&lt;&lt;Stereotype&gt;&gt;
 Package::FamilyTree
 {Some Properties}
 --
@@ -21,18 +10,7 @@ members: List&lt;FamilyMember&gt;
 --
 # addMember(member: FamilyMember): void
 # removeMember(member: FamilyMember): void
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>160</x>
-      <y>280</y>
-      <w>610</w>
-      <h>430</h>
-    </coordinates>
-    <panel_attributes>_object: FamilyMember_
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>310</y><w>610</w><h>430</h></coordinates><panel_attributes>_object: FamilyMember_
 --
 name: String
 birthDate: Date
@@ -59,24 +37,16 @@ deathDate: Date
 + setCurrentResidence(residence: String): void
 + getDeathDate(): Date
 + setDeathDate(date: Date): void
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>1280</x>
-      <y>340</y>
-      <w>320</w>
-      <h>140</h>
-    </coordinates>
-    <panel_attributes>_object: FamilyTreeContainer_
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>760</x><y>370</y><w>320</w><h>140</h></coordinates><panel_attributes>_object: FamilyTreeContainer_
 --
 members: HasMap&lt;String,FamilyMember&gt;
 --
 + FamilyTree(members:List&lt;FamilyMember&gt;)
 + addMember(member: FamilyMember): void
-+ removeMember(member: FamilyMember): void</panel_attributes>
-    <additional_attributes/>
-  </element>
-</diagram>
++ removeMember(member: FamilyMember): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>780</x><y>30</y><w>210</w><h>100</h></coordinates><panel_attributes>object: FamilyDatabase
+--
+Objects
+objectT:String
+--
+Functions
++function():void</panel_attributes><additional_attributes></additional_attributes></element></diagram>

@@ -19,15 +19,12 @@ public class FamilyDatabase {
     public FamilyDatabase(String dbFilePath) throws ClassNotFoundException, IOException {
 
         try {
-        //  String url = "jdbc:sqlite:" + new File(DB_FILE_PATH).getAbsolutePath();
              Class.forName("org.sqlite.JDBC");
              System.out.println("Loading Input Stream");
              String basePath = System.getProperty("user.dir");
 
-             // Construct the absolute path of the database file
               dbFilePath = basePath + File.separator + DB_FILE_NAME;
  
-             // Load the JDBC driver
              Class.forName("org.sqlite.JDBC");
              String[] types = {"TABLE"};
 
@@ -47,7 +44,7 @@ public class FamilyDatabase {
         }
     }
         //For potential new family feature 
-    private void createTables() {
+    private void createBlankTables() {
         try {
             Statement statement = connection.createStatement();
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS Clients (" +
@@ -191,10 +188,13 @@ public class FamilyDatabase {
         FamilyDatabase familyDatabase = new FamilyDatabase("FamilyTree.db");
         System.out.println("Main CLass formed");
 
-        // Example usage
+        // Test Cases usage
         familyDatabase.insertClient(1, "John Doe");
+        System.out.println("Added Client");
         familyDatabase.exportToCSV("Clients", "clients.csv");
+        System.out.println("Exported Client");
         familyDatabase.importFromCSV("Clients", "clients.csv");
+        System.out.println("Imported Client");
         System.out.println(familyDatabase.getClientName(1)); //  "John Doe"
     }
 }
