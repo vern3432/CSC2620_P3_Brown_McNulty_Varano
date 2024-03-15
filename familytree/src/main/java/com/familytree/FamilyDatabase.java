@@ -305,6 +305,8 @@ public class FamilyDatabase {
         }
         return memberId;
     }
+    
+    
 
     public static void main(String[] args) {
         int clientId1 = insertClient("John Doe");
