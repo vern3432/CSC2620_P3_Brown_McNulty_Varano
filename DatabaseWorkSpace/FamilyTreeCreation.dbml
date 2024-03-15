@@ -26,10 +26,18 @@ Table Addresses {
   member_id  integer [ref: < FamilyMembers.member_id]
 }
 
-Table Events {
+
+Table Event {
   event_id  integer [primary key]
   event_date  date
   event_type  text
+  member_id  integer [ref: < FamilyMembers.member_id]
+}
+Table EventAttendee {
+  event_date  date
+  event_type  text
+  event_id  integer [ref: < Event.event_id]
+
   member_id  integer [ref: < FamilyMembers.member_id]
 }
 
