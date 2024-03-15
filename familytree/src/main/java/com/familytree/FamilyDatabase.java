@@ -15,32 +15,27 @@ import java.util.*;
 public class FamilyDatabase {
     private Connection connection;
     private static final String DB_FILE_NAME = "FamilyTree.db";
-    private static final String DB_FILE_PATH = "/Databases/" + DB_FILE_NAME;
 
     public FamilyDatabase(String dbFilePath) throws ClassNotFoundException, IOException {
 
         try {
-         String url = "jdbc:sqlite:" + new File(DB_FILE_PATH).getAbsolutePath();
+        //  String url = "jdbc:sqlite:" + new File(DB_FILE_PATH).getAbsolutePath();
              Class.forName("org.sqlite.JDBC");
              System.out.println("Loading Input Stream");
+             String basePath = System.getProperty("user.dir");
 
-                // Get the input stream of the database file
-                InputStream inputStream = FamilyDatabase.class.getResourceAsStream(DB_FILE_PATH);
-                if (inputStream == null) {
-                    throw new IOException("Unable to load database file: " + DB_FILE_PATH);
-                }
-                // Create a temporary file to copy the input stream
-                File tempFile = File.createTempFile("temp", ".db");
-                tempFile.deleteOnExit(); // Delete the temporary file when the JVM exits
-                System.out.println("Temp File Loaded");
-                // Copy the input stream to the temporary file
-                Files.copy(inputStream, tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                System.out.println("Loaded Input Stream");
+             // Construct the absolute path of the database file
+              dbFilePath = basePath + File.separator + DB_FILE_NAME;
+ 
+             // Load the JDBC driver
+             Class.forName("org.sqlite.JDBC");
+             String[] types = {"TABLE"};
 
-                // Create the connection
-                connection = DriverManager.getConnection("jdbc:sqlite:" + tempFile.getAbsolutePath());
+             connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
+             DatabaseMetaData metaData = connection.getMetaData();
 
-            connection = DriverManager.getConnection(url);
+             ResultSet tables = metaData.getTables(null, null, "%", types);
+
             System.out.println("Loaded Connection");
 
         } catch (SQLException e) {
