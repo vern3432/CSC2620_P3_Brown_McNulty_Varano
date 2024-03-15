@@ -1,0 +1,25 @@
+Table Clients {
+  client_id  integer [primary key]
+  client_name text
+}
+
+Table FamilyMembers {
+  full_name text [primary key]
+  birth_date date
+  parents_or_parent text 
+  children text
+  spouse text  
+  client_id  integer [ref: > Clients.client_id]
+}
+
+Table DeceasedRelative {
+  full_name text [ref: > FamilyMembers.full_name]
+  date_of_death date 
+  primary key [full_name]
+}
+
+Table LivingRelative {
+  full_name text [ref: > FamilyMembers.full_name]
+  current_residence text 
+  primary key [full_name]
+}
