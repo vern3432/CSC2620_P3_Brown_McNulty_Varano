@@ -3,6 +3,12 @@ pip install eralchemy
 pip install SQLAlchemy==1.2.4
 eralchemy -i sqlite:///MessageApp.db -o my_new_er_diagram.pdf
 
+code ext install TheUMLetTeam.umlet
+
+
+
+
+
 UMLet VS CODe extension
  sqlite3 FamilyTree.db < FamilyTreeCreation.sql.
 

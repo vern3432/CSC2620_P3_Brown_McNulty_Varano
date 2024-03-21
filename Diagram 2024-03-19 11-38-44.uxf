@@ -1,0 +1,121 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>60</x><y>20</y><w>450</w><h>180</h></coordinates><panel_attributes>
+AndoverAccountants
+--
+
+- clients: List&lt;Client&gt;
+- accounts: List&lt;Account&gt;
+--
+
++ addClient(client: Client): void
++ removeClient(client: Client): void
++ addAccount(account: Account): void
++ removeAccount(account: Account): void
++ viewAccountHistory(client: Client, month: int, year: int): AccountStatement
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>650</x><y>0</y><w>450</w><h>330</h></coordinates><panel_attributes>
+Client
+--
+
+- name: String
+- ssn: String
+- accounts: List&lt;Account&gt;
+- portfolio: Portfolio
+--
+
++ getName(): String
++ getSSN(): String
++ getAccounts(): List&lt;Account&gt;
++ getPortfolio(): Portfolio
++ setName(name: String): void
++ setSSN(ssn: String): void
++ addAccount(account: Account): void
++ removeAccount(account: Account): void
++ setPortfolio(portfolio: Portfolio): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>40</x><y>300</y><w>450</w><h>240</h></coordinates><panel_attributes>Account
+--
+
+- accountNumber: String
+- bank: Bank
+- accountHistory: List&lt;Transaction&gt;
+- balance: double
+--
++ getAccountNumber(): String
++ getBank(): Bank
++ getAccountHistory(): List&lt;Transaction&gt;
++ getBalance(): double
++ setAccountNumber(accountNumber: String): void
++ setBank(bank: Bank): void
++ deposit(amount: double): void
++ withdraw(amount: double): void
++ writeCheck(amount: double, checkNumber: int): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1450</x><y>490</y><w>450</w><h>260</h></coordinates><panel_attributes>Portfolio
+--
+
+- stocks: List&lt;Stock&gt;
+- bonds: List&lt;Bond&gt;
+- client: Client
+--
+
++ getStocks(): List&lt;Stock&gt;
++ getBonds(): List&lt;Bond&gt;
++ getClient(): Client
++ setClient(client: Client): void
++ addStock(stock: Stock): void
++ removeStock(stock: Stock): void
++ addBond(bond: Bond): void
++ removeBond(bond: Bond): void
+
+
+
+--
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1420</x><y>870</y><w>450</w><h>270</h></coordinates><panel_attributes>
+Stock
+--
+
+- symbol: String
+- sharePrice: double
+- dividendPayout: double
+- sharesOwned: int
+--
+
++ getSymbol(): String
++ getSharePrice(): double
++ getDividendPayout(): double
++ getSharesOwned(): int
++ setSharePrice(sharePrice: double): void
++ setDividendPayout(dividendPayout: double): void
++ setSharesOwned(sharesOwned: int): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>910</x><y>830</y><w>450</w><h>200</h></coordinates><panel_attributes>Bond
+--
+
+- bondID: String
+- yield: double
+- dividendPayout: double
+--
+
++ getBondID(): String
++ getYield(): double
++ getDividendPayout(): double
++ setYield(yield: double): void
++ setDividendPayout(dividendPayout: double): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>30</x><y>640</y><w>450</w><h>100</h></coordinates><panel_attributes>Bank
+--
+
+- name: String
+--
++ getName(): String
++ setName(name: String): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>540</x><y>540</y><w>450</w><h>270</h></coordinates><panel_attributes>Transaction
+--
+- transactionID: String
+- date: Date
+- amount: double
+- type: TransactionType
+--
++ getTransactionID(): String
++ getDate(): Date
++ getAmount(): double
++ getType(): TransactionType
++ setTransactionID(transactionID: String): void
++ setDate(date: Date): void
++ setAmount(amount: double): void
++ setType(type: TransactionType): void
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>500</x><y>130</y><w>170</w><h>80</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>150;60;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>150</x><y>190</y><w>60</w><h>120</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>40;100;40;50;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>780</x><y>320</y><w>890</w><h>190</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>870;170;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>250</x><y>530</y><w>40</w><h>130</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;110;20;10</additional_attributes></element><element><id>Relation</id><coordinates><x>490</x><y>470</y><w>80</w><h>90</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>60;70;10;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1560</x><y>740</y><w>50</w><h>150</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;130;30;80;20;10</additional_attributes></element><element><id>Relation</id><coordinates><x>1160</x><y>740</y><w>310</w><h>110</h></coordinates><panel_attributes>lt=&lt;&lt;-</panel_attributes><additional_attributes>10;90;20;80;150;30;290;10</additional_attributes></element></diagram>
