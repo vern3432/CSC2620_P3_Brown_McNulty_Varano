@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class FamilyDatabase {
     private static Connection connection;
@@ -94,6 +96,235 @@ public class FamilyDatabase {
         }
         return nextClientId;
     }
+
+
+
+
+    public static List<FamilyMember> getAllFamilyMembers() {
+        List<FamilyMember> familyMembers = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM FamilyMembers");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                Date birthDate = resultSet.getDate("birth_date");
+                Date deathDate = resultSet.getDate("death_date");
+                boolean isDeceased = resultSet.getBoolean("is_deceased");
+                String currentResidence = resultSet.getString("current_residence");
+
+                FamilyMember familyMember = new FamilyMember(name, birthDate, deathDate, isDeceased, currentResidence);
+                familyMembers.add(familyMember);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return familyMembers;
+    }
+
+    public static List<Event> getAllEventsWithAttendees() {
+        List<Event> events = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Events");
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int eventId = resultSet.getInt("event_id");
+                Date eventDate = resultSet.getDate("event_date");
+                String eventType = resultSet.getString("event_type");
+    
+                Event event = new Event(eventId, eventDate, eventType);
+    
+                // Fetch attendees for the event
+                List<FamilyMember> attendees = fetchAttendeesForEvent(eventId);
+                for (FamilyMember attendee : attendees) {
+                    event.addAttendee(attendee);
+                }
+    
+                events.add(event);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
+    }
+    
+    private static List<FamilyMember> fetchAttendeesForEvent(int eventId) {
+        List<FamilyMember> attendees = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM EventAttendees WHERE event_id = ?");
+            statement.setInt(1, eventId);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int memberId = resultSet.getInt("member_id");
+                // Fetch member details from FamilyMembers table based on memberId
+                FamilyMember attendee = fetchFamilyMemberById(memberId);
+                attendees.add(attendee);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return attendees;
+    }
+    
+    private static FamilyMember fetchFamilyMemberById(int memberId) {
+        FamilyMember familyMember = null;
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM FamilyMembers WHERE member_id = ?");
+            statement.setInt(1, memberId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String name = resultSet.getString("name");
+                Date birthDate = resultSet.getDate("birth_date");
+                Date deathDate = resultSet.getDate("death_date");
+                boolean isDeceased = resultSet.getBoolean("is_deceased");
+                String currentResidence = resultSet.getString("current_residence");
+    
+                familyMember = new FamilyMember(name, birthDate, deathDate, isDeceased, currentResidence);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return familyMember;
+    }
+
+
+    public static int addEvent(Date eventDate, String eventType, int memberId) {
+        int eventId = getNextEventId();
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Events (event_id, event_date, event_type, member_id) VALUES (?, ?, ?, ?)");
+            statement.setInt(1, eventId);
+            statement.setDate(2, eventDate != null ? new java.sql.Date(eventDate.getTime()) : null);
+            statement.setString(3, eventType);
+            statement.setInt(4, memberId);
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Event inserted successfully for " + getMemberName(memberId) + ". Event ID: " + eventId);
+            return eventId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    public static boolean addAttendeeToEvent(int eventId, int memberId) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO EventAttendees (event_id, member_id) VALUES (?, ?)");
+            statement.setInt(1, eventId);
+            statement.setInt(2, memberId);
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Attendee added successfully to event with ID: " + eventId);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+
+    public static void addParsedDataToDatabase(List<String[]> parsedData) {
+        for (String[] data : parsedData) {
+            String dataType = data[0];
+            String[] values = data[1].split(", ");
+
+            switch (dataType) {
+                case "FamilyMember":
+                    insertFamilyMember(values);
+                    break;
+                case "Relationship":
+                    insertRelationship(values);
+                    break;
+                case "Event":
+                    insertEvent(values);
+                    break;
+                case "Address":
+                    insertAddress(values);
+                    break;
+                default:
+                    System.out.println("Unknown data type: " + dataType);
+                    break;
+            }
+        }
+    }
+
+    private static void insertFamilyMember(String[] values) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO FamilyMembers (name, birth_date, death_date, is_deceased, current_residence, client_id) VALUES (?, ?, ?, ?, ?, ?)");
+            statement.setString(1, values[0]);
+            statement.setDate(2, java.sql.Date.valueOf(values[1])); // Use java.sql.Date
+            if (!values[2].equals("null")) {
+                statement.setDate(3, java.sql.Date.valueOf(values[2])); // Use java.sql.Date
+            } else {
+                statement.setNull(3, Types.DATE);
+            }
+            statement.setBoolean(4, Boolean.parseBoolean(values[3]));
+            statement.setString(5, values[4]);
+            statement.setInt(6, Integer.parseInt(values[5]));
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Family member inserted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private static void insertRelationship(String[] values) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Relationships (member_id, related_member_id, relation_type) VALUES (?, ?, ?)");
+            statement.setInt(1, Integer.parseInt(values[0]));
+            statement.setInt(2, Integer.parseInt(values[1]));
+            statement.setString(3, values[2]);
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Relationship inserted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void insertEvent(String[] values) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Events (event_date, event_type, member_id) VALUES (?, ?, ?)");
+            statement.setDate(1, java.sql.Date.valueOf(values[0])); // Parse date string into java.sql.Date
+            statement.setString(2, values[1]);
+            statement.setInt(3, Integer.parseInt(values[2]));
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Event inserted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static void insertAddress(String[] values) {
+        try {
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Addresses (city, member_id) VALUES (?, ?)");
+            statement.setString(1, values[0]);
+            statement.setInt(2, Integer.parseInt(values[1]));
+            statement.executeUpdate();
+            statement.close();
+            System.out.println("Address inserted successfully.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    
+
+
+
+
+
+
 
     public static int insertClient(String clientName) {
         int clientId = getNextClientId();
