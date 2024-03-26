@@ -254,6 +254,33 @@ public class FamilyDatabase {
         }
     }
 
+    public static ArrayList<FamilyMember> getAllDeceasedFamilyMembers() {
+        ArrayList<FamilyMember> deceasedMembers = new ArrayList<>();
+        try {
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM FamilyMembers WHERE is_deceased = ?");
+            statement.setBoolean(1, true);
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                Date birthDate = resultSet.getDate("birth_date");
+                Date deathDate = resultSet.getDate("death_date");
+                boolean isDeceased = resultSet.getBoolean("is_deceased");
+                String currentResidence = resultSet.getString("current_residence");
+
+                FamilyMember familyMember = new FamilyMember(name, birthDate, deathDate, isDeceased, currentResidence);
+                deceasedMembers.add(familyMember);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return deceasedMembers;
+    }
+
+
+
+
     private static void insertFamilyMember(String[] values) {
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO FamilyMembers (name, birth_date, death_date, is_deceased, current_residence, client_id) VALUES (?, ?, ?, ?, ?, ?)");

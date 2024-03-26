@@ -1,5 +1,5 @@
 package com.familytree;
 
-public class FamilyTreeGui {
+public class FamilyTreePanel {
     
 }
