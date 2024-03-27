@@ -136,6 +136,7 @@ public class FamilyDatabase {
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
+            
         }
         return familyMembers;
     }
@@ -143,6 +144,7 @@ public class FamilyDatabase {
     public static List<Event> getAllEventWithAttendees() {
         List<Event> Event = new ArrayList<>();
         try {
+            
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM Event");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -340,8 +342,10 @@ public class FamilyDatabase {
             ResultSet resultSet = statement.executeQuery("SELECT * FROM Event");
 
             while (resultSet.next()) {
-                int eventId = resultSet.getInt("event_id");
-                Date eventDate = resultSet.getDate("event_date");
+                int eventId = resultSet.getInt("event_id"); 
+                LocalDate eventDateLocal = resultSet.getObject("event_date",LocalDate.class);
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                Date eventDate = Date.from(eventDateLocal.atStartOfDay(defaultZoneId).toInstant());
                 String eventType = resultSet.getString("event_type");
 
                 Event event = new Event(eventId, eventDate, eventType);
