@@ -2,6 +2,7 @@ package com.familytree;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -90,8 +91,7 @@ public class FamilyTreeGUI extends JFrame {
                 false // Include URLs
         );
 
-        // Customize chart appearance if needed
-
+        // Customize chart appearance 
         // Create a chart panel to display the chart
         ChartPanel chartPanel = new ChartPanel(chart);
         panel.add(chartPanel, BorderLayout.CENTER);
@@ -101,15 +101,20 @@ public class FamilyTreeGUI extends JFrame {
 
     
 
-    private JPanel createFamilyMemberListPanel() {
-        JPanel panel = new JPanel();
-        // Add components for displaying and interacting with the family member list
+    public JPanel createFamilyMemberListPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+   // Initialize your database object here
+        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(this.db);
+        panel.add(familyMemberListPanel, BorderLayout.CENTER);
         return panel;
     }
 
-    private JPanel createEventManagementPanel() {
-        JPanel panel = new JPanel();
-        // Add components for managing events
+    public JPanel createEventManagementPanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        // Initialize your database object here
+        FamilyDatabase database = new FamilyDatabase(); // Example initialization
+        EventManagementPanel eventManagementPanel = new EventManagementPanel(database);
+        panel.add(eventManagementPanel, BorderLayout.CENTER);
         return panel;
     }
 

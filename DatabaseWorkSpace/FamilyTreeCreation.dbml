@@ -26,7 +26,6 @@ Table Addresses {
   member_id  integer [ref: < FamilyMembers.member_id]
 }
 
-
 Table Event {
   event_id  integer [primary key]
   event_date  date
@@ -36,6 +35,10 @@ Table EventAttendee {
   event_id  integer [ref: < Event.event_id]
   member_id  integer [ref: < FamilyMembers.member_id]
 }
+
+
+
+
 
 // Table DeceasedRelative {
 //   full_nammember_ide text [ref: > FamilyMembers.member_id]

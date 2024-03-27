@@ -9,6 +9,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class FamilyDatabase {
     private static Connection connection;
@@ -65,7 +72,7 @@ public class FamilyDatabase {
                     "city TEXT," +
                     "member_id INTEGER REFERENCES FamilyMembers(member_id))");
 
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS Events (" +
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS Event (" +
                     "event_id INTEGER PRIMARY KEY," +
                     "event_date DATE," +
                     "event_type TEXT," +
@@ -74,7 +81,7 @@ public class FamilyDatabase {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS EventAttendees (" +
                     "event_date DATE," +
                     "event_type TEXT," +
-                    "event_id INTEGER REFERENCES Events(event_id)," +
+                    "event_id INTEGER REFERENCES Event(event_id)," +
                     "member_id INTEGER REFERENCES FamilyMembers(member_id))");
 
             statement.close();
@@ -107,8 +114,18 @@ public class FamilyDatabase {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
-                Date birthDate = resultSet.getDate("birth_date");
-                Date deathDate = resultSet.getDate("death_date");
+                LocalDate birthDateLocal = resultSet.getObject("birth_date",LocalDate.class );
+                LocalDate deathDateLocal = resultSet.getObject("death_date",LocalDate.class);
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                Date birthDate = Date.from(birthDateLocal.atStartOfDay(defaultZoneId).toInstant());
+                Date deathDate;
+                if(deathDateLocal !=null){
+                     deathDate = Date.from(deathDateLocal.atStartOfDay(defaultZoneId).toInstant());
+                }
+                else{
+                     deathDate = null;
+
+                }
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
                 String currentResidence = resultSet.getString("current_residence");
 
@@ -123,10 +140,10 @@ public class FamilyDatabase {
         return familyMembers;
     }
 
-    public static List<Event> getAllEventsWithAttendees() {
-        List<Event> events = new ArrayList<>();
+    public static List<Event> getAllEventWithAttendees() {
+        List<Event> Event = new ArrayList<>();
         try {
-            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Events");
+            PreparedStatement statement = connection.prepareStatement("SELECT * FROM Event");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int eventId = resultSet.getInt("event_id");
@@ -141,14 +158,14 @@ public class FamilyDatabase {
                     event.addAttendee(attendee);
                 }
     
-                events.add(event);
+                Event.add(event);
             }
             resultSet.close();
             statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return events;
+        return Event;
     }
     
     private static List<FamilyMember> fetchAttendeesForEvent(int eventId) {
@@ -170,6 +187,20 @@ public class FamilyDatabase {
         }
         return attendees;
     }
+    public List<FamilyMember> searchFamilyMembers(String searchTerm) {
+        List<FamilyMember> searchResults = new ArrayList<>();
+        // Perform database query to search for family members matching the searchTerm
+        // Here, we simulate a search by filtering the list of all family members based on the searchTerm
+        for (FamilyMember member : getAllFamilyMembers()) {
+            if (member.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                searchResults.add(member);
+            }
+        }
+        return searchResults;
+    }
+
+
+
     
     private static FamilyMember fetchFamilyMemberById(int memberId) {
         FamilyMember familyMember = null;
@@ -179,8 +210,18 @@ public class FamilyDatabase {
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 String name = resultSet.getString("name");
-                Date birthDate = resultSet.getDate("birth_date");
-                Date deathDate = resultSet.getDate("death_date");
+                LocalDate birthDateLocal = resultSet.getObject("birth_date",LocalDate.class );
+                LocalDate deathDateLocal = resultSet.getObject("death_date",LocalDate.class);
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                Date birthDate = Date.from(birthDateLocal.atStartOfDay(defaultZoneId).toInstant());
+                Date deathDate;
+                if(deathDateLocal !=null){
+                     deathDate = Date.from(deathDateLocal.atStartOfDay(defaultZoneId).toInstant());
+                }
+                else{
+                     deathDate = null;
+
+                }
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
                 String currentResidence = resultSet.getString("current_residence");
     
@@ -198,7 +239,7 @@ public class FamilyDatabase {
     public static int addEvent(Date eventDate, String eventType, int memberId) {
         int eventId = getNextEventId();
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO Events (event_id, event_date, event_type, member_id) VALUES (?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Event (event_id, event_date, event_type, member_id) VALUES (?, ?, ?, ?)");
             statement.setInt(1, eventId);
             statement.setDate(2, eventDate != null ? new java.sql.Date(eventDate.getTime()) : null);
             statement.setString(3, eventType);
@@ -262,8 +303,22 @@ public class FamilyDatabase {
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
-                Date birthDate = resultSet.getDate("birth_date");
-                Date deathDate = resultSet.getDate("death_date");
+                LocalDate birthDateLocal = resultSet.getObject("birth_date",LocalDate.class );
+                LocalDate deathDateLocal = resultSet.getObject("death_date",LocalDate.class);
+                ZoneId defaultZoneId = ZoneId.systemDefault();
+                Date birthDate = Date.from(birthDateLocal.atStartOfDay(defaultZoneId).toInstant());
+                Date deathDate;
+                if(deathDateLocal !=null){
+                     deathDate = Date.from(deathDateLocal.atStartOfDay(defaultZoneId).toInstant());
+                }
+                else{
+                     deathDate = null;
+
+                }
+
+
+
+                
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
                 String currentResidence = resultSet.getString("current_residence");
 
@@ -276,6 +331,30 @@ public class FamilyDatabase {
             e.printStackTrace();
         }
         return deceasedMembers;
+    }
+
+    public List<Event> getAllEvents() {
+        List<Event> events = new ArrayList<>();
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM Event");
+
+            while (resultSet.next()) {
+                int eventId = resultSet.getInt("event_id");
+                Date eventDate = resultSet.getDate("event_date");
+                String eventType = resultSet.getString("event_type");
+
+                Event event = new Event(eventId, eventDate, eventType);
+                events.add(event);
+            }
+
+            resultSet.close();
+            statement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return events;
     }
 
 
@@ -319,7 +398,7 @@ public class FamilyDatabase {
 
     private static void insertEvent(String[] values) {
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO Events (event_date, event_type, member_id) VALUES (?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Event (event_date, event_type, member_id) VALUES (?, ?, ?)");
             statement.setDate(1, java.sql.Date.valueOf(values[0])); // Parse date string into java.sql.Date
             statement.setString(2, values[1]);
             statement.setInt(3, Integer.parseInt(values[2]));
@@ -444,7 +523,7 @@ public class FamilyDatabase {
     public static int insertEvent(Date eventDate, String eventType, int memberId) {
         int eventId = getNextEventId();
         try {
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO Events (event_id, event_date, event_type, member_id) VALUES (?, ?, ?, ?)");
+            PreparedStatement statement = connection.prepareStatement("INSERT INTO Event (event_id, event_date, event_type, member_id) VALUES (?, ?, ?, ?)");
             statement.setInt(1, eventId);
             statement.setDate(2, eventDate != null ? new java.sql.Date(eventDate.getTime()) : null);
             statement.setString(3, eventType);
@@ -497,7 +576,7 @@ public class FamilyDatabase {
         int nextEventId = 1; // Start from ID 1
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT MAX(event_id) AS max_id FROM Events");
+            ResultSet resultSet = statement.executeQuery("SELECT MAX(event_id) AS max_id FROM Event");
             if (resultSet.next()) {
                 nextEventId = resultSet.getInt("max_id") + 1;
             }
