@@ -1,7 +1,12 @@
 package com.familytree;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import org.jfree.chart.ChartFactory;
@@ -38,6 +43,27 @@ public class FamilyTreeGUI extends JFrame {
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
+        
+        JMenuItem importText = new JMenuItem("Import Text");
+        importText.addActionListener(
+        new ActionListener() {
+          @Override
+          public void actionPerformed(ActionEvent e) {
+            System.out.println("Importing");
+
+
+          }
+        });
+
+        // importText.setAccelerator(
+        //     KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
+            
+            
+            fileMenu.add(importText);
+
+
+
+        
         JMenu optionMenu = new JMenu("Options");
 
         // Add file and option menu items

@@ -427,15 +427,6 @@ public class FamilyDatabase {
         }
     }
 
-
-    
-
-
-
-
-
-
-
     public static int insertClient(String clientName) {
         int clientId = getNextClientId();
         try {
