@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.List;
 public class FamilyTreeGUI extends JFrame {
     FamilyDatabase db=new FamilyDatabase();
-
+    
 
     public FamilyTreeGUI() {
         setTitle("Family Tree Application");

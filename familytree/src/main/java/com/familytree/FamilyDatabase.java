@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.LocalDate;
@@ -20,6 +21,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class FamilyDatabase {
     private static Connection connection;
@@ -411,7 +416,7 @@ public class FamilyDatabase {
         }
     }
 
-    public void addParsedDataToDatabase(List<String[]> parsedData) {
+    public void addParsedDataToDatabase(List<String[]> parsedData) throws ParseException {
         try {
             if (connection != null) {
                 for (String[] data : parsedData) {
@@ -494,7 +499,7 @@ public class FamilyDatabase {
     }
 
 
-    private static void insertParsedDeadPerson(Connection conn, String line) throws SQLException {
+    private static void insertParsedDeadPerson(Connection conn, String line) throws SQLException, ParseException {
         int nextMemberId = getNextMemberId(conn);
 
         String[] tokens = line.split(", ");
@@ -502,12 +507,19 @@ public class FamilyDatabase {
         String birthDate = tokens[1];
         String deathDate = tokens[2];
 
+
+        SimpleDateFormat formatter = new SimpleDateFormat("M d yyyy");
+        Date bdate = formatter.parse(birthDate);
+        Date ddate = formatter.parse(birthDate);
+
+        String city = tokens[2];
+
         String sql = "INSERT INTO FamilyMembers (member_id, name, birth_date, death_date, is_deceased) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, nextMemberId);
             pstmt.setString(2, name);
-            pstmt.setString(3, birthDate);
-            pstmt.setString(4, deathDate);
+            pstmt.setString(3, bdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
+            pstmt.setString(4, ddate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
             pstmt.setBoolean(5, true); // Assuming the person is deceased
             pstmt.executeUpdate();
         }
@@ -537,13 +549,16 @@ public class FamilyDatabase {
         }
     }
 
-    private static void insertParsedLiving(Connection conn, String line) throws SQLException {
+    private static void insertParsedLiving(Connection conn, String line) throws SQLException, ParseException {
         int nextMemberId = getNextMemberId(conn);
         int nextAddressId = getNextAddressId(conn);
 
         String[] tokens = line.split(", ");
         String name = tokens[0];
         String birthDate = tokens[1];
+        SimpleDateFormat formatter = new SimpleDateFormat("M d yyyy");
+        Date bdate = formatter.parse(birthDate);
+
         String city = tokens[2];
 
         // Inserting address
@@ -559,11 +574,36 @@ public class FamilyDatabase {
         try (PreparedStatement memberStmt = conn.prepareStatement(memberSql)) {
             memberStmt.setInt(1, nextMemberId);
             memberStmt.setString(2, name);
-            memberStmt.setString(3, birthDate);
+            memberStmt.setString(3, bdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
             memberStmt.setBoolean(4, false); // Assuming the person is not deceased
             memberStmt.setInt(5, nextAddressId); // Setting address ID as current residence
             memberStmt.executeUpdate();
         }
+    }
+
+        public static HashMap<Integer, HashMap<String, Integer>> getRelationships() {
+        HashMap<Integer, HashMap<String, Integer>> relationshipsMap = new HashMap<>();
+
+        try  {
+            String sql = "SELECT member_id, related_member_id, relation_type FROM Relationships";
+            try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+                ResultSet rs = pstmt.executeQuery();
+                while (rs.next()) {
+                    int memberId = rs.getInt("member_id");
+                    int relatedMemberId = rs.getInt("related_member_id");
+                    String relationType = rs.getString("relation_type");
+
+                    // Add relationship for member -> related member
+                    relationshipsMap.computeIfAbsent(memberId, k -> new HashMap<>()).put(relationType, relatedMemberId);
+                    // Add relationship for related member -> member (reverse relationship)
+                    relationshipsMap.computeIfAbsent(relatedMemberId, k -> new HashMap<>()).put(relationType, memberId);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return relationshipsMap;
     }
 
 
@@ -594,7 +634,7 @@ public class FamilyDatabase {
     
 
 
-    ///good end
+    ///good end, past here is unkown if its even still needed. Likley it isnt, will have to clean up as We go
     private static void insertFamilyMember(String[] values) {
         try {
             PreparedStatement statement = connection.prepareStatement("INSERT INTO FamilyMembers (name, birth_date, death_date, is_deceased, current_residence, client_id) VALUES (?, ?, ?, ?, ?, ?)");
