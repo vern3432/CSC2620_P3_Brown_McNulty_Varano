@@ -32,6 +32,8 @@ public class TextFileParser {
         InputStream inputStream = TextFileParser.class.getClassLoader().getResourceAsStream("data.txt");
         File file = convert(inputStream, "data");
         printParsedData(parseTextFile(file));
+        FamilyDatabase db=new FamilyDatabase();
+        db.addParsedDataToDatabase(parseTextFile(file));
 
     }
 

@@ -16,10 +16,15 @@ import java.util.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 public class FamilyDatabase {
     private static Connection connection;
     private static final String DB_FILE_NAME = "FamilyTree.db";
+    public  SimpleDateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
 
     static {
         try {
@@ -272,29 +277,7 @@ public class FamilyDatabase {
     }
 
 
-    public static void addParsedDataToDatabase(List<String[]> parsedData) {
-        for (String[] data : parsedData) {
-            String dataType = data[0];
-            String[] values = data[1].split(", ");
 
-            switch (dataType) {
-                case "FamilyMember":
-                    break;
-                case "Relationship":
-                    insertRelationship(values);
-                    break;
-                case "Dead Person":
-                    insertEvent(values);
-                    break;
-                case "Address":
-                    insertAddress(values);
-                    break;
-                default:
-                    System.out.println("Unknown data type: " + dataType);
-                    break;
-            }
-        }
-    }
 
     public static ArrayList<FamilyMember> getAllDeceasedFamilyMembers() {
         ArrayList<FamilyMember> deceasedMembers = new ArrayList<>();
@@ -413,7 +396,7 @@ public class FamilyDatabase {
         }
     }
     
-    private static void insertEvent(String[] values) {
+    private  void insertEvent(String[] values) {
         try {
             int memberId = getMemberIdByName(values[2]);
             PreparedStatement statement = connection.prepareStatement("INSERT INTO Event (event_date, event_type, member_id) VALUES (?, ?, ?)");
@@ -427,6 +410,187 @@ public class FamilyDatabase {
             e.printStackTrace();
         }
     }
+
+    public void addParsedDataToDatabase(List<String[]> parsedData) {
+        try {
+            if (connection != null) {
+                for (String[] data : parsedData) {
+                    switch (data[0]) {
+                        case "Dead Person":
+                            insertParsedDeadPerson(connection, data[1]);
+                            break;
+                        case "Relationship":
+                            insertParsedRelationship(connection, data[1]);
+                            break;
+                        case "Address":
+                        insertParsedLiving(connection, data[1]);
+                            break;
+                        // Add more cases if you have other types of data
+                        default:
+                            System.out.println("Unknown data type: " + data[0]);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private static int getNextMemberId(Connection conn) {
+        int nextMemberId = 1; // Start from ID 1
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT MAX(member_id) AS max_id FROM FamilyMembers");
+            if (resultSet.next()) {
+                nextMemberId = resultSet.getInt("max_id") + 1;
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nextMemberId;
+    }
+        private static int getMemberId(Connection conn, String name) throws SQLException {
+        int memberId = -1; // Default value if member not found
+        String sql = "SELECT member_id FROM FamilyMembers WHERE name = ?";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                memberId = rs.getInt("member_id");
+            }
+        }
+        return memberId;
+    }
+    private static int getNextRelationshipId(Connection conn) {
+        int nextRelationshipId = 1; // Start from ID 1
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT MAX(relationship_id) AS max_id FROM Relationships");
+            if (resultSet.next()) {
+                nextRelationshipId = resultSet.getInt("max_id") + 1;
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nextRelationshipId;
+    }
+    private static int getNextAddressId(Connection conn) {
+        int nextAddressId = 1; // Start from ID 1
+        try {
+            Statement statement = conn.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT MAX(address_id) AS max_id FROM Addresses");
+            if (resultSet.next()) {
+                nextAddressId = resultSet.getInt("max_id") + 1;
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return nextAddressId;
+    }
+
+
+    private static void insertParsedDeadPerson(Connection conn, String line) throws SQLException {
+        int nextMemberId = getNextMemberId(conn);
+
+        String[] tokens = line.split(", ");
+        String name = tokens[0];
+        String birthDate = tokens[1];
+        String deathDate = tokens[2];
+
+        String sql = "INSERT INTO FamilyMembers (member_id, name, birth_date, death_date, is_deceased) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, nextMemberId);
+            pstmt.setString(2, name);
+            pstmt.setString(3, birthDate);
+            pstmt.setString(4, deathDate);
+            pstmt.setBoolean(5, true); // Assuming the person is deceased
+            pstmt.executeUpdate();
+        }
+    }
+    private static void insertParsedRelationship(Connection conn, String line) throws SQLException {
+        int nextRelationshipId = getNextRelationshipId(conn);
+
+        String[] tokens = line.split(", ");
+        String memberName = tokens[0];
+        String relationType = tokens[1];
+        String relatedName = tokens[2];
+
+        int memberId = getMemberId(conn, memberName);
+        int relatedMemberId = getMemberId(conn, relatedName);
+
+        if (memberId != -1 && relatedMemberId != -1) {
+            String sql = "INSERT INTO Relationships (relationship_id, member_id, related_member_id, relation_type) VALUES (?, ?, ?, ?)";
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, nextRelationshipId);
+                pstmt.setInt(2, memberId);
+                pstmt.setInt(3, relatedMemberId);
+                pstmt.setString(4, relationType);
+                pstmt.executeUpdate();
+            }
+        } else {
+            System.out.println("Failed to insert relationship: Member ID not found for one or more names.");
+        }
+    }
+
+    private static void insertParsedLiving(Connection conn, String line) throws SQLException {
+        int nextMemberId = getNextMemberId(conn);
+        int nextAddressId = getNextAddressId(conn);
+
+        String[] tokens = line.split(", ");
+        String name = tokens[0];
+        String birthDate = tokens[1];
+        String city = tokens[2];
+
+        // Inserting address
+        String addressSql = "INSERT INTO Addresses (address_id, city) VALUES (?, ?)";
+        try (PreparedStatement addressStmt = conn.prepareStatement(addressSql)) {
+            addressStmt.setInt(1, nextAddressId);
+            addressStmt.setString(2, city);
+            addressStmt.executeUpdate();
+        }
+
+        // Inserting person
+        String memberSql = "INSERT INTO FamilyMembers (member_id, name, birth_date, is_deceased, current_residence) VALUES (?, ?, ?, ?, ?)";
+        try (PreparedStatement memberStmt = conn.prepareStatement(memberSql)) {
+            memberStmt.setInt(1, nextMemberId);
+            memberStmt.setString(2, name);
+            memberStmt.setString(3, birthDate);
+            memberStmt.setBoolean(4, false); // Assuming the person is not deceased
+            memberStmt.setInt(5, nextAddressId); // Setting address ID as current residence
+            memberStmt.executeUpdate();
+        }
+    }
+
+
+  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
 

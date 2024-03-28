@@ -57,7 +57,7 @@ public class FamilyTreeGUI extends JFrame {
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
                     List<String[]> parsedData = TextFileParser.parseTextFile(selectedFile);
-                    FamilyDatabase.addParsedDataToDatabase(parsedData);
+                    // FamilyDatabase.addParsedDataToDatabase(parsedData);
                     System.out.println("Data imported successfully.");
                 }
             }
