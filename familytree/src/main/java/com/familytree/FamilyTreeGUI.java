@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
@@ -16,8 +17,9 @@ import org.jfree.data.category.IntervalCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
-
-
+import java.awt.event.*;
+import java.io.File;
+import java.util.List;
 public class FamilyTreeGUI extends JFrame {
     FamilyDatabase db=new FamilyDatabase();
 
@@ -43,22 +45,26 @@ public class FamilyTreeGUI extends JFrame {
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
-        
+
         JMenuItem importText = new JMenuItem("Import Text");
-        importText.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            System.out.println("Importing");
+        importText.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Select Text File");
+                int result = fileChooser.showOpenDialog(null);
 
-
-          }
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    List<String[]> parsedData = TextFileParser.parseTextFile(selectedFile);
+                    FamilyDatabase.addParsedDataToDatabase(parsedData);
+                    System.out.println("Data imported successfully.");
+                }
+            }
         });
 
-        // importText.setAccelerator(
-        //     KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
-            
-            
+        importText.setAccelerator(
+           KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
             fileMenu.add(importText);
 
 
