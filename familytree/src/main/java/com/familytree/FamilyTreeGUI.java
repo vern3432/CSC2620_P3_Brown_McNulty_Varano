@@ -25,6 +25,7 @@ public class FamilyTreeGUI extends JFrame {
     
 
     public FamilyTreeGUI() {
+        FamilyTreeContainer test=new FamilyTreeContainer(db.getAllFamilyMembers(), db.getRelationships());
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(800, 600);

@@ -1,15 +1,40 @@
 package com.familytree;
 
+import java.awt.List;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class FamilyMember {
+    private int id;
+    public int getId() {
+        return id;
+    }
+
     private String name;
     private Date birthDate;
     private Date deathDate;
     private boolean isDeceased;
     private String currentResidence;
+    /**
+     *
+     */
+    private ArrayList<Integer> parents=new ArrayList<Integer>();
+    private int spouse=-1;
+    
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public FamilyMember(String name, Date birthDate, Date deathDate, boolean isDeceased, String currentResidence) {
+    public void setParents(ArrayList<Integer> parents) {
+        this.parents = parents;
+    }
+
+    public void setSpouse(int spouse) {
+        this.spouse = spouse;
+    }
+
+    public FamilyMember(int id, String name, Date birthDate, Date deathDate, boolean isDeceased, String currentResidence) {
+        this.id=id;
         this.name = name;
         this.birthDate = birthDate;
         this.deathDate = deathDate;

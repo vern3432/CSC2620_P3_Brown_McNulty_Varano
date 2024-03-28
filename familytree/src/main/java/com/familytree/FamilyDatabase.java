@@ -123,6 +123,8 @@ public class FamilyDatabase {
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM FamilyMembers");
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
+                int id = resultSet.getInt("member_id");
+
                 String name = resultSet.getString("name");
                 LocalDate birthDateLocal = resultSet.getObject("birth_date",LocalDate.class );
                 LocalDate deathDateLocal = resultSet.getObject("death_date",LocalDate.class);
@@ -139,7 +141,7 @@ public class FamilyDatabase {
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
                 String currentResidence = resultSet.getString("current_residence");
 
-                FamilyMember familyMember = new FamilyMember(name, birthDate, deathDate, isDeceased, currentResidence);
+                FamilyMember familyMember = new FamilyMember(id,name, birthDate, deathDate, isDeceased, currentResidence);
                 familyMembers.add(familyMember);
             }
             resultSet.close();
@@ -221,6 +223,8 @@ public class FamilyDatabase {
             statement.setInt(1, memberId);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet.next()) {
+                int id = resultSet.getInt("member_id");
+
                 String name = resultSet.getString("name");
                 LocalDate birthDateLocal = resultSet.getObject("birth_date",LocalDate.class );
                 LocalDate deathDateLocal = resultSet.getObject("death_date",LocalDate.class);
@@ -237,7 +241,7 @@ public class FamilyDatabase {
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
                 String currentResidence = resultSet.getString("current_residence");
     
-                familyMember = new FamilyMember(name, birthDate, deathDate, isDeceased, currentResidence);
+                familyMember = new FamilyMember(id,name, birthDate, deathDate, isDeceased, currentResidence);
             }
             resultSet.close();
             statement.close();
@@ -291,6 +295,8 @@ public class FamilyDatabase {
             statement.setBoolean(1, true);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
+                int id = resultSet.getInt("member_id");
+
                 String name = resultSet.getString("name");
                 LocalDate birthDateLocal = resultSet.getObject("birth_date",LocalDate.class );
                 LocalDate deathDateLocal = resultSet.getObject("death_date",LocalDate.class);
@@ -311,7 +317,7 @@ public class FamilyDatabase {
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
                 String currentResidence = resultSet.getString("current_residence");
 
-                FamilyMember familyMember = new FamilyMember(name, birthDate, deathDate, isDeceased, currentResidence);
+                FamilyMember familyMember = new FamilyMember(id,name, birthDate, deathDate, isDeceased, currentResidence);
                 deceasedMembers.add(familyMember);
             }
             resultSet.close();
@@ -625,6 +631,17 @@ public class FamilyDatabase {
 
 
 
+
+
+
+
+
+
+
+
+
+
+    
 
 
 
