@@ -10,6 +10,15 @@ class Node {
     private int y;
     private boolean isCouple;
     private Node partner;
+    private FamilyMember member;
+
+    public FamilyMember getMember() {
+        return member;
+    }
+
+    public void setMember(FamilyMember member) {
+        this.member = member;
+    }
 
     public Node(String name) {
         this.name = name;

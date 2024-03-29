@@ -40,12 +40,13 @@ public class FamilyTreeContainer {
                         System.out.println("    " + memberId + " is married to " + relatedMemberId);
                         this.members.get(memberId).setSpouse(relatedMemberId);
                         break;
+
                     case "parentof":
                     System.out.println("adding parent");
-                    this.members.get(relatedMemberId).addParent(memberId);
-                    this.members.get(memberId).addChildren(relatedMemberId);
+                    this.members.get(memberId).addParent(relatedMemberId);
+                    this.members.get(relatedMemberId).addChildren(memberId);
 
-                        System.out.println("    " +  this.members.get(memberId).getName() + " is parent of " + this.members.get(relatedMemberId).getName() );
+                        System.out.println("    " +  this.members.get(relatedMemberId).getName() + " is parent of " + this.members.get(memberId).getName() );
 
                         break;
                     default:

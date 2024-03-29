@@ -8,7 +8,7 @@ public class CustomFamilyTreePanel extends JPanel {
     private ArrayList<ArrayList<Node>> nodes;
     private static final int HORIZONTAL_GAP = 150;
     private static final int VERTICAL_GAP = 100;
-    private static final int PADDING_LEFT = 500;  
+    private static final int PADDING_LEFT = 1000;  
     private static final int PADDING_TOP = 50;
     FamilyMember member;
 

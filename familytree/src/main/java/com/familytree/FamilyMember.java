@@ -7,8 +7,6 @@ import java.util.Date;
 public class FamilyMember {
     private int id;
 
-
-
     public int getId() {
         return id;
     }
@@ -21,11 +19,10 @@ public class FamilyMember {
     /**
      *
      */
-    private ArrayList<Integer> parents=new ArrayList<Integer>();
-    private ArrayList<Integer> children=new ArrayList<Integer>();
-    private int spouse=-1;
-    private int stackLayer=-1;
-
+    private ArrayList<Integer> parents = new ArrayList<Integer>();
+    private ArrayList<Integer> children = new ArrayList<Integer>();
+    private int spouse = -1;
+    private int stackLayer = -1;
 
     public int getSpouse() {
         return spouse;
@@ -47,8 +44,6 @@ public class FamilyMember {
         this.children = children;
     }
 
-    
-
     public int getStackLayer() {
         return stackLayer;
     }
@@ -57,14 +52,17 @@ public class FamilyMember {
         this.stackLayer = stackLayer;
     }
 
-    
     public void setId(int id) {
         this.id = id;
     }
 
     public void addParent(Integer id) {
+        if (parents.contains(-5000)) {
+            this.parents = new ArrayList<Integer>();
+        }
         this.parents.add(id);
     }
+
     public void addChildren(Integer id) {
         this.children.add(id);
     }
@@ -73,8 +71,10 @@ public class FamilyMember {
         this.spouse = spouse;
     }
 
-    public FamilyMember(int id, String name, Date birthDate, Date deathDate, boolean isDeceased, String currentResidence) {
-        this.id=id;
+    public FamilyMember(int id, String name, Date birthDate, Date deathDate, boolean isDeceased,
+            String currentResidence) {
+                this.parents.add(-5000);
+        this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.deathDate = deathDate;

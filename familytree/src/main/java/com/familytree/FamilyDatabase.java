@@ -377,21 +377,21 @@ public class FamilyDatabase {
 
 
 
-    private static void insertRelationship(String[] values) {
-        try {
-            int memberId = getMemberIdByName(values[0]);
-            int relatedMemberId = getMemberIdByName(values[1]);
-            PreparedStatement statement = connection.prepareStatement("INSERT INTO Relationships (member_id, related_member_id, relation_type) VALUES (?, ?, ?)");
-            statement.setInt(1, memberId);
-            statement.setInt(2, relatedMemberId);
-            statement.setString(3, values[2]);
-            statement.executeUpdate();
-            statement.close();
-            System.out.println("Relationship inserted successfully.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+    // private static void insertRelationship(String[] values) {
+    //     try {
+    //         int memberId = getMemberIdByName(values[0]);
+    //         int relatedMemberId = getMemberIdByName(values[1]);
+    //         PreparedStatement statement = connection.prepareStatement("INSERT INTO Relationships (member_id, related_member_id, relation_type) VALUES (?, ?, ?)");
+    //         statement.setInt(1, memberId);
+    //         statement.setInt(2, relatedMemberId);
+    //         statement.setString(3, values[2]);
+    //         statement.executeUpdate();
+    //         statement.close();
+    //         System.out.println("Relationship inserted successfully.");
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
     
     private static void insertAddress(String[] values) {
         try {
@@ -471,6 +471,7 @@ public class FamilyDatabase {
                 memberId = rs.getInt("member_id");
             }
         }
+        System.out.println("id"+memberId+" name:"+name);
         return memberId;
     }
     private static int getNextRelationshipId(Connection conn) {
@@ -537,12 +538,14 @@ public class FamilyDatabase {
         String memberName = tokens[0];
         String relationType = tokens[1];
         String relatedName = tokens[2];
+        System.out.println(memberName+" is "+relationType+" to "+relatedName);
 
         int memberId = getMemberId(conn, memberName);
         int relatedMemberId = getMemberId(conn, relatedName);
 
         if (memberId != -1 && relatedMemberId != -1) {
             String sql = "INSERT INTO Relationships (relationship_id, member_id, related_member_id, relation_type) VALUES (?, ?, ?, ?)";
+
             try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
                 pstmt.setInt(1, nextRelationshipId);
                 pstmt.setInt(2, memberId);
