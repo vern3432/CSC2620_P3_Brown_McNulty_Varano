@@ -1,6 +1,5 @@
 package com.familytree;
 
-
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -15,54 +14,50 @@ public class FamilyTreeContainer {
         return members;
     }
 
+    public FamilyTreeContainer(List<FamilyMember> members, HashMap<Integer, Relationship> relationshipsMap) {
 
-
-
-
-    public FamilyTreeContainer(List<FamilyMember> members,HashMap<Integer,HashMap<String,Integer>> relationshipsMap) {
         this.members = new HashMap<Integer, FamilyMember>();
         for (FamilyMember member : members) {
             this.members.put(member.getId(), member);
         }
-        for (Map.Entry<Integer, HashMap<String, Integer>> entry : relationshipsMap.entrySet()) {
-            int memberId = entry.getKey();
-            HashMap<String, Integer> relations = entry.getValue();
+        for (Integer key : relationshipsMap.keySet()) {
+
+            int memberId = key;
             System.out.println("Member ID: " + memberId);
             // Traverse the inner map for each member
-            for (Map.Entry<String, Integer> relationEntry : relations.entrySet()) {
-                String relationType = relationEntry.getKey();
-                int relatedMemberId = relationEntry.getValue();
-                // Process the inner map key and value
-                System.out.println("Relationship Type: " + relationType);
-                System.out.println("Related Member ID: " + relatedMemberId);
-                switch (relationType) {
-                    case "marriedto":
-                        System.out.println("    " + memberId + " is married to " + relatedMemberId);
-                        this.members.get(memberId).setSpouse(relatedMemberId);
-                        break;
+            String relationType = relationshipsMap.get(key).getType();
+            int relatedMemberId = relationshipsMap.get(key).getMember2();
+            // Process the inner map key and value
+            System.out.println("Relationship Type: " + relationType);
+            System.out.println("Related Member ID: " + relatedMemberId);
+            switch (relationType.strip()) {
+                case "marriedto":
+                    System.out.println("    " + this.members.get(memberId).getName() + " is married to "
+                            + this.members.get(relatedMemberId).getName());
+                    this.members.get(memberId).setSpouse(relatedMemberId);
+                    this.members.get(relatedMemberId).setSpouse(memberId);
 
-                    case "parentof":
+                    break;
+
+                case "parentof":
                     System.out.println("adding parent");
-                    this.members.get(memberId).addParent(relatedMemberId);
-                    this.members.get(relatedMemberId).addChildren(memberId);
+                    this.members.get(relatedMemberId).addParent(memberId);
+                    this.members.get(memberId).addChildren(relatedMemberId);
 
-                        System.out.println("    " +  this.members.get(relatedMemberId).getName() + " is parent of " + this.members.get(memberId).getName() );
+                    System.out.println("    " + this.members.get(memberId).getName() + " is parent of "
+                            + this.members.get(relatedMemberId).getName());
 
-                        break;
-                    default:
-                        System.out.println("Unknown relationship type: " + relationType);
-                        break;
-                }
-
-
-
+                    break;
+                default:
+                    System.out.println("Unknown relationship type: " + relationType);
+                    break;
             }
+
+            // for (Map.Entry<String, Integer> relationEntry : relations.entrySet()) {
+
+            // }
         }
     }
-
-
-    
-
 
     public void addMember(FamilyMember member) {
         members.put(member.hashCode(), member);

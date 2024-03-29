@@ -1,11 +1,13 @@
 package com.familytree;
 
 import java.awt.List;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class FamilyMember {
     private int id;
+    public boolean added = false;
 
     public int getId() {
         return id;
@@ -25,6 +27,7 @@ public class FamilyMember {
     private int stackLayer = -1;
 
     public int getSpouse() {
+        System.out.println("spouse:" + spouse);
         return spouse;
     }
 
@@ -64,6 +67,11 @@ public class FamilyMember {
     }
 
     public void addChildren(Integer id) {
+        if (added == false) {
+
+            this.children = new ArrayList<Integer>();
+            this.added = true;
+        }
         this.children.add(id);
     }
 
@@ -73,7 +81,9 @@ public class FamilyMember {
 
     public FamilyMember(int id, String name, Date birthDate, Date deathDate, boolean isDeceased,
             String currentResidence) {
-                this.parents.add(-5000);
+        this.parents.add(-5000);
+        this.children.add(-5000);
+
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
@@ -123,4 +133,46 @@ public class FamilyMember {
     public String getCurrentResidence() {
         return currentResidence;
     }
+
+    // System.out.println(FamilyDatabase.findRelationshipsByName("Sally
+    // Mae",this.db.getConnection()));
+
+    public void processRelationships(Connection connection) {
+        ArrayList<Relationship> relationships = (ArrayList<Relationship>) FamilyDatabase
+                .findRelationshipsByName(this.getName(), connection);
+        if (!relationships.isEmpty()) {
+            for (Relationship relationship : relationships) {
+                switch (relationship.getType()) {
+                    case "marriedto":
+                        handleMarriedTo(relationship);
+                        break;
+                    case "parentof":
+                        handleParentOf(relationship);
+                        break;
+                    // Add more cases for other relationship types as needed
+                    default:
+                        System.out.println("Unknown relationship type: " + relationship.getType());
+                }
+            }
+        }
+
+    }
+
+    private void handleMarriedTo(Relationship relationship) {
+
+        int memberId1 = relationship.getMember2();
+        int memberId2 = relationship.getMember1();
+        this.spouse = memberId1;
+        System.out.println("Handling 'marriedto' relationship between members " + memberId1 + " and " + memberId2);
+        // Add your logic for handling 'marriedto' relationship here
+    }
+
+    private void handleParentOf(Relationship relationship) {
+        int childId = relationship.getMember2();
+        int parentId = relationship.getMember1();
+        this.parents.add(parentId);
+        System.out.println("Handling 'parentof' relationship: parent " + parentId + " child " + childId);
+        // Add your logic for handling 'parentof' relationship here
+    }
+
 }

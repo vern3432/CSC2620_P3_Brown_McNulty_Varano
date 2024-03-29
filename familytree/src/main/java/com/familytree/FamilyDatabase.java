@@ -28,6 +28,15 @@ import java.util.Date;
 
 public class FamilyDatabase {
     private static Connection connection;
+    public static Connection getConnection() {
+        return connection;
+    }
+    public static void setConnection(Connection connection) {
+        FamilyDatabase.connection = connection;
+    }
+
+
+
     private static final String DB_FILE_NAME = "FamilyTree.db";
     public  SimpleDateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
 
@@ -589,23 +598,51 @@ public class FamilyDatabase {
             memberStmt.executeUpdate();
         }
     }
+    public static List<Relationship> findRelationshipsByName(String name, Connection connection) {
+        List<Relationship> relationships = new ArrayList<>();
+    
+        try {
+            String query = "SELECT r.member_id, r.related_member_id, r.relation_type " +
+                           "FROM Relationships r " +
+                           "INNER JOIN FamilyMembers fm ON r.related_member_id = fm.member_id " +
+                           "WHERE fm.name = ?";
+    
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, name);
+                ResultSet resultSet = statement.executeQuery();
+    
+                while (resultSet.next()) {
+                    int member1 = resultSet.getInt("member_id");
+                    int member2 = resultSet.getInt("related_member_id");
+                    String type = resultSet.getString("relation_type");
+                    relationships.add(new Relationship(member1, member2, type));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    
+        return relationships;
+    }
+    
 
-        public static HashMap<Integer, HashMap<String, Integer>> getRelationships() {
-        HashMap<Integer, HashMap<String, Integer>> relationshipsMap = new HashMap<>();
+        public  HashMap<Integer, Relationship> getRelationships() {
+        HashMap<Integer, Relationship> relationshipsMap = new HashMap<>();
 
         try  {
-            String sql = "SELECT member_id, related_member_id, relation_type FROM Relationships";
+            String sql = "SELECT * FROM Relationships WHERE relationship_id>0;";
             try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
                 ResultSet rs = pstmt.executeQuery();
                 while (rs.next()) {
+                    System.out.println(rs.toString());
+                    int relationshipId = rs.getInt("relationship_id");
                     int memberId = rs.getInt("member_id");
                     int relatedMemberId = rs.getInt("related_member_id");
                     String relationType = rs.getString("relation_type");
+                    
+                    System.out.println(memberId+relatedMemberId+relationType);
+                    relationshipsMap.put(memberId, new Relationship( memberId,  relatedMemberId,  relationType));
 
-                    // Add relationship for member -> related member
-                    relationshipsMap.computeIfAbsent(memberId, k -> new HashMap<>()).put(relationType, relatedMemberId);
-                    // Add relationship for related member -> member (reverse relationship)
-                    relationshipsMap.computeIfAbsent(relatedMemberId, k -> new HashMap<>()).put(relationType, memberId);
                 }
             }
         } catch (SQLException e) {
