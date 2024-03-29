@@ -33,11 +33,14 @@ public class FamilyTreeContainer {
                         this.members.get(memberId).setSpouse(relatedMemberId);
                         break;
                     case "parentof":
+                    this.members.get(relatedMemberId).addParent(memberId);
+                    this.members.get(memberId).addChildren(relatedMemberId);
+
                         System.out.println("    " + memberId + " is parent of " + relatedMemberId);
 
                         break;
                     default:
-                        System.out.println("    Unknown relationship type: " + relationType);
+                        System.out.println("Unknown relationship type: " + relationType);
                         break;
                 }
 

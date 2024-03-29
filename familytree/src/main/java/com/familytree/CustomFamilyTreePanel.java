@@ -1,4 +1,6 @@
+package com.familytree;
 import javax.swing.*;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -6,8 +8,13 @@ public class CustomFamilyTreePanel extends JPanel {
     private ArrayList<ArrayList<Node>> nodes;
     private static final int HORIZONTAL_GAP = 150;
     private static final int VERTICAL_GAP = 100;
-    private static final int PADDING_LEFT = 500;
+    private static final int PADDING_LEFT = 500;  
     private static final int PADDING_TOP = 50;
+    FamilyMember member;
+
+    public void setMember(FamilyMember member) {
+        this.member = member;
+    }
 
     public CustomFamilyTreePanel(List<List<Node>> initialNodes) {
         nodes = new ArrayList<>();
@@ -117,7 +124,6 @@ public class CustomFamilyTreePanel extends JPanel {
         Node node22 = new Node("Node 2-2");
         Node node23 = new Node("Node 2-3");
         node21.addConnection(node22);
-        node22.addConnection(node23);
         layer2.add(node21);
         layer2.add(node22);
         layer2.add(node23);
@@ -131,6 +137,7 @@ public class CustomFamilyTreePanel extends JPanel {
 
 
         node21.addConnection(node31);
+        node21.addConnection(node32);
 
         initialNodes.add(layer1);
 

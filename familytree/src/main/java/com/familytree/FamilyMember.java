@@ -19,14 +19,19 @@ public class FamilyMember {
      *
      */
     private ArrayList<Integer> parents=new ArrayList<Integer>();
+    private ArrayList<Integer> children=new ArrayList<Integer>();
+
     private int spouse=-1;
     
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setParents(ArrayList<Integer> parents) {
-        this.parents = parents;
+    public void addParent(Integer id) {
+        this.parents.add(id);
+    }
+    public void addChildren(Integer id) {
+        this.children.add(id);
     }
 
     public void setSpouse(int spouse) {
