@@ -126,13 +126,20 @@ public class CustomFamilyTreePanel extends JPanel {
                         int x2 = nextNode.getX() + 50;
                         int y2 = nextNode.getY();
                         g.drawLine(x1, y1, x2, y2);
-
-                    }
-
+            // Draw lines between spouses
+            FamilyMember currentMember = currentNode.getMember();
+            if (currentMember.getSpouse() != -1) {
+                Node spouseNode = findNodeById(currentMember.getSpouse());
+                if (spouseNode != null) {
+                     x2 = spouseNode.getX() + 50;
+                     y2 = spouseNode.getY();
+                    g.drawLine(x1, y1, x2, y2);
                 }
             }
         }
-    }
+    }}}}
+
+
 
     public static void main(String[] args) {
         // Example usage:
