@@ -11,6 +11,14 @@ import java.util.Map;
 public class FamilyTreeContainer {
     private HashMap<Integer, FamilyMember> members;
 
+    public HashMap<Integer, FamilyMember> getMembers() {
+        return members;
+    }
+
+
+
+
+
     public FamilyTreeContainer(List<FamilyMember> members,HashMap<Integer,HashMap<String,Integer>> relationshipsMap) {
         this.members = new HashMap<Integer, FamilyMember>();
         for (FamilyMember member : members) {
@@ -33,10 +41,11 @@ public class FamilyTreeContainer {
                         this.members.get(memberId).setSpouse(relatedMemberId);
                         break;
                     case "parentof":
+                    System.out.println("adding parent");
                     this.members.get(relatedMemberId).addParent(memberId);
                     this.members.get(memberId).addChildren(relatedMemberId);
 
-                        System.out.println("    " + memberId + " is parent of " + relatedMemberId);
+                        System.out.println("    " +  this.members.get(memberId).getName() + " is parent of " + this.members.get(relatedMemberId).getName() );
 
                         break;
                     default:

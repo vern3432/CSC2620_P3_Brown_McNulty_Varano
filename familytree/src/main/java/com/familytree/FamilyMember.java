@@ -6,6 +6,9 @@ import java.util.Date;
 
 public class FamilyMember {
     private int id;
+
+
+
     public int getId() {
         return id;
     }
@@ -20,8 +23,40 @@ public class FamilyMember {
      */
     private ArrayList<Integer> parents=new ArrayList<Integer>();
     private ArrayList<Integer> children=new ArrayList<Integer>();
-
     private int spouse=-1;
+    private int stackLayer=-1;
+
+
+    public int getSpouse() {
+        return spouse;
+    }
+
+    public ArrayList<Integer> getParents() {
+        return parents;
+    }
+
+    public void setParents(ArrayList<Integer> parents) {
+        this.parents = parents;
+    }
+
+    public ArrayList<Integer> getChildren() {
+        return children;
+    }
+
+    public void setChildren(ArrayList<Integer> children) {
+        this.children = children;
+    }
+
+    
+
+    public int getStackLayer() {
+        return stackLayer;
+    }
+
+    public void setStackLayer(int stackLayer) {
+        this.stackLayer = stackLayer;
+    }
+
     
     public void setId(int id) {
         this.id = id;
