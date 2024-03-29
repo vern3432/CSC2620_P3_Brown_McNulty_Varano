@@ -1,4 +1,3 @@
-
 package com.familytree;
 import javax.swing.*;
 import java.awt.*;

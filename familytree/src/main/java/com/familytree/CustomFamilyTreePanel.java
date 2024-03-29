@@ -18,29 +18,51 @@ public class CustomFamilyTreePanel extends JPanel {
 
     public CustomFamilyTreePanel(List<List<Node>> initialNodes) {
         nodes = new ArrayList<>();
-
-        // Set initial nodes
+    
+        // Copy the existing nodes
         for (List<Node> layer : initialNodes) {
-            ArrayList<Node> level = new ArrayList<>();
+            ArrayList<Node> copiedLayer = new ArrayList<>();
             for (Node node : layer) {
-                level.add(node);
+                // Make a deep copy of the node
+                Node copiedNode = new Node(node.getName());
+                copiedNode.setMember(node.getMember()); // Copy the associated FamilyMember
+                copiedLayer.add(copiedNode);
             }
-            nodes.add(level);
+            nodes.add(copiedLayer);
         }
-
-        // Set JPanel properties
-        setLayout(null); // Use absolute positioning
-
-        // Calculate positions of nodes
+    
+        // Establish connections between nodes based on family relationships
+        for (int i = 0; i < nodes.size(); i++) {
+            List<Node> currentLayer = nodes.get(i);
+            for (Node node : currentLayer) {
+                FamilyMember member = node.getMember();
+                for (int childId : member.getChildren()) {
+                    Node childNode = findNodeById(childId); // Find the corresponding child Node
+                    if (childNode != null) {
+                        node.addConnection(childNode); // Connect parent Node to child Node
+                    }
+                }
+            }
+        }
+    
+        // Set JPanel properties, calculate positions, adjust panel size, and add nodes to JPanel
+        setLayout(null);
         calculateNodePositions();
-
-        // Adjust panel size
         adjustPanelSize();
-
-        // Add nodes to JPanel
         addNodesToPanel();
     }
-
+    
+    // Helper method to find a node by its ID
+    private Node findNodeById(int id) {
+        for (List<Node> layer : nodes) {
+            for (Node node : layer) {
+                if (node.getMember().getId() == id) {
+                    return node;
+                }
+            }
+        }
+        return null; // Return null if node with the given ID is not found
+    }
     private void calculateNodePositions() {
         int xStart = PADDING_LEFT;
         int yStart = PADDING_TOP;
