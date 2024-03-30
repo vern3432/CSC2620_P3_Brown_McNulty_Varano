@@ -143,11 +143,18 @@ public class FamilyMember {
         if (!relationships.isEmpty()) {
             for (Relationship relationship : relationships) {
                 switch (relationship.getType()) {
+                    
                     case "marriedto":
+                    if(this.spouse==-1){
                         handleMarriedTo(relationship);
+                    }
                         break;
                     case "parentof":
+                    if(this.parents.contains(-5000)){
                         handleParentOf(relationship);
+
+
+                    }
                         break;
                     // Add more cases for other relationship types as needed
                     default:
