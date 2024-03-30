@@ -92,7 +92,7 @@ public class EventManagementPanel extends JPanel {
     private void addNewEvent(Connection connection) {
         // Implement logic for adding a new event
         // For example, show a dialog to input event details
-        JOptionPane.showMessageDialog(this, "Adding a new event...");
+        // JOptionPane.showMessageDialog(this, "Adding a new event...");
         NewEventForm form = new NewEventForm(connection);
         form.setVisible(true);    }
 

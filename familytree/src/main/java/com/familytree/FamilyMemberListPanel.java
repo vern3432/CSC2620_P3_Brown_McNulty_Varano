@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.List;
 
 public class FamilyMemberListPanel extends JPanel {
@@ -10,9 +11,19 @@ public class FamilyMemberListPanel extends JPanel {
     private final FamilyDatabase database;
     private final DefaultListModel<FamilyMember> listModel;
     private final JList<FamilyMember> memberList;
-    private final JTextField searchField;
+    private final JTextField searchField; 
+    Connection connection;
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     public FamilyMemberListPanel(FamilyDatabase database) {
+        this.setConnection(database.getConnection());
         this.database = database;
         this.listModel = new DefaultListModel<>();
         this.memberList = new JList<>(listModel);
@@ -44,7 +55,7 @@ public class FamilyMemberListPanel extends JPanel {
                 updateFamilyMemberList();
             }
         });
-
+        
         // Add MouseListener to the list for handling clicks on family members
         memberList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -54,7 +65,8 @@ public class FamilyMemberListPanel extends JPanel {
                     int index = list.locationToIndex(evt.getPoint());
                     FamilyMember selectedMember = listModel.getElementAt(index);
                     // Show popup for editing the selected family member
-                    showEditPopup(selectedMember);
+                    System.out.println("Edit:"+selectedMember.getName());
+                    showPopupMenu(selectedMember);
                 }
             }
         });
@@ -69,13 +81,14 @@ public class FamilyMemberListPanel extends JPanel {
             listModel.addElement(member);
         }
     }
+        // Method to show a popup for editing the selected family member
 
-    // Method to show a popup for editing the selected family member
-    private void showEditPopup(FamilyMember member) {
-        // Implement the logic for editing the family member in a popup window
-        // You can use JOptionPane or create a custom popup dialog
-        JOptionPane.showMessageDialog(this, "Editing " + member.getName());
+    private void showPopupMenu(FamilyMember memberId) {
+        FamilyMemberPopupMenu popupMenu = new FamilyMemberPopupMenu( memberId.getId(), connection);
+        popupMenu.show(FamilyMemberListPanel.this, 0, getHeight());
     }
+
+
 
     // Method to create and return FamilyMemberListPanel
     public static FamilyMemberListPanel createFamilyMemberListPanel(FamilyDatabase database) {

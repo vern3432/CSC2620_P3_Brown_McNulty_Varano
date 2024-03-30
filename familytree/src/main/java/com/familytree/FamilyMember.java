@@ -96,6 +96,14 @@ public class FamilyMember {
         this.currentResidence = currentResidence;
     }
 
+    @Override
+    public String toString() {
+        return "FamilyMember [id=" + id + ", added=" + added + ", name=" + name + ", birthDate=" + birthDate
+                + ", deathDate=" + deathDate + ", isDeceased=" + isDeceased + ", currentResidence=" + currentResidence
+                + ", parents=" + parents + ", children=" + children + ", spouse=" + spouse + ", stackLayer="
+                + stackLayer + "]";
+    }
+
     // Setters
     public void setName(String name) {
         this.name = name;
