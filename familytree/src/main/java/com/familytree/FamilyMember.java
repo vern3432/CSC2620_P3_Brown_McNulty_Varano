@@ -9,6 +9,10 @@ public class FamilyMember {
     private int id;
     public boolean added = false;
 
+    
+    /** 
+     * @return int
+     */
     public int getId() {
         return id;
     }

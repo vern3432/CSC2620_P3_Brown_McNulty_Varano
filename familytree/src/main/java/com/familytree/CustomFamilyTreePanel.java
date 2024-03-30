@@ -134,10 +134,10 @@ private void establishConnections() {
         JButton button = new FamilyMemberButton( node,this.getConnection());
 
 
-        button.addActionListener(e -> {
-            // Show node-specific popup here
-            JOptionPane.showMessageDialog(CustomFamilyTreePanel.this, "Popup for " + nodeName);
-        });
+        // button.addActionListener(e -> {
+        //     // Show node-specific popup here
+        //     JOptionPane.showMessageDialog(CustomFamilyTreePanel.this, "Popup for " + nodeName);
+        // });
         return button;
     }
 

@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,15 @@ public class EventManagementPanel extends JPanel {
     private final List<Event> events;
     private final DefaultListModel<Event> listModel;
     private final JList<Event> eventList;
+    private Connection connection;
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
 
     public EventManagementPanel(FamilyDatabase database) {
         this.database = database;
@@ -49,9 +59,12 @@ public class EventManagementPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                 
                 // Implement logic for adding new event
-                addNewEvent();
+                addNewEvent(connection);
             }
+
+
         });
         buttonPanel.add(addButton);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -76,11 +89,12 @@ public class EventManagementPanel extends JPanel {
     }
 
     // Method to add a new event to the list and database
-    private void addNewEvent() {
+    private void addNewEvent(Connection connection) {
         // Implement logic for adding a new event
         // For example, show a dialog to input event details
         JOptionPane.showMessageDialog(this, "Adding a new event...");
-    }
+        NewEventForm form = new NewEventForm(connection);
+        form.setVisible(true);    }
 
     // Method to show a popup for editing the selected event
     private void showEditPopup(Event event) {
