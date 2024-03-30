@@ -2,8 +2,10 @@ package com.familytree;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class CustomFamilyTreePanel extends JPanel {
     private final ArrayList<ArrayList<Node>> nodes;
@@ -11,8 +13,18 @@ public class CustomFamilyTreePanel extends JPanel {
     private static final int VERTICAL_GAP = 100;
     private static final int PADDING_LEFT = 1000;
     private static final int PADDING_TOP = 50;
+    Connection connection;
 
-    public CustomFamilyTreePanel(List<List<Node>> initialNodes) {
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
+    public CustomFamilyTreePanel(List<List<Node>> initialNodes,Connection connection) {
+        this.setConnection(connection);
         nodes = new ArrayList<>();
 
         // Load nodes into their respective layers
@@ -111,15 +123,17 @@ private void establishConnections() {
     private void addNodesToPanel() {
         for (ArrayList<Node> level : nodes) {
             for (Node node : level) {
-                JButton button = createButton(node.getName());
+                JButton button = createButton(node.getName(), node);
                 button.setBounds(node.getX(), node.getY(), 100, 30);
                 add(button);
             }
         }
     }
 
-    private JButton createButton(String nodeName) {
-        JButton button = new JButton(nodeName);
+    private JButton createButton(String nodeName,Node node) {
+        JButton button = new FamilyMemberButton( node,this.getConnection());
+
+
         button.addActionListener(e -> {
             // Show node-specific popup here
             JOptionPane.showMessageDialog(CustomFamilyTreePanel.this, "Popup for " + nodeName);
@@ -154,13 +168,13 @@ private void establishConnections() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Create scroll pane
-        JScrollPane scrollPane = new JScrollPane(new CustomFamilyTreePanel(initialNodes));
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        // JScrollPane scrollPane = new JScrollPane(new CustomFamilyTreePanel(initialNodes));
+        // scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+        // scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
-        frame.getContentPane().add(scrollPane);
-        frame.pack();
-        frame.setLocationRelativeTo(null); // Center the JFrame on the screen
-        frame.setVisible(true);
+        // frame.getContentPane().add(scrollPane);
+        // frame.pack();
+        // frame.setLocationRelativeTo(null); // Center the JFrame on the screen
+        // frame.setVisible(true);
     }
 }

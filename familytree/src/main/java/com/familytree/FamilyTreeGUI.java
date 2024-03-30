@@ -577,7 +577,7 @@ public class FamilyTreeGUI extends JFrame {
         System.out.println(familyTreeRows.size());
         printFamilyTree(familyTreeRows);
         List<List<Node>> nodeStructure = createNodeshelf(familyTreeRows, members, db);
-        CustomFamilyTreePanel panelTree = new CustomFamilyTreePanel(nodeStructure);
+        CustomFamilyTreePanel panelTree = new CustomFamilyTreePanel(nodeStructure,this.db.getConnection());
 
         // Create a JScrollPane and add the custom tree panel to it
         JScrollPane scrollPane = new JScrollPane(panelTree);
