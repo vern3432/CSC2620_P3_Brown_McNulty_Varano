@@ -8,9 +8,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -39,6 +41,7 @@ public class FamilyTreeGUI extends JFrame {
     FamilyTreeContainer TreeContainer;
 
     public FamilyTreeGUI() {
+
         TreeContainer = new FamilyTreeContainer(db.getAllFamilyMembers(), db.getRelationships());
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -46,7 +49,7 @@ public class FamilyTreeGUI extends JFrame {
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JScrollPane familyTreePanel = createFamilyTreePanel();
+        JScrollPane familyTreePanel = createFamilyTreePanel(this.db.getConnection());
         JPanel ganttChartPanel = createGanttChartPanel();
         JPanel familyMemberListPanel = createFamilyMemberListPanel();
         JPanel eventManagementPanel = createEventManagementPanel();
@@ -92,6 +95,7 @@ public class FamilyTreeGUI extends JFrame {
         setJMenuBar(menuBar);
 
         setVisible(true);
+
     }
 
     public ArrayList<ArrayList<FamilyMember>> generateFamilyTreeRows(HashMap<Integer, FamilyMember> members) {
@@ -121,64 +125,6 @@ public class FamilyTreeGUI extends JFrame {
         for (Integer childId : member.getChildren()) {
             FamilyMember child = members.get(childId);
             traverseFamilyTree(child, members, visited, row);
-        }
-    }
-
-    private static ArrayList<ArrayList<FamilyMember>> adjustRows(ArrayList<ArrayList<FamilyMember>> familyTreeRows,
-            HashMap<Integer, FamilyMember> members) {
-        ArrayList<ArrayList<FamilyMember>> adjustedRows = new ArrayList<>();
-        Set<Integer> visited = new HashSet<>();
-
-        for (ArrayList<FamilyMember> row : familyTreeRows) {
-            ArrayList<FamilyMember> adjustedRow = new ArrayList<>();
-
-            for (FamilyMember member : row) {
-                if (!visited.contains(member.getId())) {
-                    traverseAndAddChildren(member, members, visited, adjustedRow, adjustedRows);
-                }
-            }
-
-            adjustedRows.add(adjustedRow);
-        }
-
-        return adjustedRows;
-    }
-
-    // Helper method to traverse and add children recursively
-    private static void traverseAndAddChildren(FamilyMember member, HashMap<Integer, FamilyMember> members,
-            Set<Integer> visited, ArrayList<FamilyMember> adjustedRow,
-            ArrayList<ArrayList<FamilyMember>> adjustedRows) {
-        if (member == null || visited.contains(member.getId())) {
-            return;
-        }
-
-        visited.add(member.getId());
-
-        // Check if the member's parent is already in the adjusted row
-        boolean hasParentInRow = false;
-        for (Integer parentId : member.getParents()) {
-            FamilyMember parent = members.get(parentId);
-            if (isParentInRow(parent, adjustedRow)) {
-                hasParentInRow = true;
-                break;
-            }
-        }
-
-        // If the member's parent is not in the row, add the member to a new row
-        if (!hasParentInRow || adjustedRow.isEmpty()) {
-            ArrayList<FamilyMember> newRow = new ArrayList<>();
-            newRow.add(member);
-            adjustedRows.add(newRow);
-            adjustedRow = newRow;
-        } else {
-            // Otherwise, add the member to the current row
-            adjustedRow.add(member);
-        }
-
-        // Recursively add children
-        for (Integer childId : member.getChildren()) {
-            FamilyMember child = members.get(childId);
-            traverseAndAddChildren(child, members, visited, adjustedRow, adjustedRows);
         }
     }
 
@@ -297,7 +243,7 @@ public class FamilyTreeGUI extends JFrame {
                     }
                     if (found == false) {
                         moveFamilyMember(familyTreeRows, x + 1, y + 1);
-                        System.out.println(" moved.");
+                        System.out.println(" moved.to:");
                         y = -1;
                         x = 1;
 
@@ -322,85 +268,326 @@ public class FamilyTreeGUI extends JFrame {
     }
 
     public List<List<Node>> createNodeshelf(ArrayList<ArrayList<FamilyMember>> familyTreeRows,
-            HashMap<Integer, FamilyMember> members) {
-                List<List<Node>> myList = new ArrayList<>();
-                ArrayList<ArrayList<Node>> nodeList = new ArrayList<>();
+            HashMap<Integer, FamilyMember> members, Connection connection) {
+        List<List<Node>> myList = new ArrayList<>();
+        ArrayList<ArrayList<Node>> nodeList = new ArrayList<>();
 
-                HashMap<Integer, Node> nodesMap = new HashMap<>();
+        HashMap<Integer, Node> nodesMap = new HashMap<>();
 
-                // Loop through the members HashMap and generate Node objects
-                for (Integer memberId : members.keySet()) {
-                    FamilyMember familyMember = members.get(memberId);
-                    Node node = new Node(familyMember.getName());
-                    // Assuming you have methods getX(), getY(), isCouple(), etc. in FamilyMember
-                    // Assuming you have a setter method setMember() in Node
-                    node.setMember(familyMember);
-                    // Add the Node to the nodesMap
-                    nodesMap.put(memberId, node);
+        // Loop through the members HashMap and generate Node objects
+        for (Integer memberId : members.keySet()) {
+            FamilyMember familyMember = members.get(memberId);
+            if (familyMember.getChildren().contains(-5000) || familyMember.getParents().contains(-5000)) {
+                familyMember.processRelationships(connection);
+
+            }
+
+            Node node = new Node(familyMember.getName());
+            // Assuming you have methods getX(), getY(), isCouple(), etc. in FamilyMember
+            // Assuming you have a setter method setMember() in Node
+            node.setMember(familyMember);
+            // Add the Node to the nodesMap
+            nodesMap.put(memberId, node);
+        }
+        for (Integer nodeId : nodesMap.keySet()) {
+            ArrayList children = nodesMap.get(nodeId).getMember().getChildren();
+            for (int x = 0; x < children.size(); x++) {
+                nodesMap.get(nodeId).addConnection(nodesMap.get(x));
+
+            }
+            ArrayList parents = nodesMap.get(nodeId).getMember().getChildren();
+            for (int x = 0; x < parents.size(); x++) {
+                nodesMap.get(nodeId).addConnection(nodesMap.get(x));
+
+            }
+        }
+        for (ArrayList<FamilyMember> row : familyTreeRows) {
+            ArrayList<Node> nodeRow = new ArrayList<>();
+            for (FamilyMember member : row) {
+                int memberId = member.getId();
+                if (nodesMap.containsKey(memberId)) {
+                    Node node = nodesMap.get(memberId);
+                    nodeRow.add(node);
                 }
-                for (Integer nodeId : nodesMap.keySet()) {
-                    ArrayList children=nodesMap.get(nodeId).getMember().getChildren();
-                    for(int x=0;x<children.size();x++){
-                        nodesMap.get(nodeId).addConnection(nodesMap.get(x));
-                        
-                    }
-            ArrayList parents=nodesMap.get(nodeId).getMember().getChildren();
-                    for(int x=0;x<parents.size();x++){
-                        nodesMap.get(nodeId).addConnection(nodesMap.get(x));
-                        
-                    }
-                }
-                for (ArrayList<FamilyMember> row : familyTreeRows) {
-                    ArrayList<Node> nodeRow = new ArrayList<>();
-                    for (FamilyMember member : row) {
-                        int memberId = member.getId();
-                        if (nodesMap.containsKey(memberId)) {
-                            Node node = nodesMap.get(memberId);
-                            nodeRow.add(node);
-                        }
-                    }
-                    nodeList.add(nodeRow);
-                }
-                myList = new ArrayList<>(nodeList);
-
-            
-        
-
+            }
+            nodeList.add(nodeRow);
+        }
+        myList = new ArrayList<>(nodeList);
 
         return myList;
     }
 
-    public JScrollPane createFamilyTreePanel() {
+    public static int findRowAbove(ArrayList<ArrayList<FamilyMember>> familyTreeRows, int rowIndex,
+            final int memberId) {
+        // Iterate through rows from the specified row index - 1 (going upwards)
+        for (int i = rowIndex - 1; i >= 0; i--) {
+            // Get the current row
+            ArrayList<FamilyMember> row = familyTreeRows.get(i);
+            // Iterate through family members in the current row
+            for (FamilyMember member : row) {
+                // Check if the member's IDs match the specified member's ID
+                if (member.getParents().contains(memberId)) {
+                    // Return the index of the row where the matching member was found
+                    System.out.println(
+                            "Returning:" + i + " from " + member.getName() + " with array: " + member.getParents());
+                    return i;
+                }
+            }
+        }
+        // If no match is found, return -1
+        return -1;
+    }
+
+    // moveFamilyMember(ArrayList<ArrayList<FamilyMember>> familyGrid,int x, int y)
+
+    public ArrayList<ArrayList<FamilyMember>> generateFamilyTree(HashMap<Integer, FamilyMember> familyMap) {
+        ArrayList<ArrayList<FamilyMember>> familyTreeLayers = new ArrayList<>();
+
+        // First, identify individuals without parents
+        ArrayList<FamilyMember> topLevelMembers = new ArrayList<>();
+        for (FamilyMember member : familyMap.values()) {
+            if (member.getParents().isEmpty()) {
+                topLevelMembers.add(member);
+            }
+        }
+        familyTreeLayers.add(topLevelMembers);
+
+        // Iterate through each layer of the family tree
+        int layerIndex = 0;
+        while (layerIndex < familyTreeLayers.size()) {
+            ArrayList<FamilyMember> currentLayer = familyTreeLayers.get(layerIndex);
+            ArrayList<FamilyMember> nextLayer = new ArrayList<>();
+            // Iterate through each member in the current layer
+            for (FamilyMember member : currentLayer) {
+                // Add children of the current member to the next layer
+                for (int childId : member.getChildren()) {
+                    FamilyMember childMember = familyMap.get(childId);
+                    boolean alreadyAdded = false;
+                    // Check if the child has been added to a previous layer
+                    for (int i = 0; i < familyTreeLayers.size(); i++) {
+                        ArrayList<FamilyMember> layer = familyTreeLayers.get(i);
+                        for (FamilyMember existingMember : layer) {
+                            if (existingMember.getId() == childMember.getId()) {
+                                alreadyAdded = true;
+                                break;
+                            }
+                        }
+                        if (alreadyAdded) {
+                            break;
+                        }
+                    }
+                    // If the child hasn't been added before, add it to the next layer
+                    if (!alreadyAdded) {
+                        nextLayer.add(childMember);
+                    }
+                }
+            }
+            // Add the next layer if it's not empty
+            if (!nextLayer.isEmpty()) {
+                familyTreeLayers.add(nextLayer);
+            }
+            layerIndex++;
+        }
+
+        return familyTreeLayers;
+    }
+
+    public ArrayList<ArrayList<FamilyMember>> organizeFamilyTreeRows(
+            ArrayList<ArrayList<FamilyMember>> familyTreeRows) {
+        // Sort each row based on generation
+        for (ArrayList<FamilyMember> row : familyTreeRows) {
+            Collections.sort(row, Comparator.comparingInt(FamilyMember::getStackLayer));
+        }
+
+        // Iterate through each row and organize spouses
+        for (int i = 0; i < familyTreeRows.size(); i++) {
+            ArrayList<FamilyMember> row = familyTreeRows.get(i);
+            HashMap<Integer, FamilyMember> spouseMap = new HashMap<>();
+
+            // Group spouses by ID
+            for (FamilyMember member : row) {
+                if (member.getSpouse() != -1) {
+                    spouseMap.put(member.getSpouse(), member);
+                }
+            }
+
+            // Find spouses with higher placement
+            for (Map.Entry<Integer, FamilyMember> entry : spouseMap.entrySet()) {
+                FamilyMember spouse = entry.getValue();
+                int spouseIndex = row.indexOf(spouse);
+                if (spouseIndex != -1) {
+                    ArrayList<FamilyMember> higherGenerationRow = findHigherGenerationRow(familyTreeRows, spouseIndex,
+                            i);
+                    if (higherGenerationRow != null) {
+                        // Move spouse to the higher generation row
+                        row.remove(spouse);
+                        higherGenerationRow.add(spouse);
+                    }
+                }
+            }
+        }
+
+        return familyTreeRows;
+    }
+
+    private ArrayList<FamilyMember> findHigherGenerationRow(ArrayList<ArrayList<FamilyMember>> familyTreeRows,
+            int spouseIndex, int currentRowIndex) {
+        // Start from the row above the current row
+        for (int i = currentRowIndex - 1; i >= 0; i--) {
+            ArrayList<FamilyMember> higherGenerationRow = familyTreeRows.get(i);
+            if (!higherGenerationRow.isEmpty()) {
+                return higherGenerationRow;
+            }
+        }
+        return null;
+    }
+
+    private static ArrayList<ArrayList<FamilyMember>> buildFamilyTree(HashMap<Integer, FamilyMember> members) {
+        ArrayList<ArrayList<FamilyMember>> familyTree = new ArrayList<>();
+        Set<Integer> visited = new HashSet<>();
+
+        // Identify individuals without children and place them in the bottom row
+        ArrayList<FamilyMember> bottomRow = new ArrayList<>();
+        for (FamilyMember member : members.values()) {
+            if (member.getChildren().contains(-5000)) {
+                bottomRow.add(member);
+                visited.add(member.getId());
+            }
+        }
+        familyTree.add(bottomRow);
+
+        // Build the rest of the family tree
+        while (true) {
+            ArrayList<FamilyMember> currentRow = new ArrayList<>();
+
+            // Place parents in the row above their children
+            for (FamilyMember parent : familyTree.get(familyTree.size() - 1)) {
+                for (int parentId : parent.getParents()) {
+                    if (!visited.contains(parentId)) {
+                        FamilyMember parentMember = members.get(parentId);
+                        if (parentMember != null) {
+                            currentRow.add(parentMember);
+                            visited.add(parentId);
+                        }
+                    }
+                }
+            }
+
+            // If there are no more individuals to add, break out of the loop
+            if (currentRow.isEmpty()) {
+                break;
+            }
+
+            // Add the current row to the family tree
+            familyTree.add(currentRow);
+        }
+
+        // Reverse the family tree so that the top row is at index 0
+        Collections.reverse(familyTree);
+
+        return familyTree;
+    }
+
+    public ArrayList<ArrayList<FamilyMember>> recurse(ArrayList<ArrayList<FamilyMember>> familyTreeRows){
+
+
+
+
+
+        return familyTreeRows;
+
+
+
+    }
+
+    public static ArrayList<ArrayList<FamilyMember>> moveFamilyMembers(ArrayList<ArrayList<FamilyMember>> familyGrid, int x, int y) {
+        if (x < 1 || y < 1 || x > familyGrid.size() || y > familyGrid.get(x - 1).size()) {
+            System.out.println("Invalid coordinates.");
+            return familyGrid;
+        }
+
+        FamilyMember currentMember = familyGrid.get(x - 1).get(y - 1);
+        moveFamilyMemberRecursive(familyGrid, x, y, currentMember);
+        return familyGrid;
+    }
+
+    private static void moveFamilyMemberRecursive(ArrayList<ArrayList<FamilyMember>> familyGrid, int x, int y, FamilyMember currentMember) {
+        boolean moved = false; // Flag to track if any member is moved in this iteration
+        do {
+            moved = false; // Reset moved flag for each iteration
+            if (x <= 1)
+                return; // Base case: reached the first row, stop recursion
+
+            ArrayList<FamilyMember> previousRow = familyGrid.get(x - 2);
+            for (int i = 0; i < previousRow.size(); i++) {
+                FamilyMember prevMember = previousRow.get(i);
+                if (prevMember != null && prevMember.getParents().contains(currentMember.getId())) {
+                    previousRow.set(i, null);
+                    familyGrid.get(x - 2).add(prevMember);
+                    moved = true; // Set moved flag to true since a member is moved
+                    moveFamilyMemberRecursive(familyGrid, x - 1, i + 1, prevMember);
+                    break; // Move only one member up in each iteration
+                }
+            }
+        } while (moved); // Continue iterating until no more movements are made
+    }
+
+    @SuppressWarnings("unused")
+    public JScrollPane createFamilyTreePanel(Connection db) {
+        System.out.println(this.TreeContainer.getMembers().toString());
         HashMap<Integer, FamilyMember> members = this.TreeContainer.getMembers();
 
-        ArrayList<ArrayList<FamilyMember>> familyTreeRows = generateFamilyTreeRows(members);
-        familyTreeRows = adjustRows(familyTreeRows, members);
-        familyTreeRows = adjustSpouse(familyTreeRows, members);
-        familyTreeRows = removeEmptyArrays(familyTreeRows);
-        familyTreeRows = adjustParents(familyTreeRows, members);
+        ArrayList<ArrayList<FamilyMember>> familyTreeRows = buildFamilyTree(members);
+
+        familyTreeRows = moveFamilyMembers(familyTreeRows, 3, 1);
         familyTreeRows = removeNullValues(familyTreeRows);
         familyTreeRows = removeEmptyArrays(familyTreeRows);
         familyTreeRows = adjustSpouse(familyTreeRows, members);
+
+        if (true == false) {
+            familyTreeRows = moveFamilyMember(familyTreeRows, 3, 2);
+            familyTreeRows = removeNullValues(familyTreeRows);
+            familyTreeRows = removeEmptyArrays(familyTreeRows);
+            familyTreeRows = adjustSpouse(familyTreeRows, members);
+            familyTreeRows = moveFamilyMember(familyTreeRows, 3, 2);
+            familyTreeRows = removeNullValues(familyTreeRows);
+            familyTreeRows = removeEmptyArrays(familyTreeRows);
+            familyTreeRows = adjustSpouse(familyTreeRows, members);
+            familyTreeRows = moveFamilyMember(familyTreeRows, 3, 2);
+            familyTreeRows = removeNullValues(familyTreeRows);
+            familyTreeRows = removeEmptyArrays(familyTreeRows);
+            familyTreeRows = adjustSpouse(familyTreeRows, members);
+        }
+
+        // familyTreeRows=moveFamilyMembers(familyTreeRows);
+        // familyTreeRows = adjustRows(familyTreeRows, members);
+        // familyTreeRows = adjustSpouse(familyTreeRows, members);
+        // // familyTreeRows = removeEmptyArrays(familyTreeRows);
+        // familyTreeRows = adjustParents(familyTreeRows, members);
+
+        // familyTreeRows = removeNullValues(familyTreeRows);
+        // familyTreeRows = removeEmptyArrays(familyTreeRows);
+        // int foundRowIndex = findRowAbove(familyTreeRows, 1, 4);
+        // familyTreeRows = adjustChildren(familyTreeRows);
+        // System.out.println("rw above:"+foundRowIndex);
+        familyTreeRows = removeNullValues(familyTreeRows);
+        familyTreeRows = removeEmptyArrays(familyTreeRows);
+        // familyTreeRows = adjustSpouse(familyTreeRows, members);
+
         System.out.println(familyTreeRows.size());
         printFamilyTree(familyTreeRows);
-        List<List<Node>> nodeStructure = createNodeshelf(familyTreeRows, members);
+        List<List<Node>> nodeStructure = createNodeshelf(familyTreeRows, members, db);
         CustomFamilyTreePanel panelTree = new CustomFamilyTreePanel(nodeStructure);
-        
+
         // Create a JScrollPane and add the custom tree panel to it
         JScrollPane scrollPane = new JScrollPane(panelTree);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        
+
         // You may need to adjust the preferred size of the scroll pane if necessary
         // scrollPane.setPreferredSize(new Dimension(width, height));
 
         return scrollPane;
-    }
-
-    @Override
-    public void paint(Graphics arg0) {
-        // TODO Auto-generated method stub
-        super.paint(arg0);
     }
 
     private JPanel createGanttChartPanel() {
@@ -408,7 +595,7 @@ public class FamilyTreeGUI extends JFrame {
         panel.setLayout(new BorderLayout());
 
         // Retrieve all deceased family members
-        ArrayList<FamilyMember> deceasedMembers = db.getAllDeceasedFamilyMembers();
+        ArrayList<FamilyMember> deceasedMembers = FamilyDatabase.getAllDeceasedFamilyMembers();
 
         // Create a task series for the Gantt chart
         TaskSeries taskSeries = new TaskSeries("Deceased Family Members");
