@@ -1,8 +1,8 @@
 -- Table Clients
 
 CREATE TABLE Clients (
-  client_id INTEGER PRIMARY KEY,
-  client_name TEXT
+  client_id INTEGER PRIMARY KEY UNIQUE,
+  client_name TEXT COLLATE NOCASE
 );
 
 -- Table FamilyMembers
@@ -25,6 +25,8 @@ CREATE TABLE Relationships (
   relation_type TEXT,
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id),
   FOREIGN KEY (related_member_id) REFERENCES FamilyMembers(member_id)
+
+  
 );
 
 -- Table Addresses
