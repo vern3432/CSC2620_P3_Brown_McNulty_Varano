@@ -1,10 +1,8 @@
 -- Table Clients
-
 CREATE TABLE Clients (
   client_id INTEGER PRIMARY KEY UNIQUE,
   client_name TEXT COLLATE NOCASE
 );
-
 -- Table FamilyMembers
 CREATE TABLE FamilyMembers (
   member_id INTEGER PRIMARY KEY,
@@ -16,7 +14,6 @@ CREATE TABLE FamilyMembers (
   client_id INTEGER,
   FOREIGN KEY (client_id) REFERENCES Clients(client_id)
 );
-
 -- Table Relationships
 CREATE TABLE Relationships (
   relationship_id INTEGER PRIMARY KEY,
@@ -25,25 +22,21 @@ CREATE TABLE Relationships (
   relation_type TEXT,
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id),
   FOREIGN KEY (related_member_id) REFERENCES FamilyMembers(member_id)
-
-  
 );
-
 -- Table Addresses
 CREATE TABLE Addresses (
   address_id INTEGER PRIMARY KEY,
   city TEXT,
-  member_id INTEGER,
+  state TEXT,
+,memberId
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
 );
-
 -- Table Event
 CREATE TABLE Event (
   event_id INTEGER PRIMARY KEY,
   event_date DATE,
   event_type TEXT
 );
-
 -- Table EventAttendee
 CREATE TABLE EventAttendee (
   event_id INTEGER,
@@ -51,32 +44,3 @@ CREATE TABLE EventAttendee (
   FOREIGN KEY (event_id) REFERENCES Event(event_id),
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
