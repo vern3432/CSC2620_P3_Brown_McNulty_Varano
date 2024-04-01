@@ -21,7 +21,6 @@ public class FamilyMember {
     private Date birthDate;
     private Date deathDate;
     private boolean isDeceased;
-    private String currentResidence;
     /**
      *
      */
@@ -93,13 +92,12 @@ public class FamilyMember {
         this.birthDate = birthDate;
         this.deathDate = deathDate;
         this.isDeceased = isDeceased;
-        this.currentResidence = currentResidence;
     }
 
     @Override
     public String toString() {
         return "FamilyMember [id=" + id + ", added=" + added + ", name=" + name + ", birthDate=" + birthDate
-                + ", deathDate=" + deathDate + ", isDeceased=" + isDeceased + ", currentResidence=" + currentResidence
+                + ", deathDate=" + deathDate + ", isDeceased=" + isDeceased
                 + ", parents=" + parents + ", children=" + children + ", spouse=" + spouse + ", stackLayer="
                 + stackLayer + "]";
     }
@@ -121,10 +119,6 @@ public class FamilyMember {
         isDeceased = deceased;
     }
 
-    public void setCurrentResidence(String currentResidence) {
-        this.currentResidence = currentResidence;
-    }
-
     // Getters
     public String getName() {
         return name;
@@ -140,10 +134,6 @@ public class FamilyMember {
 
     public boolean isDeceased() {
         return isDeceased;
-    }
-
-    public String getCurrentResidence() {
-        return currentResidence;
     }
 
     // System.out.println(FamilyDatabase.findRelationshipsByName("Sally

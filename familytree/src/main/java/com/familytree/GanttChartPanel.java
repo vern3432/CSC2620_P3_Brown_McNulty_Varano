@@ -11,6 +11,7 @@ import org.jfree.data.gantt.TaskSeriesCollection;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -18,26 +19,21 @@ import java.util.List;
 public class GanttChartPanel extends JPanel {
 
     private static final String ERROR_FAILED_TO_RETRIEVE = "Failed to retrieve all family members, please try again later" ;
-    private final FamilyDatabase database;
-    private final FamilyDataAccess familyDataAccess;
-    
 
-    public GanttChartPanel(FamilyDatabase database) {
-        this.database = database;
-        this.familyDataAccess = new FamilyDataAccess(FamilyDatabase.getConnection());
+    public GanttChartPanel(Connection connection) {
         try {
-            initialize();
+            initialize(connection);
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, ERROR_FAILED_TO_RETRIEVE, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void initialize() throws SQLException {
+    private void initialize(Connection connection) throws SQLException {
         setLayout(new BorderLayout());
 
         // Retrieve all family members sorted by birthday
-        List<FamilyMember> members = familyDataAccess.getAllSortedByBirthday();
+        List<FamilyMember> members = FamilyDataAccess.getAllSortedByBirthday(connection);
 
         // Create a task series for the Gantt chart
         TaskSeriesCollection dataset = getTaskSeriesCollection(members);

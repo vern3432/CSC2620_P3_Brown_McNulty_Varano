@@ -36,10 +36,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class FamilyTreeGUI extends JFrame {
+
+    private final Connection connection;
     FamilyDatabase db = new FamilyDatabase();
     FamilyTreeContainer TreeContainer;
 
-    public FamilyTreeGUI() {
+    public FamilyTreeGUI(Connection connection) {
+
+        this.connection = connection;
 
         TreeContainer = new FamilyTreeContainer(db.getAllFamilyMembers(), db.getRelationships());
         setTitle("Family Tree Application");
@@ -597,7 +601,7 @@ public class FamilyTreeGUI extends JFrame {
     }
 
     private JPanel createGanttChartPanel() {
-        return new GanttChartPanel(this.db);
+        return new GanttChartPanel(this.connection);
     }
 
     public JPanel createFamilyMemberListPanel() {
@@ -615,9 +619,5 @@ public class FamilyTreeGUI extends JFrame {
         EventManagementPanel eventManagementPanel = new EventManagementPanel(database);
         panel.add(eventManagementPanel, BorderLayout.CENTER);
         return panel;
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new FamilyTreeGUI());
     }
 }
