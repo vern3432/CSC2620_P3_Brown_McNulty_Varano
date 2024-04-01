@@ -32,35 +32,42 @@ public class TextFileParser {
     public static void main(String[] args) throws IOException, ParseException {
 
         InputStream inputStream = TextFileParser.class.getClassLoader().getResourceAsStream("data.txt");
-        File file = convert(inputStream, "data");
-        printParsedData(parseTextFile(file));
+        printParsedData(parseTextFile(inputStream));
         FamilyDatabase db = new FamilyDatabase();
-        db.addParsedDataToDatabase(parseTextFile(file));
+        db.addParsedDataToDatabase(parseTextFile(inputStream));
 
     }
 
-    public static List<String[]> parseTextFile(File file) {
+    public static List<String[]> parseTextFile(InputStream file) {
         List<String[]> parsedData = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.contains(", ")) {
                     System.out.println(line);
 
                     String[] tokens = line.split(", ");
-                    if (tokens.length == 3 && tokens[2].matches("\\d{1,2} \\d{1,2} \\d{4}")) {
-                        parsedData.add(new String[] { "Dead Person", line });
-                    } else if (tokens.length == 3) {
-                        parsedData.add(new String[] { "Relationship", line });
-                    } else if (tokens.length == 2 && tokens[1].equals("marriedto")) {
-                        parsedData.add(new String[] { "Relationship", line });
-                    } else if (tokens.length == 2 && tokens[1].equals("parentof")) {
-                        parsedData.add(new String[] { "Relationship", line });
-                    } else {
-                        parsedData.add(new String[] { "Address", line });
+                    switch (tokens.length) {
+                        case 4:
+                            parsedData.add(new String[]{"Address", line});
+                            break;
+                        case 3:
+                            if (tokens[2].matches("\\d{1,2} \\d{1,2} \\d{4}")) {
+                                parsedData.add(new String[]{"Dead Person", line});
+                            } else {
+                                parsedData.add(new String[]{"Relationship", line});
+                            }
+                            break;
+                        case 2:
+                            if (tokens[1].equals("marriedto")) {
+                                parsedData.add(new String[]{"Relationship", line});
+                            } else if (tokens[1].equals("parentof")) {
+                                parsedData.add(new String[]{"Relationship", line});
+                            }
+                            break;
+                        default:
+                            System.err.println("Invalid line: " + line);
                     }
-                } else {
-                    // parsedData.add(new String[]{"FamilyMember", line});
                 }
             }
         } catch (IOException e) {

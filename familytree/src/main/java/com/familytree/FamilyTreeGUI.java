@@ -6,8 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -74,8 +73,15 @@ public class FamilyTreeGUI extends JFrame {
 
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    List<String[]> parsedData = TextFileParser.parseTextFile(selectedFile);
-                    // FamilyDatabase.addParsedDataToDatabase(parsedData);
+
+                    try {
+                        List<String[]> parsedData = TextFileParser.parseTextFile(new FileInputStream(selectedFile));
+                        // FamilyDatabase.addParsedDataToDatabase(parsedData);
+                    } catch (FileNotFoundException ex) {
+                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "selected file was not found", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+
                     System.out.println("Data imported successfully.");
                 }
             }
@@ -591,41 +597,7 @@ public class FamilyTreeGUI extends JFrame {
     }
 
     private JPanel createGanttChartPanel() {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BorderLayout());
-
-        // Retrieve all deceased family members
-        ArrayList<FamilyMember> deceasedMembers = FamilyDatabase.getAllDeceasedFamilyMembers();
-
-        // Create a task series for the Gantt chart
-        TaskSeries taskSeries = new TaskSeries("Deceased Family Members");
-        for (FamilyMember member : deceasedMembers) {
-            // Create a task for each deceased family member
-            Task task = new Task(member.getName(), member.getDeathDate(), member.getDeathDate());
-            taskSeries.add(task);
-        }
-
-        // Create a dataset for the Gantt chart
-        TaskSeriesCollection dataset = new TaskSeriesCollection();
-        dataset.add(taskSeries);
-
-        // Create the Gantt chart
-        JFreeChart chart = ChartFactory.createGanttChart(
-                "Deceased Family Members Gantt Chart", // Chart title
-                "Members", // X-axis label
-                "Time", // Y-axis label
-                dataset, // Dataset
-                false, // Include legend
-                true, // Include tooltips
-                false // Include URLs
-        );
-
-        // Customize chart appearance
-        // Create a chart panel to display the chart
-        ChartPanel chartPanel = new ChartPanel(chart);
-        panel.add(chartPanel, BorderLayout.CENTER);
-
-        return panel;
+        return new GanttChartPanel(this.db);
     }
 
     public JPanel createFamilyMemberListPanel() {

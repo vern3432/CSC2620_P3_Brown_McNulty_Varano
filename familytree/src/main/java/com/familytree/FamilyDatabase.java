@@ -522,13 +522,11 @@ public class FamilyDatabase {
         String name = tokens[0];
         String birthDate = tokens[1];
         String deathDate = tokens[2];
-
+        System.out.println("********* b: " + birthDate + ", d: " + deathDate);
 
         SimpleDateFormat formatter = new SimpleDateFormat("M d yyyy");
         Date bdate = formatter.parse(birthDate);
-        Date ddate = formatter.parse(birthDate);
-
-        String city = tokens[2];
+        Date ddate = formatter.parse(deathDate);
 
         String sql = "INSERT INTO FamilyMembers (member_id, name, birth_date, death_date, is_deceased) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
