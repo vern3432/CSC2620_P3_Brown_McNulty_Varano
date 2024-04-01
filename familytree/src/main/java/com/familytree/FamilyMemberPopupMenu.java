@@ -56,16 +56,39 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
     private void loadData() {
         try {
             // Fetch data from the database based on the memberId
-            String query = "SELECT fm.name, fm.current_residence FROM FamilyMembers fm WHERE fm.member_id = ?";
+            String query = "SELECT Addresses.city,FamilyMembers.name FROM Addresses JOIN FamilyMembers ON FamilyMembers.current_residence=Addresses.address_id WHERE FamilyMembers.member_id = ?";
+            String query_dead = "SELECT name FROM FamilyMembers WHERE FamilyMembers.member_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, memberId);
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     String name = resultSet.getString("name");
-                    String residence = resultSet.getString("current_residence");
+                    String residence = resultSet.getString("city");
+                    System.out.println(name);
+                    System.out.println(residence);
                     nameLabel.setText("Name: " + name);
                     addressLabel.setText("Address: " + residence);
+                } else {
+                    try (PreparedStatement statement2 = connection.prepareStatement(query_dead)) {
+                        System.out.println("Empty" + memberId);
+                        statement2.setInt(1, memberId);
+                        ResultSet resultSet2 = statement2.executeQuery();
+                        if (resultSet2.next()) {
+                            String name2 = resultSet2.getString("name");
+                            System.out.println(name2);
+                            nameLabel.setText("Name: " + name2);
+                            addressLabel.setText("Address: " + "N/A");
+
+                        } else {
+
+                            System.out.println("Empty_Second" + memberId);
+
+                        }
+                    }
                 }
+            } catch (SQLException e) {
+                System.out.println("caugt");
+                e.printStackTrace();
             }
 
             // Fetch relationships
@@ -86,6 +109,7 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
             editButton.setEnabled(true);
             submitButton.setEnabled(false);
         } catch (SQLException e) {
+            System.out.println("caugt");
             e.printStackTrace();
         }
     }

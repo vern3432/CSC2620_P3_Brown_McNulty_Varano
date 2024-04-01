@@ -24,6 +24,7 @@ public class EventManagementPanel extends JPanel {
     }
 
     public EventManagementPanel(FamilyDatabase database) {
+        this.connection=database.getConnection();
         this.database = database;
         this.events = new ArrayList<>();
         this.listModel = new DefaultListModel<>();
