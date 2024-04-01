@@ -95,6 +95,7 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
             }
 
             // Fetch relationships
+            boolean found_spouse=true;
             query = "SELECT r.relation_type, fm.name FROM Relationships r JOIN FamilyMembers fm ON r.related_member_id = fm.member_id WHERE r.member_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, memberId);
@@ -102,8 +103,17 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
                 StringBuilder relationships = new StringBuilder();
                 while (resultSet.next()) {
                     String relationType = resultSet.getString("relation_type");
+                    if (relationType=="marriedto") {
+                        found_spouse=true;
+                    }
                     String relatedName = resultSet.getString("name");
                     relationships.append(relationType).append(": ").append(relatedName).append("\n");
+                
+                
+                
+                
+                
+                
                 }
                 relationshipsArea.setText(relationships.toString());
             }

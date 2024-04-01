@@ -33,6 +33,7 @@ CREATE TABLE Relationships (
 CREATE TABLE Addresses (
   address_id INTEGER PRIMARY KEY,
   city TEXT,
+  res_state TEXT,
   member_id INTEGER,
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
 );

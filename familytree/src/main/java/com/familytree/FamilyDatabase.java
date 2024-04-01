@@ -591,12 +591,15 @@ public class FamilyDatabase {
         Date bdate = formatter.parse(birthDate);
 
         String city = tokens[2];
+        String state = tokens[3];
 
         // Inserting address
-        String addressSql = "INSERT INTO Addresses (address_id, city) VALUES (?, ?)";
+        String addressSql = "INSERT INTO Addresses (address_id, city,res_state) VALUES (?, ?,?)";
         try (PreparedStatement addressStmt = conn.prepareStatement(addressSql)) {
             addressStmt.setInt(1, nextAddressId);
             addressStmt.setString(2, city);
+            addressStmt.setString(3, state);
+
             addressStmt.executeUpdate();
         }
 
