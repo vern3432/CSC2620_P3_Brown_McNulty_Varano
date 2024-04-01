@@ -16,7 +16,7 @@ public class TextFileParser {
 
     public static File convert(InputStream inputStream, String fileName) throws IOException {
         File tempFile = File.createTempFile(fileName, ".tmp");
-        tempFile.deleteOnExit(); // Delete the temporary file when the JVM exits
+        // tempFile.deleteOnExit(); // Delete the temporary file when the JVM exits
 
         try (FileOutputStream outputStream = new FileOutputStream(tempFile)) {
             byte[] buffer = new byte[1024];
@@ -32,12 +32,13 @@ public class TextFileParser {
     public static void main(String[] args) throws IOException, ParseException {
 
         InputStream inputStream = TextFileParser.class.getClassLoader().getResourceAsStream("data.txt");
-        printParsedData(parseTextFile(inputStream));
+        List<String[]> parsedData = parseTextFile(inputStream);
+        printParsedData(parsedData);
         FamilyDatabase db = new FamilyDatabase();
-        db.addParsedDataToDatabase(parseTextFile(inputStream));
-
+        db.addParsedDataToDatabase(parsedData);
     }
 
+    
     public static List<String[]> parseTextFile(InputStream file) {
         List<String[]> parsedData = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file))) {
