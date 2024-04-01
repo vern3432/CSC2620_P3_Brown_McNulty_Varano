@@ -45,11 +45,13 @@ public class EventManagementPanel extends JPanel {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 JList<Event> list = (JList<Event>) evt.getSource();
                 if (evt.getClickCount() == 2) {
+                    int x = evt.getX(); // Get x position
+                    int y = evt.getY();
                     // Double-click detected
                     int index = list.locationToIndex(evt.getPoint());
                     Event selectedEvent = listModel.getElementAt(index);
                     // Show popup for editing the selected event
-                    showEditPopup(selectedEvent);
+                    showEditPopup(selectedEvent,x,y);
                 }
             }
         });
@@ -98,8 +100,11 @@ public class EventManagementPanel extends JPanel {
         form.setVisible(true);    }
 
     // Method to show a popup for editing the selected event
-    private void showEditPopup(Event event) {
+    private void showEditPopup(Event event,int x, int y) {
+        int event_id=event.getEventId();
         // Implement logic for editing the event in a popup window
-        JOptionPane.showMessageDialog(this, "Editing event: " + event.getEventType());
+        EventPopupMenu popupMenu=new EventPopupMenu(event_id,this.getConnection());
+        popupMenu.show(EventManagementPanel.this, x, y);
+        // JOptionPane.showMessageDialog(this, "Editing event: " + event.getEventType());
     }
 }
