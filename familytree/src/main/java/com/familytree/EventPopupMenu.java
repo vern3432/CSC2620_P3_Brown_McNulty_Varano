@@ -97,8 +97,7 @@ public class EventPopupMenu extends JPopupMenu {
             e.printStackTrace();
         }
     }
-
-    private void addAttendee() {
+    public void addAttendee2() {
         try {
             // Fetch all family members to populate the dropdown menu
             String query = "SELECT member_id, name, birth_date FROM FamilyMembers";
@@ -152,4 +151,78 @@ public class EventPopupMenu extends JPopupMenu {
             e.printStackTrace();
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private void addAttendee() {
+        try {
+            // Fetch all family members to populate the dropdown menu
+            String query = "SELECT member_id, name, birth_date FROM FamilyMembers";
+            try (PreparedStatement statement = this.getConnection().prepareStatement(query)) {
+                ResultSet resultSet = statement.executeQuery();
+                
+                // Create a new JFrame for displaying options
+                JFrame frame = new JFrame("Select Family Member");
+                frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                JPanel panel = new JPanel();
+                panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    
+                // Populate the panel with options
+                while (resultSet.next()) {
+                    int memberId = resultSet.getInt("member_id");
+                    String name = resultSet.getString("name");
+                    String birthDate = resultSet.getString("birth_date");
+                    JMenuItem menuItem = new JMenuItem(name + " (" + birthDate + ")");
+                    menuItem.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            // Print the selected family member
+                            System.out.println("Selected: " + name + " (" + birthDate + ")");
+                            
+                            // Add the selected family member as an attendee to the event
+                            try {
+                                String insertQuery = "INSERT INTO EventAttendee (event_id, member_id) VALUES (?, ?)";
+                                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                                insertStatement.setInt(1, eventId);
+                                insertStatement.setInt(2, memberId);
+                                insertStatement.executeUpdate();
+                                
+                                // Reload data after adding attendee
+                                loadData();
+                            } catch (SQLException ex) {
+                                ex.printStackTrace();
+                            }
+                            frame.dispose(); // Close the window after selection
+                        }
+                    });
+                    panel.add(menuItem);
+                }
+    
+                // Add panel to frame and display
+                frame.getContentPane().add(panel);
+                frame.pack();
+                frame.setLocationRelativeTo(null); // Center the frame on the screen
+                frame.setVisible(true);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
 }
