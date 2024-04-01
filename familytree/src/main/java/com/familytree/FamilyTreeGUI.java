@@ -45,7 +45,7 @@ public class FamilyTreeGUI extends JFrame {
         TreeContainer = new FamilyTreeContainer(db.getAllFamilyMembers(), db.getRelationships());
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
+        setSize(1000, 1000);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 

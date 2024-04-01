@@ -7,10 +7,32 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Properties;
+import java.time.ZoneId;
+import java.util.Date;
+import java.time.LocalDate;
 
 public class EventPopupMenu extends JPopupMenu {
     private int eventId;
     private Connection connection;
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public void setConnection(Connection connection) {
+        this.connection = connection;
+    }
+
     private JLabel dateLabel;
     private JLabel typeLabel;
     private JTextArea attendeesArea;
@@ -80,9 +102,11 @@ public class EventPopupMenu extends JPopupMenu {
         try {
             // Fetch all family members to populate the dropdown menu
             String query = "SELECT member_id, name, birth_date FROM FamilyMembers";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                ResultSet resultSet = statement.executeQuery();
+            System.out.println("query");
+            try (PreparedStatement statement = this.getConnection().prepareStatement(query)) {
+                System.out.println("1st statement made");
 
+                ResultSet resultSet = statement.executeQuery();
                 // Create a dropdown menu with family member names and birthdates
                 JPopupMenu menu = new JPopupMenu();
                 while (resultSet.next()) {
@@ -90,24 +114,35 @@ public class EventPopupMenu extends JPopupMenu {
                     String name = resultSet.getString("name");
                     String birthDate = resultSet.getString("birth_date");
                     JMenuItem menuItem = new JMenuItem(name + " (" + birthDate + ")");
+
                     menuItem.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
+                            System.out.println("Actually cought");
                             // Add the selected family member as an attendee to the event
                             try {
+                                System.out.println("Insert suceed for new attendee");
+
                                 String insertQuery = "INSERT INTO EventAttendee (event_id, member_id) VALUES (?, ?)";
-                                try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
                                     insertStatement.setInt(1, eventId);
                                     insertStatement.setInt(2, memberId);
                                     insertStatement.executeUpdate();
-                                }
+                                
                                 // Reload data after adding attendee
                                 loadData();
                             } catch (SQLException ex) {
+                                System.out.println("Insert failed for new attendee");
                                 ex.printStackTrace();
                             }
                         }
                     });
+
+                    // Assuming this is where you add the JMenuItem to a JMenu or JPopupMenu
+                    // For demonstration purposes, let's assume menu is your JMenu or JPopupMenu
+                    // object
+                    menu.add(menuItem);
+
                     menu.add(menuItem);
                 }
                 // Display the dropdown menu
