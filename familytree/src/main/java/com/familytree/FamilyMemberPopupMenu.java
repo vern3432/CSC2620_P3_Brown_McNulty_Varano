@@ -1,6 +1,9 @@
 package com.familytree;
 
 import javax.swing.*;
+
+import java.awt.CardLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -115,15 +118,30 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
     }
 
     private void enableEditMode() {
-        // Enable editing of the displayed data
-        // Allow user to make changes
-        nameLabel.setText("Name: ");
-        addressLabel.setText("Address: ");
-        relationshipsArea.setEditable(true);
-
-        // Enable submit button
-        submitButton.setEnabled(true);
+        // Create a dialog box with buttons for options
+        String[] options = {"Name", "Address"};
+        int optionSelected = JOptionPane.showOptionDialog(null, "Choose an option to edit:", "Edit Information",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    
+        if (optionSelected == 0) { // Edit Name
+            String currentName = nameLabel.getText().substring(6).trim(); // Extract current name
+            String newName = JOptionPane.showInputDialog(null, "Enter new name:", "Edit Name", JOptionPane.PLAIN_MESSAGE, null, null, currentName).toString();
+            if (newName != null && !newName.isEmpty()) {
+                nameLabel.setText("Name: " + newName);
+                submitChanges(); // Automatically submit changes for simplicity
+            }
+        } else if (optionSelected == 1) { // Edit Address
+            String currentAddress = addressLabel.getText().substring(9).trim(); // Extract current address
+            String newAddress = JOptionPane.showInputDialog(null, "Enter new address:", "Edit Address", JOptionPane.PLAIN_MESSAGE, null, null, currentAddress).toString();
+            if (newAddress != null && !newAddress.isEmpty()) {
+                addressLabel.setText("Address: " + newAddress);
+                submitChanges(); // Automatically submit changes for simplicity
+            }
+        }
     }
+    
+
+    
 
     private void submitChanges() {
         try {

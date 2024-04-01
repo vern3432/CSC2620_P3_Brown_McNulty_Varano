@@ -20,6 +20,7 @@ public class GanttChartPanel extends JPanel {
     private static final String ERROR_FAILED_TO_RETRIEVE = "Failed to retrieve all family members, please try again later" ;
     private final FamilyDatabase database;
     private final FamilyDataAccess familyDataAccess;
+    
 
     public GanttChartPanel(FamilyDatabase database) {
         this.database = database;
@@ -36,7 +37,7 @@ public class GanttChartPanel extends JPanel {
         setLayout(new BorderLayout());
 
         // Retrieve all family members sorted by birthday
-        var members = familyDataAccess.getAllSortedByBirthday();
+        List<FamilyMember> members = familyDataAccess.getAllSortedByBirthday();
 
         // Create a task series for the Gantt chart
         TaskSeriesCollection dataset = getTaskSeriesCollection(members);
@@ -65,6 +66,7 @@ public class GanttChartPanel extends JPanel {
             // Create a task for each deceased family member
             var endDate = member.getDeathDate() == null ? new Date() : member.getDeathDate();
             Task task = new Task(member.getName(), member.getBirthDate(), endDate);
+
             if (member.getDeathDate() == null) {
                 aliveSeries.add(task);
             } else {
