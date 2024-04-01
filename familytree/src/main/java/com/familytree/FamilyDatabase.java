@@ -560,6 +560,21 @@ public class FamilyDatabase {
                 pstmt.setString(4, relationType);
                 pstmt.executeUpdate();
             }
+
+            // try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            //     if(relationType=="marriedto"){
+            //         pstmt.setInt(1, nextRelationshipId+1);
+            //         pstmt.setInt(2, relatedMemberId);
+            //         pstmt.setInt(3, memberId);
+            //         pstmt.setString(4, relationType);
+            //         pstmt.executeUpdate();
+
+            //     }
+
+            // }
+
+
+
         } else {
             System.out.println("Failed to insert relationship: Member ID not found for one or more names.");
         }

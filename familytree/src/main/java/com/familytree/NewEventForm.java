@@ -9,10 +9,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Properties;
+import java.time.ZoneId;
+import java.util.Date;
+import java.time.LocalDate;
 
 public class NewEventForm extends JFrame {
     private JLabel dateLabel;
@@ -82,18 +86,40 @@ public class NewEventForm extends JFrame {
     private void submitEvent() {
         try {
             // Get selected date from the date picker
-            LocalDate eventDate = (LocalDate) datePicker.getModel().getValue();
-
+            Date eventDate = (Date) datePicker.getModel().getValue();
+            String eventDateLocalString=eventDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString();
+            
             // Get event type from the type field
             String eventType = typeField.getText();
 
             // Insert the new event into the database
-            String query = "INSERT INTO Event (event_date, event_type) VALUES (?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setDate(1, java.sql.Date.valueOf(eventDate));
-                statement.setString(2, eventType);
-                statement.executeUpdate();
+            String query = "INSERT INTO Event (event_id,event_date, event_type) VALUES (?,?, ?)";
+            String query2 = "SELECT MAX(event_id) AS max_id FROM Event";
+            int nextMemberId = 1; // Start from ID 1
+
+            try (PreparedStatement statement2 = connection.prepareStatement(query2)) {
+                ResultSet resultSet2 = statement2.executeQuery();
+                nextMemberId = resultSet2.getInt("max_id") + 1;
             }
+
+
+
+
+            System.out.println(nextMemberId);
+            try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+                preparedStatement.setInt(1, nextMemberId);
+                preparedStatement.setString(2, eventDateLocalString);
+                preparedStatement.setString(3, eventType);
+                int rowsAffected = preparedStatement.executeUpdate();
+                            // Checking if the query was successful
+            if (rowsAffected > 0) {
+                System.out.println("Event inserted successfully.");
+            } else {
+                System.out.println("Failed to insert event.");
+            }
+
+            }
+
 
             // Inform the user about successful submission
             JOptionPane.showMessageDialog(this, "Event submitted successfully.");

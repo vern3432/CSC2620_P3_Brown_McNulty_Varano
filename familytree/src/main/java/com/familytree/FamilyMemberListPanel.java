@@ -62,11 +62,13 @@ public class FamilyMemberListPanel extends JPanel {
                 JList<FamilyMember> list = (JList<FamilyMember>) evt.getSource();
                 if (evt.getClickCount() == 2) {
                     // Double-click detected
+                    int x = evt.getX(); // Get x position
+                    int y = evt.getY();
                     int index = list.locationToIndex(evt.getPoint());
                     FamilyMember selectedMember = listModel.getElementAt(index);
                     // Show popup for editing the selected family member
                     System.out.println("Edit:"+selectedMember.getName());
-                    showPopupMenu(selectedMember);
+                    showPopupMenu(selectedMember,x,y);
                 }
             }
         });
@@ -83,9 +85,9 @@ public class FamilyMemberListPanel extends JPanel {
     }
         // Method to show a popup for editing the selected family member
 
-    private void showPopupMenu(FamilyMember memberId) {
+    private void showPopupMenu(FamilyMember memberId,int x, int y) {
         FamilyMemberPopupMenu popupMenu = new FamilyMemberPopupMenu( memberId.getId(), connection);
-        popupMenu.show(FamilyMemberListPanel.this, 0, getHeight());
+        popupMenu.show(FamilyMemberListPanel.this, x, y);
     }
 
 
