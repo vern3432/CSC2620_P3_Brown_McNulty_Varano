@@ -43,6 +43,23 @@ public class FamilyMemberListPanel extends JPanel {
 
         // Panel for displaying family member list
         JScrollPane scrollPane = new JScrollPane(memberList);
+
+        
+        // Add button panel for adding new event
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JButton addButton = new JButton("Add Family Member");
+        addButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                 
+                // Implement logic for adding new event
+            }
+
+
+        });
+        buttonPanel.add(addButton);
+        add(buttonPanel, BorderLayout.SOUTH);
+
         add(scrollPane, BorderLayout.CENTER);
 
         // Fetch and display all family members initially
@@ -72,6 +89,10 @@ public class FamilyMemberListPanel extends JPanel {
                 }
             }
         });
+
+
+
+
     }
 
     // Method to update the family member list based on the search field
