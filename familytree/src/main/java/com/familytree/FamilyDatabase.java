@@ -1,8 +1,6 @@
 package com.familytree;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import com.familytree.data.entities.FamilyMember;
+
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,20 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.time.LocalDate;
-import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.Date;
 
 public class FamilyDatabase {
     private static Connection connection;
@@ -39,30 +24,6 @@ public class FamilyDatabase {
 
     private static final String DB_FILE_NAME = "FamilyTree.db";
     public  SimpleDateFormat dateFormat = new SimpleDateFormat("MM dd yyyy");
-
-    static {
-        try {
-            Class.forName("org.sqlite.JDBC");
-            String basePath = System.getProperty("user.dir");
-            String dbFilePath = basePath + File.separator + DB_FILE_NAME;
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
-            String[] types = {"TABLE"};
-
-            connection = DriverManager.getConnection("jdbc:sqlite:" + dbFilePath);
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            ResultSet tables = metaData.getTables(null, null, "%", types);
-            while (tables.next()) {
-               String tableName = tables.getString("TABLE_NAME");
-               System.out.println(tableName);
-           }
-
-
-
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     private static void createBlankTables() {
         try {
@@ -148,9 +109,8 @@ public class FamilyDatabase {
 
                 }
                 boolean isDeceased = resultSet.getBoolean("is_deceased");
-                String currentResidence = resultSet.getString("current_residence");
 
-                FamilyMember familyMember = new FamilyMember(id,name, birthDate, deathDate, isDeceased, currentResidence);
+                FamilyMember familyMember = new FamilyMember(id,name, birthDate, deathDate, isDeceased, null);
                 familyMembers.add(familyMember);
             }
             resultSet.close();
@@ -210,7 +170,7 @@ public class FamilyDatabase {
         }
         return attendees;
     }
-    public List<FamilyMember> searchFamilyMembers(String searchTerm) {
+    public static List<FamilyMember> searchFamilyMembers(String searchTerm) {
         List<FamilyMember> searchResults = new ArrayList<>();
         // Perform database query to search for family members matching the searchTerm
         // Here, we simulate a search by filtering the list of all family members based on the searchTerm
@@ -639,7 +599,7 @@ public class FamilyDatabase {
     }
     
 
-        public  HashMap<Integer, Relationship> getRelationships() {
+        public  static HashMap<Integer, Relationship> getRelationships() {
         HashMap<Integer, Relationship> relationshipsMap = new HashMap<>();
 
         try  {

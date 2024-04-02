@@ -9,9 +9,9 @@ import java.sql.Statement;
 import java.util.Scanner;
 
 public class SQLiteConnector {
+    private static final String url = "jdbc:sqlite:finnFamilyTree.db";
 
     public static Connection connect() {
-        String url = "jdbc:sqlite:finnFamilyTree.db";
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(url);
@@ -32,9 +32,9 @@ public class SQLiteConnector {
                 System.out.println(sqlScript);
                 // Create statement
                 try (Statement statement = connection.createStatement()) {
-
+                    statement.execute("PRAGMA foreign_keys = ON;"); // Enabling foreign key constraint checking
                     // Execute SQL script
-                    statement.execute(sqlScript);
+                    statement.executeUpdate(sqlScript);
                     System.out.println("Schema created successfully.");
                 }
             } else {

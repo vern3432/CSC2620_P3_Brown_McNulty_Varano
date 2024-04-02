@@ -1,6 +1,7 @@
 package com.familytree;
 
-import javax.imageio.ImageIO;
+import com.familytree.data.entities.FamilyMember;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,52 +9,35 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.sql.Connection;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
 
-import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.data.category.IntervalCategoryDataset;
-import org.jfree.data.gantt.Task;
-import org.jfree.data.gantt.TaskSeries;
-import org.jfree.data.gantt.TaskSeriesCollection;
-import java.awt.event.*;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class FamilyTreeGUI extends JFrame {
 
     private final Connection connection;
-    FamilyDatabase db = new FamilyDatabase();
     FamilyTreeContainer TreeContainer;
 
     public FamilyTreeGUI(Connection connection) {
 
         this.connection = connection;
-
-        TreeContainer = new FamilyTreeContainer(db.getAllFamilyMembers(), db.getRelationships());
+        FamilyDatabase.setConnection(connection);
+        TreeContainer = new FamilyTreeContainer(FamilyDatabase.getAllFamilyMembers(), FamilyDatabase.getRelationships());
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
-        JScrollPane familyTreePanel = createFamilyTreePanel(this.db.getConnection());
-        JPanel ganttChartPanel = createGanttChartPanel();
+        JScrollPane familyTreePanel = createFamilyTreePanel(this.connection);
+        JPanel ganttChartPanel = createGanttChartPanel(connection);
         JPanel familyMemberListPanel = createFamilyMemberListPanel();
         JPanel eventManagementPanel = createEventManagementPanel();
 
@@ -587,7 +571,7 @@ public class FamilyTreeGUI extends JFrame {
         System.out.println(familyTreeRows.size());
         printFamilyTree(familyTreeRows);
         List<List<Node>> nodeStructure = createNodeshelf(familyTreeRows, members, db);
-        CustomFamilyTreePanel panelTree = new CustomFamilyTreePanel(nodeStructure,this.db.getConnection());
+        CustomFamilyTreePanel panelTree = new CustomFamilyTreePanel(nodeStructure,this.connection);
 
         // Create a JScrollPane and add the custom tree panel to it
         JScrollPane scrollPane = new JScrollPane(panelTree);
@@ -600,14 +584,14 @@ public class FamilyTreeGUI extends JFrame {
         return scrollPane;
     }
 
-    private JPanel createGanttChartPanel() {
-        return new GanttChartPanel(this.connection);
+    private JPanel createGanttChartPanel(Connection connection) {
+        return new GanttChartPanel(connection);
     }
 
     public JPanel createFamilyMemberListPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         // Initialize your database object here
-        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(this.db);
+        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel();
         panel.add(familyMemberListPanel, BorderLayout.CENTER);
         return panel;
     }

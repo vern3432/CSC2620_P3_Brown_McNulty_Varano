@@ -1,5 +1,7 @@
 package com.familytree;
 
+import com.familytree.data.entities.FamilyMember;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

@@ -1,4 +1,7 @@
-package com.familytree;
+package com.familytree.data.entities;
+
+import com.familytree.FamilyDatabase;
+import com.familytree.Relationship;
 
 import java.awt.List;
 import java.sql.Connection;
@@ -8,22 +11,11 @@ import java.util.Date;
 public class FamilyMember {
     private int id;
     public boolean added = false;
-
-    
-    /** 
-     * @return int
-     */
-    public int getId() {
-        return id;
-    }
-
     private String name;
     private Date birthDate;
     private Date deathDate;
     private boolean isDeceased;
-    /**
-     *
-     */
+    private Address address;
     private ArrayList<Integer> parents = new ArrayList<Integer>();
     private ArrayList<Integer> children = new ArrayList<Integer>();
     private int spouse = -1;
@@ -58,6 +50,10 @@ public class FamilyMember {
         this.stackLayer = stackLayer;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -83,11 +79,21 @@ public class FamilyMember {
     }
 
     public FamilyMember(int id, String name, Date birthDate, Date deathDate, boolean isDeceased,
-            String currentResidence) {
+                        String currentResidence) {
         this.parents.add(-5000);
         this.children.add(-5000);
 
         this.id = id;
+        this.name = name;
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.isDeceased = isDeceased;
+    }
+
+    public FamilyMember(String name, Date birthDate, Date deathDate, boolean isDeceased) {
+        this.parents.add(-5000);
+        this.children.add(-5000);
+
         this.name = name;
         this.birthDate = birthDate;
         this.deathDate = deathDate;
@@ -136,8 +142,13 @@ public class FamilyMember {
         return isDeceased;
     }
 
-    // System.out.println(FamilyDatabase.findRelationshipsByName("Sally
-    // Mae",this.db.getConnection()));
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public void processRelationships(Connection connection) {
         ArrayList<Relationship> relationships = (ArrayList<Relationship>) FamilyDatabase
@@ -145,18 +156,18 @@ public class FamilyMember {
         if (!relationships.isEmpty()) {
             for (Relationship relationship : relationships) {
                 switch (relationship.getType()) {
-                    
+
                     case "marriedto":
-                    if(this.spouse==-1){
-                        handleMarriedTo(relationship);
-                    }
+                        if (this.spouse == -1) {
+                            handleMarriedTo(relationship);
+                        }
                         break;
                     case "parentof":
-                    if(this.parents.contains(-5000)){
-                        handleParentOf(relationship);
+                        if (this.parents.contains(-5000)) {
+                            handleParentOf(relationship);
 
 
-                    }
+                        }
                         break;
                     // Add more cases for other relationship types as needed
                     default:
