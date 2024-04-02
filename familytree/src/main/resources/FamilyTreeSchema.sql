@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Relationships (
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id),
   FOREIGN KEY (related_member_id) REFERENCES FamilyMembers(member_id)
 );
+
 CREATE TABLE IF NOT EXISTS Addresses (
   city TEXT,
   state TEXT,
