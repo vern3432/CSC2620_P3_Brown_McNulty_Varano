@@ -2,6 +2,7 @@ package com.familytree;
 
 import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
+import com.familytree.listeners.ImportFileListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -55,28 +56,7 @@ public class FamilyTreeGUI extends JFrame {
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem importText = new JMenuItem("Import Text");
-        importText.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setDialogTitle("Select Text File");
-                int result = fileChooser.showOpenDialog(null);
-
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-
-                    try {
-                        List<String[]> parsedData = TextFileParser.parseTextFile(new FileInputStream(selectedFile));
-                        // FamilyDatabase.addParsedDataToDatabase(parsedData);
-                    } catch (FileNotFoundException ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "selected file was not found", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-
-                    System.out.println("Data imported successfully.");
-                }
-            }
-        });
+        importText.addActionListener(new ImportFileListener(connection));
 
         importText.setAccelerator(
                 KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
