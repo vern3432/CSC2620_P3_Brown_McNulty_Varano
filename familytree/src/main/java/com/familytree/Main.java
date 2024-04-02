@@ -2,6 +2,7 @@ package com.familytree;
 
 import com.familytree.data.schema.SQLiteConnector;
 import com.familytree.parsing.TextFileParser;
+import com.familytree.views.LoginDialog;
 
 import javax.swing.SwingUtilities;
 import java.io.IOException;
@@ -16,7 +17,7 @@ public class Main {
             final Connection conn = SQLiteConnector.connect();
             SQLiteConnector.createSchema(conn);
             loadInitialData(conn);
-            SwingUtilities.invokeLater(() -> new FamilyTreeGUI(conn));
+            SwingUtilities.invokeLater(() -> new LoginDialog(conn));
         } catch (Exception ex) {
             ex.printStackTrace();
             System.err.println("Failed to start application");

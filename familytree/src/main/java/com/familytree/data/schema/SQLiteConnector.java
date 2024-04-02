@@ -29,7 +29,6 @@ public class SQLiteConnector {
                 Scanner scanner = new Scanner(inputStream).useDelimiter("\\A");
                 String sqlScript = scanner.hasNext() ? scanner.next() : "";
 
-                System.out.println(sqlScript);
                 // Create statement
                 try (Statement statement = connection.createStatement()) {
                     statement.execute("PRAGMA foreign_keys = ON;"); // Enabling foreign key constraint checking

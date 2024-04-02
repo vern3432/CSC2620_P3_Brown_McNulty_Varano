@@ -1,5 +1,6 @@
 package com.familytree;
 
+import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
 
 import javax.swing.*;
@@ -23,10 +24,12 @@ import java.util.Set;
 public class FamilyTreeGUI extends JFrame {
 
     private final Connection connection;
+    private final Client client;
     FamilyTreeContainer TreeContainer;
 
-    public FamilyTreeGUI(Connection connection) {
 
+    public FamilyTreeGUI(Connection connection, Client client) {
+        this.client = client;
         this.connection = connection;
         FamilyDatabase.setConnection(connection);
         TreeContainer = new FamilyTreeContainer(FamilyDatabase.getAllFamilyMembers(), FamilyDatabase.getRelationships());

@@ -3,8 +3,12 @@
 
 CREATE TABLE IF NOT EXISTS Clients (
   client_id INTEGER PRIMARY KEY UNIQUE,
-  client_name TEXT
+  client_name TEXT,
+  user_name  TEXT,
+  password TEXT
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS client_index_001 ON Clients(user_name);
 
 -- Table FamilyMembers
 CREATE TABLE IF NOT EXISTS FamilyMembers (
