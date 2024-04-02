@@ -27,13 +27,15 @@ public class FamilyTreeGUI extends JFrame {
     private final Connection connection;
     private final Client client;
     FamilyTreeContainer TreeContainer;
+    FamilyDatabase db;
 
 
     public FamilyTreeGUI(Connection connection, Client client) {
         this.client = client;
         this.connection = connection;
         FamilyDatabase.setConnection(connection);
-        TreeContainer = new FamilyTreeContainer(FamilyDatabase.getAllFamilyMembers(), FamilyDatabase.getRelationships());
+        FamilyDatabase db=new FamilyDatabase();
+        TreeContainer = new FamilyTreeContainer(db.getAllFamilyMembers(), db.getRelationships());
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
@@ -42,7 +44,7 @@ public class FamilyTreeGUI extends JFrame {
 
         JScrollPane familyTreePanel = createFamilyTreePanel(this.connection);
         JPanel ganttChartPanel = createGanttChartPanel(connection);
-        JPanel familyMemberListPanel = createFamilyMemberListPanel();
+        JPanel familyMemberListPanel = createFamilyMemberListPanel(this.db);
         JPanel eventManagementPanel = createEventManagementPanel();
 
         tabbedPane.addTab("Family Tree", familyTreePanel);
@@ -123,6 +125,7 @@ public class FamilyTreeGUI extends JFrame {
             System.out.println(); // Move to the next row
         }
     }
+
 
     private static ArrayList<ArrayList<FamilyMember>> adjustSpouse(ArrayList<ArrayList<FamilyMember>> familyTreeRows,
             HashMap<Integer, FamilyMember> members) {
@@ -571,10 +574,10 @@ public class FamilyTreeGUI extends JFrame {
         return new GanttChartPanel(connection);
     }
 
-    public JPanel createFamilyMemberListPanel() {
+    public JPanel createFamilyMemberListPanel(FamilyDatabase db) {
         JPanel panel = new JPanel(new BorderLayout());
         // Initialize your database object here
-        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel();
+        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(db);
         panel.add(familyMemberListPanel, BorderLayout.CENTER);
         return panel;
     }
