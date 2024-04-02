@@ -15,8 +15,6 @@ public class Main {
         try {
             final Connection conn = SQLiteConnector.connect();
             SQLiteConnector.createSchema(conn);
-
-            System.out.println();
             loadInitialData(conn);
             SwingUtilities.invokeLater(() -> new FamilyTreeGUI(conn));
         } catch (Exception ex) {
