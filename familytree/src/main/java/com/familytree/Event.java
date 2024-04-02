@@ -1,5 +1,7 @@
 package com.familytree;
 
+import com.familytree.data.entities.FamilyMember;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

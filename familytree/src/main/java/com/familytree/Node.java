@@ -1,7 +1,7 @@
 
 package com.familytree;
-import javax.swing.*;
-import java.awt.*;
+import com.familytree.data.entities.FamilyMember;
+
 import java.util.ArrayList;
 import java.util.List;
 class Node {

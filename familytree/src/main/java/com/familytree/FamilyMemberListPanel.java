@@ -1,4 +1,6 @@
 package com.familytree;
+import com.familytree.data.entities.FamilyMember;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -8,7 +10,6 @@ import java.util.List;
 
 public class FamilyMemberListPanel extends JPanel {
 
-    private final FamilyDatabase database;
     private final DefaultListModel<FamilyMember> listModel;
     private final JList<FamilyMember> memberList;
     private final JTextField searchField; 
@@ -22,9 +23,8 @@ public class FamilyMemberListPanel extends JPanel {
         this.connection = connection;
     }
 
-    public FamilyMemberListPanel(FamilyDatabase database) {
-        this.setConnection(database.getConnection());
-        this.database = database;
+    public FamilyMemberListPanel() {
+        this.setConnection(FamilyDatabase.getConnection());
         this.listModel = new DefaultListModel<>();
         this.memberList = new JList<>(listModel);
         this.searchField = new JTextField(20);
@@ -98,7 +98,7 @@ public class FamilyMemberListPanel extends JPanel {
     // Method to update the family member list based on the search field
     private void updateFamilyMemberList() {
         String searchTerm = searchField.getText().trim();
-        List<FamilyMember> familyMembers = database.searchFamilyMembers(searchTerm);
+        List<FamilyMember> familyMembers = FamilyDatabase.searchFamilyMembers(searchTerm);
         listModel.clear();
         for (FamilyMember member : familyMembers) {
             listModel.addElement(member);
@@ -111,10 +111,4 @@ public class FamilyMemberListPanel extends JPanel {
         popupMenu.show(FamilyMemberListPanel.this, x, y);
     }
 
-
-
-    // Method to create and return FamilyMemberListPanel
-    public static FamilyMemberListPanel createFamilyMemberListPanel(FamilyDatabase database) {
-        return new FamilyMemberListPanel(database);
-    }
 }

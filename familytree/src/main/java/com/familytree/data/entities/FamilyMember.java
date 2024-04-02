@@ -1,4 +1,7 @@
-package com.familytree;
+package com.familytree.data.entities;
+
+import com.familytree.FamilyDatabase;
+import com.familytree.Relationship;
 
 import java.awt.List;
 import java.sql.Connection;
@@ -8,23 +11,11 @@ import java.util.Date;
 public class FamilyMember {
     private int id;
     public boolean added = false;
-
-    
-    /** 
-     * @return int
-     */
-    public int getId() {
-        return id;
-    }
-
     private String name;
     private Date birthDate;
     private Date deathDate;
     private boolean isDeceased;
-    private String currentResidence;
-    /**
-     *
-     */
+    private Address address;
     private ArrayList<Integer> parents = new ArrayList<Integer>();
     private ArrayList<Integer> children = new ArrayList<Integer>();
     private int spouse = -1;
@@ -59,6 +50,10 @@ public class FamilyMember {
         this.stackLayer = stackLayer;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public void setId(int id) {
         this.id = id;
     }
@@ -84,7 +79,7 @@ public class FamilyMember {
     }
 
     public FamilyMember(int id, String name, Date birthDate, Date deathDate, boolean isDeceased,
-            String currentResidence) {
+                        String currentResidence) {
         this.parents.add(-5000);
         this.children.add(-5000);
 
@@ -93,28 +88,26 @@ public class FamilyMember {
         this.birthDate = birthDate;
         this.deathDate = deathDate;
         this.isDeceased = isDeceased;
-        this.currentResidence = currentResidence;
+    }
+
+    public FamilyMember(String name, Date birthDate, Date deathDate, boolean isDeceased) {
+        this.parents.add(-5000);
+        this.children.add(-5000);
+
+        this.name = name;
+        this.birthDate = birthDate;
+        this.deathDate = deathDate;
+        this.isDeceased = isDeceased;
     }
 
     @Override
     public String toString() {
-        String formattedId = String.format("%-10s", id);
-        String formattedName = String.format("%-20s", name);
-        String formattedBirthDate = String.format("%-12s", birthDate);
-        String formattedDeathDate = String.format("%-12s", deathDate);
-        String formattedIsDeceased = String.format("%-12s", isDeceased);
-        String formattedCurrentResidence = String.format("%-20s", currentResidence);
-        String formattedParents = String.format("%-20s", parents);
-        String formattedChildren = String.format("%-20s", children);
-        String formattedSpouse = String.format("%-20s", spouse);
-        String formattedStackLayer = String.format("%-10s", stackLayer);
-    
-        return "FamilyMember [id=" + formattedId + "| name=" + formattedName + "| birthDate="
-                + formattedBirthDate + "| deathDate=" + formattedDeathDate + "| isDeceased=" + formattedIsDeceased
-                + "| currentResidence=" + formattedCurrentResidence + "| parents=" + formattedParents + "| children="
-                + formattedChildren + "| spouse=" + formattedSpouse;
+        return "FamilyMember [id=" + id + ", added=" + added + ", name=" + name + ", birthDate=" + birthDate
+                + ", deathDate=" + deathDate + ", isDeceased=" + isDeceased
+                + ", parents=" + parents + ", children=" + children + ", spouse=" + spouse + ", stackLayer="
+                + stackLayer + "]";
     }
-    
+
     // Setters
     public void setName(String name) {
         this.name = name;
@@ -130,10 +123,6 @@ public class FamilyMember {
 
     public void setDeceased(boolean deceased) {
         isDeceased = deceased;
-    }
-
-    public void setCurrentResidence(String currentResidence) {
-        this.currentResidence = currentResidence;
     }
 
     // Getters
@@ -153,12 +142,13 @@ public class FamilyMember {
         return isDeceased;
     }
 
-    public String getCurrentResidence() {
-        return currentResidence;
+    public Address getAddress() {
+        return address;
     }
 
-    // System.out.println(FamilyDatabase.findRelationshipsByName("Sally
-    // Mae",this.db.getConnection()));
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 
     public void processRelationships(Connection connection) {
         ArrayList<Relationship> relationships = (ArrayList<Relationship>) FamilyDatabase
@@ -166,18 +156,18 @@ public class FamilyMember {
         if (!relationships.isEmpty()) {
             for (Relationship relationship : relationships) {
                 switch (relationship.getType()) {
-                    
+
                     case "marriedto":
-                    if(this.spouse==-1){
-                        handleMarriedTo(relationship);
-                    }
+                        if (this.spouse == -1) {
+                            handleMarriedTo(relationship);
+                        }
                         break;
                     case "parentof":
-                    if(this.parents.contains(-5000)){
-                        handleParentOf(relationship);
+                        if (this.parents.contains(-5000)) {
+                            handleParentOf(relationship);
 
 
-                    }
+                        }
                         break;
                     // Add more cases for other relationship types as needed
                     default:

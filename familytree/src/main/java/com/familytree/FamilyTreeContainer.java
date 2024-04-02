@@ -1,11 +1,9 @@
 package com.familytree;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import com.familytree.data.entities.FamilyMember;
+
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FamilyTreeContainer {
     private HashMap<Integer, FamilyMember> members;
