@@ -594,12 +594,12 @@ public class FamilyDatabase {
         String state = tokens[3];
 
         // Inserting address
-        String addressSql = "INSERT INTO Addresses (address_id, city,res_state) VALUES (?, ?,?)";
+        String addressSql = "INSERT INTO Addresses (address_id, city,res_state,member_id) VALUES (?, ?,?,?)";
         try (PreparedStatement addressStmt = conn.prepareStatement(addressSql)) {
             addressStmt.setInt(1, nextAddressId);
             addressStmt.setString(2, city);
             addressStmt.setString(3, state);
-
+            addressStmt.setInt(4, nextMemberId);
             addressStmt.executeUpdate();
         }
 

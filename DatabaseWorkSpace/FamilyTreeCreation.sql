@@ -35,7 +35,7 @@ CREATE TABLE Addresses (
   city TEXT,
   res_state TEXT,
   member_id INTEGER,
-  FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
+  FOREIGN KEY (address_id) REFERENCES FamilyMembers(current_residence)
 );
 
 -- Table Event
