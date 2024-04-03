@@ -3,20 +3,17 @@ package com.familytree;
 import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
 import com.familytree.listeners.ImportFileListener;
+import com.familytree.views.FamilyMemberListPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.io.*;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.HashSet;
@@ -574,7 +571,7 @@ public class FamilyTreeGUI extends JFrame {
     public JPanel createFamilyMemberListPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         // Initialize your database object here
-        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel();
+        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(connection);
         panel.add(familyMemberListPanel, BorderLayout.CENTER);
         return panel;
     }

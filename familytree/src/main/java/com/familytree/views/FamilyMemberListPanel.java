@@ -1,4 +1,7 @@
-package com.familytree;
+package com.familytree.views;
+import com.familytree.FamilyDatabase;
+import com.familytree.FamilyMemberPopupMenu;
+import com.familytree.data.access.FamilyDataAccess;
 import com.familytree.data.entities.FamilyMember;
 
 import javax.swing.*;
@@ -23,8 +26,8 @@ public class FamilyMemberListPanel extends JPanel {
         this.connection = connection;
     }
 
-    public FamilyMemberListPanel() {
-        this.setConnection(FamilyDatabase.getConnection());
+    public FamilyMemberListPanel(Connection connection) {
+        this.setConnection(connection);
         this.listModel = new DefaultListModel<>();
         this.memberList = new JList<>(listModel);
         this.searchField = new JTextField(20);
@@ -97,11 +100,16 @@ public class FamilyMemberListPanel extends JPanel {
 
     // Method to update the family member list based on the search field
     private void updateFamilyMemberList() {
-        String searchTerm = searchField.getText().trim();
-        List<FamilyMember> familyMembers = FamilyDatabase.searchFamilyMembers(searchTerm);
-        listModel.clear();
-        for (FamilyMember member : familyMembers) {
-            listModel.addElement(member);
+        try {
+            String searchTerm = searchField.getText().trim();
+            List<FamilyMember> familyMembers = FamilyDataAccess.listByNameOrderById(searchTerm, connection);
+            listModel.clear();
+            for (FamilyMember member : familyMembers) {
+                listModel.addElement(member);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Failed to list all members, please try again.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
         // Method to show a popup for editing the selected family member

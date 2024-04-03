@@ -29,6 +29,12 @@ public class Address {
     }
 
     /**
+     * Default constructor
+     */
+    public Address() {
+    }
+
+    /**
      * Gets the ID of the member associated with the address.
      * @return The member ID.
      */
@@ -74,5 +80,13 @@ public class Address {
      */
     public void setState(String state) {
         this.state = state;
+    }
+
+    @Override
+    public String toString() {
+        if (city != null && !city.isEmpty()) {
+            return String.format("Address[city=%s, state=%s]", city, state);
+        }
+        return "";
     }
 }

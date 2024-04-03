@@ -1,5 +1,6 @@
 package com.familytree.data.access;
 
+import com.familytree.data.entities.Address;
 import com.familytree.data.entities.FamilyMember;
 
 import java.sql.*;
@@ -24,7 +25,24 @@ public class FamilyDataAccess {
         var resultSet = statement.executeQuery(sortedByClientAndBirthday);
         List<FamilyMember> result = new ArrayList<>();
         while (resultSet.next()) {
-            result.add(createFromRow(resultSet));
+            result.add(createFromRow(resultSet, false));
+        }
+        return result;
+    }
+
+    public static List<FamilyMember> listByNameOrderById(String name, Connection connection) throws SQLException {
+        String SQL = "SELECT * FROM FamilyMembers AS f  INNER JOIN Addresses as a ON f.member_id = a.member_id ";
+        if (name != null && !name.trim().isEmpty()) {
+            SQL += "WHERE UPPER(f.name) like  '%" + name.toUpperCase() + "%'";
+        }
+        SQL += "ORDER BY f.member_id";
+        List<FamilyMember> result = new ArrayList<>();
+        try (var statement = connection.createStatement()) {
+            try(var resultSet = statement.executeQuery(SQL)) {
+                while (resultSet.next()) {
+                    result.add(createFromRow(resultSet, true));
+                }
+            }
         }
         return result;
     }
@@ -34,10 +52,10 @@ public class FamilyDataAccess {
         FamilyMember result = null;
         try (PreparedStatement pstmt = connection.prepareStatement(SQL)) {
             pstmt.setString(1, name.toUpperCase());
-            pstmt.setDate(2,  new java.sql.Date(birthDate.getTime()));
+            pstmt.setDate(2, new java.sql.Date(birthDate.getTime()));
             var resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
-                result = createFromRow(resultSet);
+                result = createFromRow(resultSet, false);
             }
         }
         return result;
@@ -50,7 +68,7 @@ public class FamilyDataAccess {
             pstmt.setString(1, name.toUpperCase());
             var resultSet = pstmt.executeQuery();
             if (resultSet.next()) {
-                result = createFromRow(resultSet);
+                result = createFromRow(resultSet, false);
             }
         }
         return result;
@@ -78,7 +96,7 @@ public class FamilyDataAccess {
         return member;
     }
 
-    private static FamilyMember createFromRow(ResultSet resultSet) throws SQLException {
+    private static FamilyMember createFromRow(ResultSet resultSet, boolean includeAddress) throws SQLException {
         var id = resultSet.getInt("member_id");
 
         var name = resultSet.getString("name");
@@ -92,7 +110,15 @@ public class FamilyDataAccess {
         if (localDeathDate != null) {
             deathDate = Date.from(localDeathDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
         }
-        return new FamilyMember(id, name, birthDate, deathDate, isDeceased, null);
+        var result = new FamilyMember(id, name, birthDate, deathDate, isDeceased, null);
+
+
+        if (includeAddress) {
+            var city = resultSet.getString("city");
+            var state = resultSet.getString("state");
+            result.setAddress(new Address(id, city, state));
+        }
+        return result;
     }
 
     private static int getNextMemberId(Connection conn) throws SQLException {

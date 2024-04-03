@@ -15,7 +15,7 @@ public class FamilyMember {
     private Date birthDate;
     private Date deathDate;
     private boolean isDeceased;
-    private Address address;
+    private Address address = new Address();
     private ArrayList<Integer> parents = new ArrayList<Integer>();
     private ArrayList<Integer> children = new ArrayList<Integer>();
     private int spouse = -1;
@@ -105,7 +105,7 @@ public class FamilyMember {
         return "FamilyMember [id=" + id + ", added=" + added + ", name=" + name + ", birthDate=" + birthDate
                 + ", deathDate=" + deathDate + ", isDeceased=" + isDeceased
                 + ", parents=" + parents + ", children=" + children + ", spouse=" + spouse + ", stackLayer="
-                + stackLayer + "]";
+                + stackLayer + "," + this.address + "]";
     }
 
     // Setters
