@@ -1,4 +1,6 @@
-package com.familytree;
+package com.familytree.views;
+
+import com.familytree.data.access.FamilyDataAccess;
 import com.familytree.data.entities.FamilyMember;
 
 import javax.swing.*;
@@ -23,8 +25,8 @@ public class FamilyMemberListPanel extends JPanel {
         this.connection = connection;
     }
 
-    public FamilyMemberListPanel() {
-        this.setConnection(FamilyDatabase.getConnection());
+    public FamilyMemberListPanel(Connection connection) {
+        this.setConnection(connection);
         this.listModel = new DefaultListModel<>();
         this.memberList = new JList<>(listModel);
         this.searchField = new JTextField(20);

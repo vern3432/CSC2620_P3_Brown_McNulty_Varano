@@ -1,14 +1,12 @@
-package com.familytree;
+package com.familytree.views;
 
 import org.jdatepicker.impl.*;
-import org.jdatepicker.util.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;

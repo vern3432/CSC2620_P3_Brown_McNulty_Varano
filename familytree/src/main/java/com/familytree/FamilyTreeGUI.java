@@ -3,6 +3,7 @@ package com.familytree;
 import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
 import com.familytree.listeners.ImportFileListener;
+import com.familytree.views.FamilyMemberListPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ public class FamilyTreeGUI extends JFrame {
 
         JScrollPane familyTreePanel = createFamilyTreePanel(this.connection);
         JPanel ganttChartPanel = createGanttChartPanel(connection);
-        JPanel familyMemberListPanel = createFamilyMemberListPanel(this.db);
+        JPanel familyMemberListPanel = createFamilyMemberListPanel();
         JPanel eventManagementPanel = createEventManagementPanel();
 
         tabbedPane.addTab("Family Tree", familyTreePanel);
@@ -574,7 +575,7 @@ public class FamilyTreeGUI extends JFrame {
         return new GanttChartPanel(connection);
     }
 
-    public JPanel createFamilyMemberListPanel(FamilyDatabase db) {
+    public JPanel createFamilyMemberListPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         // Initialize your database object here
         FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(connection);
