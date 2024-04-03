@@ -67,7 +67,10 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
     private void loadData() {
         try {
             // Fetch data from the database based on the memberId
-            String query = "SELECT Addresses.address_id, Addresses.res_state,Addresses.city,FamilyMembers.name FROM Addresses JOIN FamilyMembers ON FamilyMembers.current_residence=Addresses.address_id WHERE FamilyMembers.member_id = ?";
+            String query = "SELECT Addresses.member_id, Addresses.city, Addresses.state, FamilyMembers.name " +
+            "FROM Addresses " +
+            "JOIN FamilyMembers ON Addresses.member_id = FamilyMembers.member_id " +
+            "WHERE FamilyMembers.member_id = ?";
             String query_dead = "SELECT name FROM FamilyMembers WHERE FamilyMembers.member_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, memberId);
@@ -75,8 +78,8 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
                 if (resultSet.next()) {
                     String name = resultSet.getString("name");
                     String residence = resultSet.getString("city");
-                    String StateString = resultSet.getString("res_state");
-                    this.address_id=resultSet.getInt("address_id");
+                    String StateString = resultSet.getString("state");
+                    // this.address_id=resultSet.getInt("address_id");
                     System.out.println(name);
                     System.out.println(residence);
                     nameLabel.setText("Name: " + name);
@@ -176,7 +179,7 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
     // public void updateNameAddressState(int memberId, String newName, String newCity, String newState) {
     //     String query = "UPDATE FamilyMembers " +
     //                    "JOIN Addresses ON FamilyMembers.member_id = Addresses.member_id " +
-    //                    "SET FamilyMembers.name = ?, Addresses.city = ?, Addresses.res_state = ? " +
+    //                    "SET FamilyMembers.name = ?, Addresses.city = ?, Addresses.state = ? " +
     //                    "WHERE FamilyMembers.member_id = ?";
         
     //     try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -207,12 +210,12 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
 
             // Update database with edited data
             String query = "UPDATE Addresses " +
-            "SET res_state = ?, " +
+            "SET state = ?, " +
             
             "WHERE member_id = ?";
 
             String update_res = "UPDATE Addresses " +
-             "SET res_state = ? " +
+             "SET state = ? " +
              "WHERE address_id = ? " +
              "AND member_id IN (SELECT member_id FROM FamilyMembers WHERE client_id = (SELECT client_id FROM FamilyMembers WHERE member_id = ?));";
              
