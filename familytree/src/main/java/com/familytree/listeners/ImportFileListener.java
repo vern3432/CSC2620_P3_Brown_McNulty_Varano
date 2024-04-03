@@ -1,5 +1,6 @@
 package com.familytree.listeners;
 
+import com.familytree.data.entities.Client;
 import com.familytree.parsing.TextFileParser;
 
 import javax.swing.*;
@@ -14,9 +15,11 @@ import java.sql.SQLException;
 public class ImportFileListener implements ActionListener {
 
     private final Connection connection;
+    private final Client client;
 
-    public ImportFileListener(Connection connection) {
+    public ImportFileListener(Client client, Connection connection) {
         this.connection = connection;
+        this.client = client;
     }
 
     
@@ -33,7 +36,7 @@ public class ImportFileListener implements ActionListener {
             File selectedFile = fileChooser.getSelectedFile();
 
             try {
-                var importResult =  TextFileParser.parse(new FileInputStream(selectedFile), connection);
+                var importResult =  TextFileParser.parse(new FileInputStream(selectedFile), client, connection);
                 String message = "Import Result:\n" +
                         "Created: " + importResult.getCreated() + "\n" +
                         "Duplicated: " + importResult.getDuplicated() + "\n" +

@@ -2,6 +2,7 @@ package com.familytree;
 
 import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
+import com.familytree.listeners.ClearAllTablesListener;
 import com.familytree.listeners.ImportFileListener;
 import com.familytree.views.LoggedInPanel;
 
@@ -78,7 +79,7 @@ public class FamilyTreeGUI extends JFrame {
         JMenu fileMenu = new JMenu("File");
 
         JMenuItem importText = new JMenuItem("Import Text");
-        importText.addActionListener(new ImportFileListener(connection));
+        importText.addActionListener(new ImportFileListener(client, connection));
 
         importText.setAccelerator(
                 KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
@@ -101,6 +102,7 @@ public class FamilyTreeGUI extends JFrame {
 
 
         optionMenu.add(Refresh);
+        optionMenu.add(addClearAllOption());
         menuBar.add(fileMenu);
         menuBar.add(optionMenu);
 
@@ -110,7 +112,13 @@ public class FamilyTreeGUI extends JFrame {
 
     }
 
-    
+    private JMenuItem addClearAllOption() {
+        var result = new JMenuItem("Clear All");
+        result.addActionListener(new ClearAllTablesListener(client, connection));
+        return result;
+    }
+
+
     /** 
      * @param HashMap<Integer
      * @param members

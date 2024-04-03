@@ -1,6 +1,7 @@
 package com.familytree.parsing;
 
 import com.familytree.data.access.RelationshipDataAccess;
+import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
 import com.familytree.data.access.AddressDataAccess;
 import com.familytree.data.access.FamilyDataAccess;
@@ -22,7 +23,7 @@ public class TextFileParser {
      * @throws SQLException
      * @throws ParseException
      */
-    public static ParsingResult parse(InputStream file, Connection connection) throws IOException, SQLException, ParseException {
+    public static ParsingResult parse(InputStream file, Client client, Connection connection) throws IOException, SQLException, ParseException {
         var result = new ParsingResult();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file))) {
             String line;
@@ -31,7 +32,7 @@ public class TextFileParser {
                     String[] tokens = line.split(", ");
                     switch (tokens.length) {
                         case 4:
-                            if (createAliveMember(tokens, connection)) {
+                            if (createAliveMember(tokens, client, connection)) {
                                 result.setCreated(result.getCreated() + 1);
                             } else {
                                 result.setDuplicated(result.getDuplicated() + 1);
@@ -39,13 +40,13 @@ public class TextFileParser {
                             break;
                         case 3:
                             if (tokens[2].matches("\\d{1,2} \\d{1,2} \\d{4}")) {
-                                if (createDeathMember(tokens, connection)) {
+                                if (createDeathMember(tokens, client, connection)) {
                                     result.setCreated(result.getCreated() + 1);
                                 } else {
                                     result.setDuplicated(result.getDuplicated() + 1);
                                 }
                             } else {
-                                if (createRelationship(tokens, connection)) {
+                                if (createRelationship(tokens, client, connection)) {
                                     result.setRelationshipsCreated(result.getRelationshipsCreated() + 1);
                                 } else {
                                     result.setRelationshipsDuplicated(result.getRelationshipsDuplicated() + 1);
@@ -68,7 +69,7 @@ public class TextFileParser {
         return result;
     }
 
-    private static boolean createDeathMember(String[] tokens, Connection connection) throws ParseException, SQLException {
+    private static boolean createDeathMember(String[] tokens, Client client, Connection connection) throws ParseException, SQLException {
         var success = true;
         String name = tokens[0];
         String birthDate = tokens[1];
@@ -81,11 +82,12 @@ public class TextFileParser {
             return false;
         }
         var member = new FamilyMember(name, bdate, ddate, true);
+        member.setClientId(client.getClientId());
         FamilyDataAccess.create(member, connection);
         return success;
     }
 
-    private static boolean createAliveMember(String[] tokens, Connection connection) throws ParseException, SQLException {
+    private static boolean createAliveMember(String[] tokens, Client client, Connection connection) throws ParseException, SQLException {
         var success = true;
         String name = tokens[0];
         String birthDate = tokens[1];
@@ -98,12 +100,13 @@ public class TextFileParser {
             return false;
         }
         var member = new FamilyMember(name, bdate, null, false);
+        member.setClientId(client.getClientId());
         member = FamilyDataAccess.create(member, connection);
         member.setAddress(AddressDataAccess.create(member.getId(), city, state, connection));
         return success;
     }
 
-    private static boolean createRelationship(String[] tokens, Connection connection) throws ParseException, SQLException {
+    private static boolean createRelationship(String[] tokens, Client client, Connection connection) throws ParseException, SQLException {
         boolean success = true;
 
         String memberName = tokens[0];
@@ -121,7 +124,7 @@ public class TextFileParser {
         if (RelationshipDataAccess.hasRelation(member.getId(), relatedMember.getId(), connection)) {
             return false;
         }
-        RelationshipDataAccess.create(member.getId(), relatedMember.getId(), relationType, connection);
+        RelationshipDataAccess.create(member.getId(), relatedMember.getId(), relationType, client.getClientId(), connection);
 
         return success;
     }

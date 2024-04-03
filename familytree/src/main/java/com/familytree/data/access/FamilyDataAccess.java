@@ -37,7 +37,7 @@ public class FamilyDataAccess {
      * @return List<FamilyMember>
      * @throws SQLException
      */
-    public static List<FamilyMember> listByNameOrderById(String name, Connection connection) throws SQLException {
+    public static List<FamilyMember>  listByNameOrderById(String name, Connection connection) throws SQLException {
         String SQL = "SELECT * FROM FamilyMembers AS f  INNER JOIN Addresses as a ON f.member_id = a.member_id ";
         if (name != null && !name.trim().isEmpty()) {
             SQL += "WHERE UPPER(f.name) like  '%" + name.toUpperCase() + "%'";
@@ -83,8 +83,8 @@ public class FamilyDataAccess {
 
     public static FamilyMember create(FamilyMember member, Connection connection) throws SQLException {
         final String sql = "INSERT INTO FamilyMembers "
-                + "(member_id, name, birth_date, death_date, is_deceased) "
-                + "VALUES (?, ?, ?, ?, ?)";
+                + "(member_id, name, birth_date, death_date, is_deceased, client_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
 
         member.setId(getNextMemberId(connection));
 
@@ -98,6 +98,7 @@ public class FamilyDataAccess {
             pstmt.setDate(3, new java.sql.Date(member.getBirthDate().getTime()));
             pstmt.setDate(4, deathDate);
             pstmt.setBoolean(5, member.isDeceased());
+            pstmt.setInt(6, member.getClientId());
             pstmt.executeUpdate();
         }
         return member;
