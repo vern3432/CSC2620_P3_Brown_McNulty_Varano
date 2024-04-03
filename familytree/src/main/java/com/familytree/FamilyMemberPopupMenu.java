@@ -67,7 +67,10 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
     private void loadData() {
         try {
             // Fetch data from the database based on the memberId
-            String query = "SELECT Addresses.address_id, Addresses.res_state,Addresses.city,FamilyMembers.name FROM Addresses JOIN FamilyMembers ON FamilyMembers.current_residence=Addresses.address_id WHERE FamilyMembers.member_id = ?";
+            String query = "SELECT Addresses.member_id, Addresses.city, Addresses.state, FamilyMembers.name " +
+            "FROM Addresses " +
+            "JOIN FamilyMembers ON Addresses.member_id = FamilyMembers.member_id " +
+            "WHERE FamilyMembers.member_id = ?";
             String query_dead = "SELECT name FROM FamilyMembers WHERE FamilyMembers.member_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, memberId);
@@ -75,8 +78,8 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
                 if (resultSet.next()) {
                     String name = resultSet.getString("name");
                     String residence = resultSet.getString("city");
-                    String StateString = resultSet.getString("res_state");
-                    this.address_id=resultSet.getInt("address_id");
+                    String StateString = resultSet.getString("state");
+                    // this.address_id=resultSet.getInt("address_id");
                     System.out.println(name);
                     System.out.println(residence);
                     nameLabel.setText("Name: " + name);
@@ -176,7 +179,7 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
     // public void updateNameAddressState(int memberId, String newName, String newCity, String newState) {
     //     String query = "UPDATE FamilyMembers " +
     //                    "JOIN Addresses ON FamilyMembers.member_id = Addresses.member_id " +
-    //                    "SET FamilyMembers.name = ?, Addresses.city = ?, Addresses.res_state = ? " +
+    //                    "SET FamilyMembers.name = ?, Addresses.city = ?, Addresses.state = ? " +
     //                    "WHERE FamilyMembers.member_id = ?";
         
     //     try (Connection connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
@@ -201,55 +204,47 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
             // Retrieve edited data
             String editedName = nameLabel.getText().replace("Name: ", ""); // Remove "Name: " prefix
             String editedAddress = addressLabel.getText().replace("Address: ", ""); // Remove "Address: " prefix
-            String editedState = State.getText().replace("State: ", ""); // Remove "Address: " prefix
-
-            String editedRelationships = relationshipsArea.getText();
-
+            String editedState = State.getText().replace("State: ", ""); // Remove "State: " prefix
+    
             // Update database with edited data
-            String query = "UPDATE Addresses " +
-            "SET res_state = ?, " +
-            
-            "WHERE member_id = ?";
-
-            String update_res = "UPDATE Addresses " +
-             "SET res_state = ? " +
-             "WHERE address_id = ? " +
-             "AND member_id IN (SELECT member_id FROM FamilyMembers WHERE client_id = (SELECT client_id FROM FamilyMembers WHERE member_id = ?));";
-             
-             String update_city = "UPDATE Addresses " +
-             "SET city = ? " +
-             "WHERE address_id = ? " +
-             "AND member_id IN (SELECT member_id FROM FamilyMembers WHERE client_id = (SELECT client_id FROM FamilyMembers WHERE member_id = ?));";
-
-            String update_name = "UPDATE FamilyMembers SET name = ? WHERE member_id = ?;";
-
-
-            try (PreparedStatement statement = connection.prepareStatement(update_res)) {
+            String updateQuery = "UPDATE Addresses " +
+                                 "SET state = ? " +
+                                 "WHERE member_id = ?";
+    
+            try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
                 statement.setString(1, editedState);
                 statement.setInt(2, address_id);
-                statement.setInt(3, memberId);
                 statement.executeUpdate();
-                System.out.println("Update successful."+memberId+":"+address_id);
+                System.out.println("Update successful for state: " + editedState + ", member ID: " + address_id);
             }
-
-            try (PreparedStatement statement2 = connection.prepareStatement(update_city)) {
-                statement2.setString(1, editedAddress);
-                statement2.setInt(2, address_id);
-                statement2.setInt(3, memberId);
-                statement2.executeUpdate();
-                System.out.println("Update successful."+memberId+":"+address_id);
+    
+            updateQuery = "UPDATE Addresses " +
+                          "SET city = ? " +
+                          "WHERE member_id = ?";
+    
+            try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+                statement.setString(1, editedAddress);
+                statement.setInt(2, address_id);
+                statement.executeUpdate();
+                System.out.println("Update successful for city: " + editedAddress + ", member ID: " + address_id);
             }
-
-            try (PreparedStatement statement3 = connection.prepareStatement(update_name)) {
-                statement3.setString(1, "editedName");
-                statement3.setInt(2, memberId);
-                System.out.println("Update successful."+memberId+":"+address_id);
+    
+            String updateNameQuery = "UPDATE FamilyMembers " +
+                                     "SET name = ? " +
+                                     "WHERE member_id = ?";
+    
+            try (PreparedStatement statement = connection.prepareStatement(updateNameQuery)) {
+                statement.setString(1, editedName);
+                statement.setInt(2, memberId);
+                statement.executeUpdate();
+                System.out.println("Update successful for name: " + editedName + ", member ID: " + memberId);
             }
-
-            // Inform the user about successful submissionupdate_res
+    
+            // Inform the user about successful submission
             JOptionPane.showMessageDialog(null, "Changes submitted successfully.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    
 }

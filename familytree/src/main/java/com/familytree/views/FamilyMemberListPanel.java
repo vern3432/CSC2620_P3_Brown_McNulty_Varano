@@ -1,7 +1,4 @@
-package com.familytree.views;
-import com.familytree.FamilyDatabase;
-import com.familytree.FamilyMemberPopupMenu;
-import com.familytree.data.access.FamilyDataAccess;
+package com.familytree;
 import com.familytree.data.entities.FamilyMember;
 
 import javax.swing.*;
@@ -26,16 +23,28 @@ public class FamilyMemberListPanel extends JPanel {
         this.connection = connection;
     }
 
-    public FamilyMemberListPanel(Connection connection) {
-        this.setConnection(connection);
+    public FamilyMemberListPanel() {
+        this.setConnection(FamilyDatabase.getConnection());
         this.listModel = new DefaultListModel<>();
         this.memberList = new JList<>(listModel);
         this.searchField = new JTextField(20);
-
-        initialize();
+        initialize(this.connection);
+    }
+    public static void displayNewFamilyMemberForm(Connection connection) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    NewFamilyMemberForm frame = new NewFamilyMemberForm(connection);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
-    private void initialize() {
+
+    private void initialize(Connection connection) {
         setLayout(new BorderLayout());
 
         // Panel for search bar
@@ -54,7 +63,7 @@ public class FamilyMemberListPanel extends JPanel {
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                 
+                displayNewFamilyMemberForm(connection);
                 // Implement logic for adding new event
             }
 
