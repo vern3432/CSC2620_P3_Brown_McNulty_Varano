@@ -132,6 +132,10 @@ public class NewEventForm extends JFrame {
         }
     }
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         // You can test the form independently if needed
         SwingUtilities.invokeLater(new Runnable() {

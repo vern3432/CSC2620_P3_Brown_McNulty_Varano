@@ -19,6 +19,10 @@ public class Event {
         this.attendees = new ArrayList<>();
     }
 
+    
+    /** 
+     * @param eventId
+     */
     // Setters
     public void setEventId(int eventId) {
         this.eventId = eventId;

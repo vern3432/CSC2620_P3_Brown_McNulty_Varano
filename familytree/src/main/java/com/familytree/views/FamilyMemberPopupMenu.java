@@ -138,6 +138,10 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
         }
     }
 
+    
+    /** 
+     * @param address_id
+     */
     private void enableEditMode(int address_id) {
         // Create a dialog box with buttons for options
         String[] options = {"Name", "Address","State"};

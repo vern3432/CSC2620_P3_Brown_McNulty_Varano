@@ -13,6 +13,15 @@ import java.util.Date;
 
 public class TextFileParser {
 
+    
+    /** 
+     * @param file
+     * @param connection
+     * @return ParsingResult
+     * @throws IOException
+     * @throws SQLException
+     * @throws ParseException
+     */
     public static ParsingResult parse(InputStream file, Connection connection) throws IOException, SQLException, ParseException {
         var result = new ParsingResult();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file))) {

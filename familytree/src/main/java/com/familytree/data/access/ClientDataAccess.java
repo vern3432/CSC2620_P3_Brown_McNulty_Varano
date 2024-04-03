@@ -7,6 +7,13 @@ import java.sql.*;
 
 public class ClientDataAccess {
 
+    
+    /** 
+     * @param username
+     * @param connection
+     * @return Client
+     * @throws SQLException
+     */
     public static Client getByUserName(String username, Connection connection) throws SQLException {
         final String SQL = "SELECT * FROM Clients WHERE UPPER(user_name) = ?";
         Client result = null;

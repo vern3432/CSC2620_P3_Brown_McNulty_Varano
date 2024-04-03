@@ -79,6 +79,12 @@ public class FamilyTreeGUI extends JFrame {
 
     }
 
+    
+    /** 
+     * @param HashMap<Integer
+     * @param members
+     * @return ArrayList<ArrayList<FamilyMember>>
+     */
     public ArrayList<ArrayList<FamilyMember>> generateFamilyTreeRows(HashMap<Integer, FamilyMember> members) {
         ArrayList<ArrayList<FamilyMember>> familyTreeRows = new ArrayList<>();
         Set<Integer> visited = new HashSet<>();

@@ -31,6 +31,10 @@ public class FamilyTreePanel extends JPanel {
         });
     }
 
+    
+    /** 
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

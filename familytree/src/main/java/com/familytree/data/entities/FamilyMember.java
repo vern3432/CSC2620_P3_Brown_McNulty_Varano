@@ -21,6 +21,10 @@ public class FamilyMember {
     private int spouse = -1;
     private int stackLayer = -1;
 
+    
+    /** 
+     * @return int
+     */
     public int getSpouse() {
         System.out.println("spouse:" + spouse);
         return spouse;

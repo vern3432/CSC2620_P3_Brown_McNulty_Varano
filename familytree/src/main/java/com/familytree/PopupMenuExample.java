@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 
 public class PopupMenuExample {
 
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {

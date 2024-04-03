@@ -8,6 +8,15 @@ import java.sql.SQLException;
 
 public class AddressDataAccess {
 
+    
+    /** 
+     * @param memberId
+     * @param city
+     * @param state
+     * @param connection
+     * @return Address
+     * @throws SQLException
+     */
     public static Address create(int memberId, String city, String state, Connection connection) throws SQLException {
         final String addressSql = "INSERT INTO Addresses (state, city, member_id) VALUES (?, ?, ?)";
         var result = new Address(memberId, city, state);

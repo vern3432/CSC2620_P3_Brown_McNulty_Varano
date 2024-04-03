@@ -15,6 +15,10 @@ public class FamilyMemberListPanel extends JPanel {
     private final JTextField searchField; 
     Connection connection;
 
+    
+    /** 
+     * @return Connection
+     */
     public Connection getConnection() {
         return connection;
     }

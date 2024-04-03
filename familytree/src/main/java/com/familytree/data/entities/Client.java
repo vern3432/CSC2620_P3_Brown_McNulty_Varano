@@ -11,6 +11,10 @@ public class Client {
         this.userName = userName;
     }
 
+    
+    /** 
+     * @return int
+     */
     public int getClientId() {
         return clientId;
     }

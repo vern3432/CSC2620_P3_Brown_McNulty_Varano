@@ -25,6 +25,10 @@ import java.time.LocalDate;
 public class EventPopupMenu extends JPopupMenu {
     private int eventId;
     private Connection connection;
+    
+    /** 
+     * @return Connection
+     */
     public Connection getConnection() {
         return connection;
     }

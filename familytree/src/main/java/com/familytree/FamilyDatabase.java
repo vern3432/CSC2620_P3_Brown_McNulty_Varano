@@ -13,6 +13,10 @@ import java.time.ZoneId;
 
 public class FamilyDatabase {
     private static Connection connection;
+    
+    /** 
+     * @return Connection
+     */
     public static Connection getConnection() {
         return connection;
     }

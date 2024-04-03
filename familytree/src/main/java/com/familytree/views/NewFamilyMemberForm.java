@@ -115,6 +115,10 @@ public class NewFamilyMemberForm extends JFrame {
         add(scrollPane);
     }
 
+    
+    /** 
+     * @return JDatePickerImpl
+     */
     private JDatePickerImpl createDatePicker() {
         UtilDateModel model = new UtilDateModel();
         Properties p = new Properties();

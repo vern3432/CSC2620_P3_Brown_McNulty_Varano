@@ -56,6 +56,10 @@ public class RegisterDialog extends JDialog implements ActionListener {
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
     }
 
+    
+    /** 
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Register")) {

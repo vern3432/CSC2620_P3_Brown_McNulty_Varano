@@ -15,6 +15,10 @@ public class EventManagementPanel extends JPanel {
     private final JList<Event> eventList;
     private Connection connection;
 
+    
+    /** 
+     * @return Connection
+     */
     public Connection getConnection() {
         return connection;
     }

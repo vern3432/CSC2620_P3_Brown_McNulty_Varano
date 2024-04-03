@@ -13,6 +13,10 @@ class Node {
     private Node partner;
     private FamilyMember member;
 
+    
+    /** 
+     * @return FamilyMember
+     */
     public FamilyMember getMember() {
         return member;
     }

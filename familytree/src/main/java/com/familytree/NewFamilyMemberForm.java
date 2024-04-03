@@ -32,6 +32,10 @@ public class NewFamilyMemberForm extends JFrame {
 
   private Connection connection;
 
+  
+  /** 
+   * @return Connection
+   */
   public Connection getConnection() {
     return connection;
   }

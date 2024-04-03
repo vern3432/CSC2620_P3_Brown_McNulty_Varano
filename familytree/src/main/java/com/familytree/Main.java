@@ -12,6 +12,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 
 public class Main {
+    
+    /** 
+     * @param args
+     */
     public static void main(String[] args) {
         try {
             final Connection conn = SQLiteConnector.connect();

@@ -4,6 +4,15 @@ import java.sql.*;
 
 public class RelationshipDataAccess {
 
+    
+    /** 
+     * @param memberId
+     * @param relatedMemberId
+     * @param relationType
+     * @param conn
+     * @return int
+     * @throws SQLException
+     */
     public static int create(int memberId, int relatedMemberId, String relationType, Connection conn) throws SQLException {
         int nextRelationshipId = getNextRelationshipId(conn);
 

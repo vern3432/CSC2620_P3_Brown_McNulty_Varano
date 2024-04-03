@@ -30,6 +30,13 @@ public class FamilyDataAccess {
         return result;
     }
 
+    
+    /** 
+     * @param name
+     * @param connection
+     * @return List<FamilyMember>
+     * @throws SQLException
+     */
     public static List<FamilyMember> listByNameOrderById(String name, Connection connection) throws SQLException {
         String SQL = "SELECT * FROM FamilyMembers AS f  INNER JOIN Addresses as a ON f.member_id = a.member_id ";
         if (name != null && !name.trim().isEmpty()) {

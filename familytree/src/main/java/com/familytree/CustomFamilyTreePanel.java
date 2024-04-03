@@ -16,6 +16,10 @@ public class CustomFamilyTreePanel extends JPanel {
     private static final int PADDING_TOP = 50;
     Connection connection;
 
+    
+    /** 
+     * @return Connection
+     */
     public Connection getConnection() {
         return connection;
     }

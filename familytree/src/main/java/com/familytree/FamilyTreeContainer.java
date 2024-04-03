@@ -8,6 +8,10 @@ import java.util.List;
 public class FamilyTreeContainer {
     private HashMap<Integer, FamilyMember> members;
 
+    
+    /** 
+     * @return HashMap<Integer, FamilyMember>
+     */
     public HashMap<Integer, FamilyMember> getMembers() {
         return members;
     }

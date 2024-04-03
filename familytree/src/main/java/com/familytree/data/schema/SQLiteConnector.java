@@ -11,6 +11,10 @@ import java.util.Scanner;
 public class SQLiteConnector {
     private static final String url = "jdbc:sqlite:finnFamilyTree.db";
 
+    
+    /** 
+     * @return Connection
+     */
     public static Connection connect() {
         Connection conn = null;
         try {

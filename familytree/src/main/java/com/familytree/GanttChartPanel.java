@@ -28,6 +28,11 @@ public class GanttChartPanel extends JPanel {
         }
     }
 
+    
+    /** 
+     * @param connection
+     * @throws SQLException
+     */
     private void initialize(Connection connection) throws SQLException {
         setLayout(new BorderLayout());
 

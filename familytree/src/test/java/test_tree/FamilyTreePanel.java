@@ -49,6 +49,12 @@ public class FamilyTreePanel extends JPanel {
         displayTree(rootPerson, 100, 20);
     }
 
+    
+    /** 
+     * @param person
+     * @param x
+     * @param y
+     */
     private void displayTree(Person person, int x, int y) {
         JLabel nameLabel = new JLabel(person.getName());
         nameLabel.setBounds(x, y, PERSON_WIDTH, PERSON_HEIGHT);
