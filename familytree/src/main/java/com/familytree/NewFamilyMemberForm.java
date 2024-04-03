@@ -35,6 +35,7 @@ public class NewFamilyMemberForm extends JFrame {
   public int connectedID;
   public int Spouse=-5000;
   public ArrayList<Integer> children =new ArrayList<Integer>();
+  public boolean success=false;
 
   private Connection connection;
 
@@ -147,6 +148,12 @@ public class NewFamilyMemberForm extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
           submitForm();
+          if(NewFamilyMemberForm.this.success){
+            NewFamilyMemberForm.this.dispose();
+
+
+          }
+          
         }
       }
     );
@@ -363,11 +370,7 @@ public class NewFamilyMemberForm extends JFrame {
     String text = currentResidenceField.getText().trim();
 
     // If the field is empty, do nothing
-    if (text.isEmpty()) {
-      isDead = true;
 
-      System.out.println("Empty");
-    }
 
     // Split the text by comma
 
@@ -395,18 +398,25 @@ public class NewFamilyMemberForm extends JFrame {
       int rowsAffected = preparedStatement.executeUpdate();
       if (rowsAffected > 0) {
         System.out.println("New family member inserted successfully.");
+        NewFamilyMemberForm.this.success=true;
       } else {
         System.out.println("Failed to insert new family member.");
       }
     }
 
+    boolean noAddress=false;
+    if (text.isEmpty()) {
+      noAddress = true;
+
+      System.out.println("Empty");
+    }
     String[] parts = text.split(",");
 
     // If there aren't exactly two parts, do nothing
-    if (parts.length != 2) {
+    if (parts.length != 2&& !noAddress) {
       System.out.println("wrong format");
       return;
-    } else {
+    } else if(!noAddress){
       // Create an ArrayList and add the two parts
       ArrayList<String> resultList = new ArrayList<>();
       for (String part : parts) {
