@@ -4,6 +4,7 @@ import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
 import com.familytree.listeners.ImportFileListener;
 import com.familytree.views.FamilyMemberListPanel;
+import com.familytree.views.LoggedInPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +41,8 @@ public class FamilyTreeGUI extends JFrame {
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
+
+        add(new LoggedInPanel(client, this, connection), BorderLayout.NORTH);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
