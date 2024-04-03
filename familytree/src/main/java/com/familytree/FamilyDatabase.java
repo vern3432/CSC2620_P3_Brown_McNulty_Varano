@@ -775,7 +775,6 @@ public class FamilyDatabase {
             statement.setInt(3, relatedMemberId);
             statement.setString(4, relationType);
             statement.executeUpdate();
-            statement.close();
             System.out.println("Relationship inserted successfully. Relationship ID: " + relationshipId);
             return relationshipId;
         } catch (SQLException e) {

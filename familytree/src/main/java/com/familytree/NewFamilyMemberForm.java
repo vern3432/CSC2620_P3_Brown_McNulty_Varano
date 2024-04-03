@@ -27,8 +27,14 @@ public class NewFamilyMemberForm extends JFrame {
   private JButton submitButton;
   private JLabel relationshipLabel;
   private JDatePickerImpl datePicker;
-  Date deathDate;
-  Date birthDate;
+  public Date deathDate;
+  public Date birthDate;
+  public String currentName; 
+  public int currentId;
+  public String connectedName;
+  public int connectedID;
+  public int Spouse=-5000;
+  public ArrayList<Integer> children =new ArrayList<Integer>();
 
   private Connection connection;
 
@@ -106,7 +112,13 @@ public class NewFamilyMemberForm extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
           addAttendee();
-          addSpouse();
+          String added=NewFamilyMemberForm.this.connectedName;
+          int addedId=NewFamilyMemberForm.this.connectedID;
+          if(added !=null){
+            addSpouse(added);
+            addSpouseButton.setEnabled(false);
+
+          }
         }
       }
     );
@@ -115,7 +127,16 @@ public class NewFamilyMemberForm extends JFrame {
       new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          addChild();
+          addAttendee();
+          String added=NewFamilyMemberForm.this.connectedName;
+          int addedId=NewFamilyMemberForm.this.connectedID;
+          if(added !=null){
+            addChild(added);
+            addSpouseButton.setEnabled(false);
+
+          }
+
+
         }
       }
     );
@@ -174,15 +195,15 @@ public class NewFamilyMemberForm extends JFrame {
     return datePicker;
   }
 
-  private void addSpouse() {
+  private void addSpouse(String added) {
     // Implement adding spouse functionality here
-    relationships.add("X married to Y"); // Example text
+    relationships.add("X married to "+added); // Example text
     updateRelationshipLabel();
   }
 
-  private void addChild() {
+  private void addChild(String added) {
     // Implement adding child functionality here
-    relationships.add("X parent of Y"); // Example text
+    relationships.add("X parent of "+added); // Example text
     updateRelationshipLabel();
   }
 
@@ -264,6 +285,8 @@ public class NewFamilyMemberForm extends JFrame {
                 System.out.println(
                   "Selected: " + name + " (" + birthDate + ")"
                 );
+                  connectedName=name;
+                  connectedID=memberId;
 
                 // Add the selected family member as an attendee to the event
                 try {
@@ -400,6 +423,23 @@ public class NewFamilyMemberForm extends JFrame {
 
           preparedStatement.executeUpdate();
     }
+    if(this.Spouse!=-5000){
+      PreparedStatement statement = connection.prepareStatement("INSERT INTO Relationships (relationship_id, member_id, related_member_id, relation_type) VALUES (?, ?, ?, ?)");
+      statement.setInt(1, getNextRelationshipId());
+      statement.setInt(2, nextMemberId);
+      statement.setInt(3, this.connectedID);
+      statement.setString(4, "marriedto");
+    }
+    if(this.children.isEmpty()){
+      for (int child : this.children) {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO Relationships (relationship_id, member_id, related_member_id, relation_type) VALUES (?, ?, ?, ?)");
+        statement.setInt(1, getNextRelationshipId());
+        statement.setInt(2, nextMemberId);
+        statement.setInt(3, child);
+        statement.setString(4, "parentto");        
+    }
+
+    }
   }
 
   private int getNextMemberId() throws SQLException {
@@ -415,7 +455,19 @@ public class NewFamilyMemberForm extends JFrame {
     }
     return nextMemberId;
   }
-
+  private int getNextRelationshipId() throws SQLException {
+    int nextMemberId = 1; // Assuming starting from 1
+    String sql = "SELECT MAX(relationship_id) FROM Relationships";
+    try (
+      Statement statement = connection.createStatement();
+      ResultSet resultSet = statement.executeQuery(sql)
+    ) {
+      if (resultSet.next()) {
+        nextMemberId = resultSet.getInt(1) + 1;
+      }
+    }
+    return nextMemberId;
+  }
   public static void main(String[] args) {
     // You can test the form independently if needed
     SwingUtilities.invokeLater(
