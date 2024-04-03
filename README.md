@@ -10,12 +10,65 @@ This application allows users to manage and visualize family tree data through a
 4. Build and run the project.
 
 ## Usage
+### Login Process:
+
+1. Launch the application.
+2. The login dialog will appear.
+3. Enter your credentials (username and password).
+4. Click the "Login" button.
+5. If the credentials are valid, the main GUI window will open.
+6. If the credentials are invalid, an error message will be displayed.
+
+### Family Tree Tab:
+
+- **Display Family Tree:**
+  - Visualize the family tree hierarchy using a custom tree panel.
+  - Implement zoom in/out functionality for better visualization.
+  - Provide options to expand/collapse nodes for better navigation.
+
+### Gantt Chart Tab:
+
+- **Display Gantt Chart:**
+  - Show a graphical representation of events associated with family members.
+  - Implement filtering options to view specific types of events.
+  - Allow users to add, edit, or delete events directly from the chart.
+
+### Family Member List Tab:
+
+- **List Family Members:**
+  - Display a list of all family members with relevant details.
+  - Implement sorting and filtering options for easy navigation.
+  - Allow users to add, edit, or delete family members.
+
+### Event Management Tab:
+
+- **Manage Events:**
+  - Provide a user-friendly interface to manage events associated with family members.
+  - Allow users to add, edit, or delete events.
+  - Implement reminders or notifications for upcoming events.
+
+### Menu Bar Functions:
+
+- **File Menu:**
+  - **Import Text:** Allow users to import family tree data from text files.
+  - **Export Data:** Provide an option to export family tree data to text files.
+  - **Exit:** Close the application.
+
+- **Options Menu:**
+  - **Refresh:** Implement a refresh function to update the displayed data.
+  - **Settings:** Allow users to customize application settings, such as theme or font size.
+
+
 
 ### Main Class (Main.java)
 
 The `Main` class serves as the entry point for the application. It initializes the SQLite database, loads initial data from a text file, and launches the login dialog.
 
-#### Execution Steps:
+
+
+
+
+####  Steps:
 
 1. Establishes a connection to the SQLite database.
 2. Creates the necessary schema in the database.
@@ -35,8 +88,6 @@ The `FamilyTreeGUI` class represents the main graphical user interface of the ap
 
 ## Contributing
 
-Contributions to this project are welcome. If you find any issues or have suggestions for improvements, please feel free to open an issue or submit a pull request.
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
