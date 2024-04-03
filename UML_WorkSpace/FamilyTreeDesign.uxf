@@ -1,10 +1,36 @@
-<diagram program="umletino" version="15.1"><zoom_level>8</zoom_level><help_text>Space for diagram notes</help_text><element><id>UMLClass</id><coordinates><x>64</x><y>120</y><w>256</w><h>112</h></coordinates><panel_attributes>FamilyTreeContainer
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <help_text>Space for diagram notes</help_text>
+  <zoom_level>5</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>405</x>
+      <y>295</y>
+      <w>160</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>FamilyTreeContainer
 --
-members: HasMap&lt;int,FamilyMember&gt;
+- members: HashMap&lt;Integer, FamilyMember&gt;
 --
-+ FamilyTree(members:List&lt;FamilyMember&gt;)
++ getMembers(): HashMap&lt;Integer, FamilyMember&gt;
++ FamilyTreeContainer(members: List&lt;FamilyMember&gt;, relationshipsMap: HashMap&lt;Integer, Relationship&gt;)
 + addMember(member: FamilyMember): void
-+ removeMember(member: FamilyMember): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>944</x><y>120</y><w>624</w><h>264</h></coordinates><panel_attributes> FamilyDatabase
++ removeMember(member: FamilyMember): void
++ toString(): String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1005</x>
+      <y>250</y>
+      <w>390</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes> FamilyDatabase
 --
     - connection: Connection
     - DB_FILE_NAME: String
@@ -24,50 +50,90 @@ members: HasMap&lt;int,FamilyMember&gt;
     + getClientName(clientId: int): String
     + getMemberName(memberId: int): String
     + getMemberIdByNameAndBirthDate(name: String, birthDate: Date): int
-    + main(args: String[]): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>368</x><y>0</y><w>520</w><h>432</h></coordinates><panel_attributes> FamilyMember
+    + main(args: String[]): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>595</x>
+      <y>170</y>
+      <w>340</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>FamilyMember
 --
-    - name: String
-    - birthDate: Date
-    - deathDate: Date
-     - parents: List&lt;FamilyMember&gt;
-     - children: List&lt;FamilyMember&gt;
-     - spouse: FamilyMember
-     - isDeceased: boolean
-    - currentResidence: String
---
-    + FamilyMember(name: String, birthDate: Date, deathDate: Date, isDeceased: boolean, currentResidence: String)
-    + setName(name: String): void
-    + setBirthDate(birthDate: Date): void
-    + setDeathDate(deathDate: Date): void
-    + setDeceased(deceased: boolean): void
-    + setCurrentResidence(currentResidence: String): void
-    + getName(): String
-    + getBirthDate(): Date
-    + getDeathDate(): Date
-    + isDeceased(): boolean
-    + getCurrentResidence(): String
-    + setName(name: String): void
-    + getBirthDate(): Date
-    + setBirthDate(date: Date): void
-    + getParents(): List&lt;FamilyMember&gt;
-    + addChild(child: FamilyMember): void
-    + removeChild(child: FamilyMember): void
-     + getSpouse(): FamilyMember
-     + setSpouse(spouse: FamilyMember): void
-	+ isLiving(): boolean
-	+ setLiving(living: boolean): void
-        + getCurrentResidence(): String
-	+ setCurrentResidence(residence: String): void
-	+ getDeathDate(): Date
-	+ setDeathDate(date: Date): void
 
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>120</x><y>360</y><w>176</w><h>128</h></coordinates><panel_attributes>TextFileParser
+- id: int
+- added: boolean
+- name: String
+- birthDate: Date
+- deathDate: Date
+- isDeceased: boolean
+- address: Address
+- parents: ArrayList&lt;Integer&gt;
+- children: ArrayList&lt;Integer&gt;
+- spouse: int
+- stackLayer: int
+--
+
++ getSpouse(): int
++ getParents(): ArrayList&lt;Integer&gt;
++ setParents(parents: ArrayList&lt;Integer&gt;): void
++ getChildren(): ArrayList&lt;Integer&gt;
++ setChildren(children: ArrayList&lt;Integer&gt;): void
++ getStackLayer(): int
++ setStackLayer(stackLayer: int): void
++ getId(): int
++ setId(id: int): void
++ addParent(id: Integer): void
++ addChildren(id: Integer): void
++ setSpouse(spouse: int): void
++ FamilyMember(id: int, name: String, birthDate: Date, deathDate: Date, isDeceased: boolean, currentResidence: String)
++ FamilyMember(name: String, birthDate: Date, deathDate: Date, isDeceased: boolean)
++ toString(): String
++ setName(name: String): void
++ setBirthDate(birthDate: Date): void
++ setDeathDate(deathDate: Date): void
++ setDeceased(deceased: boolean): void
++ getName(): String
++ getBirthDate(): Date
++ getDeathDate(): Date
++ isDeceased(): boolean
++ getAddress(): Address
++ setAddress(address: Address): void
++ processRelationships(connection: Connection): void
+- handleMarriedTo(relationship: Relationship): void
+- handleParentOf(relationship: Relationship): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>465</x>
+      <y>395</y>
+      <w>110</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>TextFileParser
 --
 --
 - parseTextFile(String): List&lt;String[]&gt; 
 - parseTextFileAndPrintResults(String): void 
 + main(String[]): void
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1112</x><y>424</y><w>272</w><h>200</h></coordinates><panel_attributes>Event
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1090</x>
+      <y>465</y>
+      <w>220</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Event
 --
     - eventId: int
     - eventDate: Date
@@ -84,7 +150,18 @@ members: HasMap&lt;int,FamilyMember&gt;
     + getAttendees(): List&lt;FamilyMember&gt;
     + addAttendee(attendee: FamilyMember): void
     + toString(): String
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>504</x><y>480</y><w>200</w><h>128</h></coordinates><panel_attributes>FamilyTreeGUI
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>645</x>
+      <y>545</y>
+      <w>125</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>FamilyTreeGUI
 --
 - db: FamilyDatabase
 --
@@ -92,14 +169,37 @@ members: HasMap&lt;int,FamilyMember&gt;
 + createFamilyTreePanel(): JPanel
 + createGanttChartPanel(): JPanel
 + createFamilyMemberListPanel(): JPanel
-+ createEventManagementPanel(): JPanel</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>136</x><y>616</y><w>168</w><h>144</h></coordinates><panel_attributes>FamilyTreePanel
++ createEventManagementPanel(): JPanel</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>230</x>
+      <y>605</y>
+      <w>325</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>FamilyTreePanel
 --
 - rootMember: FamilyMember
 --
 + FamilyTreePanel(rootMember: FamilyMember)
-- initialize(): void
-- paintComponent(g: Graphics): void
-- drawFamilyTree(g: Graphics, member: FamilyMember, x: int, y: int, isRoot: boolean): void</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>688</x><y>672</y><w>168</w><h>152</h></coordinates><panel_attributes>FamilyMemberListPanel
++ initialize(): void
++ paintComponent(g: Graphics): void
+- drawFamilyTree(g: Graphics, member: FamilyMember, x: int, y: int, isRoot: boolean): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>810</x>
+      <y>665</y>
+      <w>105</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>FamilyMemberListPanel
 -
 - database: FamilyDatabase
 - listModel: DefaultListModel&lt;FamilyMember&gt;
@@ -111,7 +211,18 @@ members: HasMap&lt;int,FamilyMember&gt;
 - updateFamilyMemberList(): void
 - showEditPopup(member: FamilyMember): void
 + createFamilyMemberListPanel(database: FamilyDatabase): FamilyMemberListPanel
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>888</x><y>776</y><w>256</w><h>152</h></coordinates><panel_attributes>EventManagementPanel
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>630</y>
+      <w>160</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>EventManagementPanel
 --
 - database: FamilyDatabase
 - events: List&lt;Event&gt;
@@ -123,23 +234,733 @@ members: HasMap&lt;int,FamilyMember&gt;
 - loadEventsFromDatabase(): void
 - addNewEvent(): void
 - showEditPopup(event: Event): void
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>416</x><y>696</y><w>240</w><h>112</h></coordinates><panel_attributes>GanttChartPanel
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>645</x>
+      <y>665</y>
+      <w>150</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>GanttChartPanel
 --
 - database: FamilyDatabase
 --
 + GanttChartPanel(database: FamilyDatabase)
 - initialize(): void
 + createGanttChartPanel(database: FamilyDatabase): GanttChartPanel
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>608</x><y>424</y><w>64</w><h>72</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>10;10;10;70</additional_attributes></element><element><id>Relation</id><coordinates><x>224</x><y>424</y><w>160</w><h>208</h></coordinates><panel_attributes></panel_attributes><additional_attributes>180;10;10;240</additional_attributes></element><element><id>Relation</id><coordinates><x>768</x><y>376</y><w>192</w><h>312</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>220;10;10;370</additional_attributes></element><element><id>Relation</id><coordinates><x>544</x><y>376</y><w>448</w><h>336</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>540;10;240;300;10;400</additional_attributes></element><element><id>Relation</id><coordinates><x>976</x><y>376</y><w>72</w><h>416</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>10;10;30;500</additional_attributes></element><element><id>Relation</id><coordinates><x>216</x><y>312</y><w>168</w><h>64</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>190;10;10;60</additional_attributes></element><element><id>Relation</id><coordinates><x>768</x><y>424</y><w>152</w><h>264</h></coordinates><panel_attributes></panel_attributes><additional_attributes>10;10;170;190;90;310</additional_attributes></element><element><id>Relation</id><coordinates><x>1136</x><y>616</y><w>104</w><h>176</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>110;10;10;200</additional_attributes></element><element><id>Relation</id><coordinates><x>48</x><y>224</y><w>104</w><h>408</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>20;10;10;430;110;490</additional_attributes></element><element><id>UMLClass</id><coordinates><x>288</x><y>560</y><w>168</w><h>48</h></coordinates><panel_attributes>Main
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>710</x>
+      <y>515</y>
+      <w>50</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>505</x>
+      <y>515</y>
+      <w>100</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>180.0;10.0;10.0;180.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>860</x>
+      <y>410</y>
+      <w>155</w>
+      <h>265</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>290.0;10.0;200.0;270.0;10.0;510.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>725</x>
+      <y>410</y>
+      <w>310</w>
+      <h>265</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>600.0;10.0;440.0;240.0;210.0;440.0;10.0;510.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>995</x>
+      <y>410</y>
+      <w>65</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>70.0;10.0;10.0;440.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>525</x>
+      <y>365</y>
+      <w>80</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>140.0;10.0;50.0;30.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>845</x>
+      <y>515</y>
+      <w>95</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes>10.0;10.0;170.0;130.0;120.0;300.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1085</x>
+      <y>600</y>
+      <w>75</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>130.0;10.0;100.0;30.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>420</x>
+      <y>360</y>
+      <w>55</w>
+      <h>255</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;20.0;290.0;60.0;490.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>570</x>
+      <y>770</y>
+      <w>105</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>Main
+bg=red
 -
 -
 + main(args: String[]): void
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>352</x><y>496</y><w>168</w><h>80</h></coordinates><panel_attributes>lt=&lt;.
-&lt;&lt;include&gt;&gt;</panel_attributes><additional_attributes>190;60;80;20;10;80</additional_attributes></element></diagram>
++ loadInitialData(connection: Connection): void
+
+
+
+
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>580</x>
+      <y>580</y>
+      <w>75</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>130.0;10.0;90.0;20.0;10.0;210.0;80.0;320.0;70.0;380.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>305</x>
+      <y>880</y>
+      <w>155</w>
+      <h>175</h>
+    </coordinates>
+    <panel_attributes>Node
+--
+- name: String
+- connections: ArrayList&lt;Node&gt;
+- x: int
+- y: int
+- isCouple: boolean
+- partner: Node
+- member: FamilyMember
+--
++ getMember(): FamilyMember
++ setMember(member: FamilyMember): void
++ Node(name: String)
++ setX(x: int): void
++ setY(y: int): void
++ getName(): String
++ addConnection(node: Node): void
++ getConnections(): List&lt;Node&gt;
++ getX(): int
++ getY(): int
++ isCouple(): boolean
++ setCouple(couple: boolean): void
++ getPartner(): Node
++ setPartner(partner: Node): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>890</x>
+      <y>780</y>
+      <w>205</w>
+      <h>275</h>
+    </coordinates>
+    <panel_attributes>NewFamilyMemberForm
+--
+- nameField: JTextField
+- birthDatePicker: JDatePickerImpl
+- deathDatePicker: JDatePickerImpl
+- currentResidenceField: JTextField
+- addSpouseButton: JButton
+- addChildButton: JButton
+- submitButton: JButton
+- relationshipLabel: JLabel
+- datePicker: JDatePickerImpl
+- deathDate: Date
+- birthDate: Date
+- currentName: String
+- currentId: int
+- connectedName: String
+- connectedID: int
+- Spouse: int
+- children: ArrayList&lt;Integer&gt;
+- success: boolean
+- connection: Connection
+- relationships: List&lt;String&gt;
+--
++ getConnection(): Connection
++ setConnection(connection: Connection): void
++ NewFamilyMemberForm(connection: Connection)
+- createDatePicker(): JDatePickerImpl
+- addSpouse(added: String): void
+- addChild(added: String): void
+- submitForm(): void
+- updateRelationshipLabel(): void
+- addAttendee(): void
+- updateSubmitButtonState(): void
+- insertNewFamilyMember(name: String): void
+- getNextMemberId(): int
+- getNextRelationshipId(): int
++ main(args: String[]): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1100</x>
+      <y>700</y>
+      <w>140</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>NewEventForm
+--
+- dateLabel: JLabel
+- typeLabel: JLabel
+- submitButton: JButton
+- datePicker: JDatePickerImpl
+- typeField: JTextField
+- connection: Connection
+--
++ getConnection(): Connection
++ setConnection(connection: Connection): void
++ NewEventForm(connection: Connection)
+- submitEvent(): void
++ main(args: String[]): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>705</x>
+      <y>785</y>
+      <w>170</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>FamilyMemberPopupMenu
+--
+- memberId: int
+- connection: Connection
+- nameLabel: JLabel
+- addressLabel: JLabel
+- State: JLabel
+- address_id: int
+- relationshipsArea: JTextArea
+- editButton: JButton
+- submitButton: JButton
+--
++ FamilyMemberPopupMenu(memberId: int, connection: Connection)
+- loadData(): void
+- enableEditMode(address_id: int): void
+- submitChanges(address_id: int): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>475</x>
+      <y>940</y>
+      <w>105</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>FamilyMemberButton
+--
+- memberId: int
+- connection: Connection
+--
++ FamilyMemberButton(node: Node, connection: Connection)
+- showPopupMenu(): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>240</x>
+      <y>685</y>
+      <w>295</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>CustomFamilyTreePanel
+--
+- nodes: ArrayList&lt;ArrayList&lt;Node&gt;&gt;
+- HORIZONTAL_GAP: final int
+- VERTICAL_GAP: final int
+- PADDING_LEFT: final int
+- PADDING_TOP: final int
+- connection: Connection
+-
++ getConnection(): Connection
++ setConnection(connection: Connection): void
++ CustomFamilyTreePanel(initialNodes: List&lt;List&lt;Node&gt;&gt;, connection: Connection)
+- findNodeById(id: int): Node
+- establishConnections(): void
+- calculateNodePositions(): void
+- adjustPanelSize(): void
+- addNodesToPanel(): void
+- createButton(nodeName: String, node: Node): JButton
+- paintComponent(g: Graphics): void
++ main(args: String[]): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>480</x>
+      <y>840</y>
+      <w>75</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;200.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>390</x>
+      <y>840</y>
+      <w>90</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;80.0;160.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>805</x>
+      <y>1055</y>
+      <w>105</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>RegisterDialog
+--
+- connection: Connection
+- nameField: JTextField
+- usernameField: JTextField
+- passwordField: JPasswordField
+-
++ RegisterDialog(parent: JFrame, connection: Connection)
++ actionPerformed(e: ActionEvent): void
+- registerUser(name: String, username: String, password: String): boolean
+- isValidEntries(name: String, username: String, password: String): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>550</x>
+      <y>1060</y>
+      <w>105</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>LoginDialog
+--
+- connection: Connection
+- usernameField: JTextField
+- passwordField: JPasswordField
+--
++ LoginDialog(connection: Connection)
++ actionPerformed(e: ActionEvent): void
+- authenticateUser(username: String, password: String): Client
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>570</x>
+      <y>840</y>
+      <w>105</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>LoggedInPanel
+--
+- userLabel: JLabel
+- logoutButton: JButton
+--
++ LoggedInPanel(client: Client, main: FamilyTreeGUI, conn: Connection)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>605</x>
+      <y>810</y>
+      <w>50</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>670</x>
+      <y>875</y>
+      <w>195</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>370.0;360.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>575</x>
+      <y>880</y>
+      <w>65</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>70.0;360.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>205</x>
+      <y>350</y>
+      <w>105</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>ParsingResult
+--
+- created: int
+- duplicated: int
+- relationshipsCreated: int
+- relationshipsDuplicated: int
+--+ getCreated(): int
++ setCreated(created: int): void
++ getDuplicated(): int
++ setDuplicated(duplicated: int): void
++ getRelationshipsCreated(): int
++ setRelationshipsCreated(relationshipsCreated: int): void
++ getRelationshipsDuplicated(): int
++ setRelationshipsDuplicated(relationshipsDuplicated: int): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>305</x>
+      <y>390</y>
+      <w>170</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;320.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>190</x>
+      <y>495</y>
+      <w>130</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>ImportFileListener
+--
+- connection: Connection
+--
++ ImportFileListener(connection: Connection)
++ actionPerformed(e: ActionEvent): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>315</x>
+      <y>450</y>
+      <w>160</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;90.0;300.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1325</x>
+      <y>490</y>
+      <w>105</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>SQLiteConnector
+--
+- url: String
+--
++ connect(): Connection
++ createSchema(connection: Connection): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1355</x>
+      <y>380</y>
+      <w>65</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;220.0;80.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>675</x>
+      <y>1065</y>
+      <w>105</w>
+      <h>95</h>
+    </coordinates>
+    <panel_attributes>Client
+--
+- clientId: int
+- name: String
+- userName: String
+--
++ Client(clientId: int, name: String, userName: String)
++ getClientId(): int
++ setClientId(clientId: int): void
++ getName(): String
++ setName(name: String): void
++ getUserName(): String
++ setUserName(userName: String): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>690</x>
+      <y>0</y>
+      <w>190</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>Address
+--
+- memberId: int
+- city: String
+- state: String
+--
++ Address(memberId: int, city: String, state: String)
++ Address()
++ getMemberId(): int
++ setMemberId(memberId: int): void
++ getCity(): String
++ setCity(city: String): void
++ getState(): String
++ setState(state: String): void
++ toString(): String
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>890</x>
+      <y>755</y>
+      <w>60</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>50.0;50.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1085</x>
+      <y>660</y>
+      <w>80</w>
+      <h>50</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;instanceOf&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;30.0;50.0;10.0;70.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>735</y>
+      <w>225</w>
+      <h>60</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>430.0;100.0;310.0;20.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>800</x>
+      <y>755</y>
+      <w>55</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;60.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>615</x>
+      <y>880</y>
+      <w>115</w>
+      <h>195</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>210.0;370.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>780</x>
+      <y>115</y>
+      <w>50</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>20.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>665</x>
+      <y>620</y>
+      <w>50</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>20.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>765</x>
+      <y>620</y>
+      <w>70</w>
+      <h>55</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>120.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>765</x>
+      <y>600</y>
+      <w>175</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>330.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>620</y>
+      <w>180</w>
+      <h>75</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;include&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;130.0;340.0;10.0</additional_attributes>
+  </element>
+</diagram>

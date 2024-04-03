@@ -106,11 +106,23 @@ public class FamilyMember {
 
     @Override
     public String toString() {
-        return "FamilyMember [id=" + id + ", added=" + added + ", name=" + name + ", birthDate=" + birthDate
-                + ", deathDate=" + deathDate + ", isDeceased=" + isDeceased
-                + ", parents=" + parents + ", children=" + children + ", spouse=" + spouse + ", stackLayer="
-                + stackLayer + "]";
+        String formattedId = String.format("%-10s", id);
+        String formattedAdded = String.format("%-10s", added);
+        String formattedName = String.format("%-20s", name);
+        String formattedBirthDate = String.format("%-12s", birthDate);
+        String formattedDeathDate = String.format("%-12s", deathDate);
+        String formattedIsDeceased = String.format("%-12s", isDeceased);
+        String formattedParents = String.format("%-20s", parents);
+        String formattedChildren = String.format("%-20s", children);
+        String formattedSpouse = String.format("%-20s", spouse);
+        String formattedStackLayer = String.format("%-10s", stackLayer);
+    
+        return " [id=" + formattedId +  "| name=" + formattedName + "| birthDate="
+                + formattedBirthDate + "| deathDate=" + formattedDeathDate + "| isDeceased=" + formattedIsDeceased
+                + "| parents=" + formattedParents + "| children="
+                + formattedChildren + "| spouse=" + formattedSpouse + "| stackLayer=" + formattedStackLayer + "]";
     }
+    
 
     // Setters
     public void setName(String name) {
