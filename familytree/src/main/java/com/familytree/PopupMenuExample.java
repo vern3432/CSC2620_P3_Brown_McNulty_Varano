@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 public class PopupMenuExample {
 
     
-    /** 
+    /** Main method to start family tree GUI
      * @param args
      */
     public static void main(String[] args) {
@@ -17,7 +17,9 @@ public class PopupMenuExample {
             }
         });
     }
-
+    /** 
+     *  Creates and displays GUI to user
+     */
     private static void createAndShowGUI() {
         JFrame frame = new JFrame("Popup Menu Example");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
