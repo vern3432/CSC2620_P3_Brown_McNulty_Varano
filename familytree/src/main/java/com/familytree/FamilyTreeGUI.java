@@ -3,7 +3,6 @@ package com.familytree;
 import com.familytree.data.entities.Client;
 import com.familytree.data.entities.FamilyMember;
 import com.familytree.listeners.ImportFileListener;
-import com.familytree.views.FamilyMemberListPanel;
 import com.familytree.views.LoggedInPanel;
 
 import javax.swing.*;
@@ -41,14 +40,13 @@ public class FamilyTreeGUI extends JFrame {
         setTitle("Family Tree Application");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 1000);
-
         add(new LoggedInPanel(client, this, connection), BorderLayout.NORTH);
 
         JTabbedPane tabbedPane = new JTabbedPane();
 
         JScrollPane familyTreePanel = createFamilyTreePanel(this.connection);
         JPanel ganttChartPanel = createGanttChartPanel(connection);
-        JPanel familyMemberListPanel = createFamilyMemberListPanel();
+        JPanel familyMemberListPanel = createFamilyMemberListPanel(this.db);
         JPanel eventManagementPanel = createEventManagementPanel();
 
         tabbedPane.addTab("Family Tree", familyTreePanel);
@@ -578,10 +576,10 @@ public class FamilyTreeGUI extends JFrame {
         return new GanttChartPanel(connection);
     }
 
-    public JPanel createFamilyMemberListPanel() {
+    public JPanel createFamilyMemberListPanel(FamilyDatabase db) {
         JPanel panel = new JPanel(new BorderLayout());
         // Initialize your database object here
-        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(connection);
+        FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(db);
         panel.add(familyMemberListPanel, BorderLayout.CENTER);
         return panel;
     }
