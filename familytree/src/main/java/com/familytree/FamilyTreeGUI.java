@@ -30,6 +30,24 @@ public class FamilyTreeGUI extends JFrame {
     FamilyTreeContainer TreeContainer;
     FamilyDatabase db;
 
+    public void Update() {
+        Dimension previousSize = getSize();
+        int selectedTabIndex = ((JTabbedPane) getContentPane().getComponent(1)).getSelectedIndex();
+
+        Connection connection=this.connection;
+        Client client=this.client;
+        // Dispose of the current window
+        dispose();
+        // Create a new instance of FamilyTreeGUI
+        FamilyTreeGUI New1=new FamilyTreeGUI(connection, client);
+        New1.setSize(previousSize);
+
+        JTabbedPane tabbedPane = (JTabbedPane) New1.getContentPane().getComponent(1);
+        tabbedPane.setSelectedIndex(selectedTabIndex);
+
+    }
+    
+
 
     public FamilyTreeGUI(Connection connection, Client client) {
         this.client = client;
@@ -68,8 +86,21 @@ public class FamilyTreeGUI extends JFrame {
 
         JMenu optionMenu = new JMenu("Options");
 
+        JMenuItem Refresh = new JMenuItem("Refresh");
+        Refresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Call your function here
+                Update();
+            }
+        });
+
+        Refresh.setAccelerator(
+                KeyStroke.getKeyStroke(KeyEvent.VK_R, KeyEvent.CTRL_DOWN_MASK));
         // Add file and option menu items
 
+
+        optionMenu.add(Refresh);
         menuBar.add(fileMenu);
         menuBar.add(optionMenu);
 
