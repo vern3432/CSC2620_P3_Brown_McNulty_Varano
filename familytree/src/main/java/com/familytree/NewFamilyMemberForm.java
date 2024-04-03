@@ -364,7 +364,7 @@ public class NewFamilyMemberForm extends JFrame {
     birthDate = (Date) birthDatePicker.getModel().getValue();
     deathDate = (Date) deathDatePicker.getModel().getValue();
     Boolean isDead = false;
-    if (deathDate == null) {
+    if (deathDate != null) {
       isDead = true;
     }
     String text = currentResidenceField.getText().trim();
