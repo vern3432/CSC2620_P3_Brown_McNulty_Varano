@@ -125,7 +125,6 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
             
                     
                 }
-
             }
             if(found_spouse==false){
                 System.out.println("First found not found");
