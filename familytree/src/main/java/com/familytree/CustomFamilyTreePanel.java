@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * C
+ * represents custom panel for displaying tree
  */
 public class CustomFamilyTreePanel extends JPanel {
     private final ArrayList<ArrayList<Node>> nodes;
@@ -30,6 +30,12 @@ public class CustomFamilyTreePanel extends JPanel {
         this.connection = connection;
     }
 
+    /**
+     * Constructs custom family tree panel with initial nodes and a database connection
+     * 
+     * @param initialNodes initial nodes to display in family tree
+     * @param connection database connection
+     */
     public CustomFamilyTreePanel(List<List<Node>> initialNodes,Connection connection) {
         this.setConnection(connection);
         nodes = new ArrayList<>();

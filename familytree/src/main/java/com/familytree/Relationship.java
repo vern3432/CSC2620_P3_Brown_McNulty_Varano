@@ -7,11 +7,11 @@ public class Relationship {
     private String type;
 
     /**
-    * Constructs a new Relationship object with the specified members and type.
+    * Constructs new relationship object with the specified members and type
     *
-    * @param member1 the ID of the first member in the relationship.
-    * @param member2 the ID of the second member in the relationship.
-    * @param type the type of relationship (e.g., friendship, family, professional).
+    * @param member1 ID of the first member in the relationship
+    * @param member2 ID of the second member in the relationship
+    * @param type type of relationship (family or marital)
     */
     
     public Relationship(int member1, int member2, String type) {

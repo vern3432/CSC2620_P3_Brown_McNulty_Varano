@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * represents an event that is set on a date with attendees
+ */
 public class Event {
     private int eventId;
     private Date eventDate;
@@ -13,6 +16,13 @@ public class Event {
     private List<FamilyMember> attendees;
     private List<Integer> attendees2;
 
+    /**
+     * Constructor for event including the ID, date, and tyope
+     * 
+     * @param eventId Identification 
+     * @param eventDate date of event
+     * @param eventType type of event
+     */
     public Event(int eventId, Date eventDate, String eventType) {
         this.eventId = eventId;
         this.eventDate = eventDate;
@@ -52,6 +62,11 @@ public class Event {
         return eventType;
     }
 
+    /**
+     * Gets attendees of event
+     * 
+     * @return attendees
+     */
     public List<FamilyMember> getAttendees() {
         return attendees;
     }
@@ -60,6 +75,7 @@ public class Event {
     public void addAttendee(FamilyMember attendee) {
         attendees.add(attendee);
     }
+
     public void addAttendee2(int attendee) {
         attendees2.add(attendee);
     }

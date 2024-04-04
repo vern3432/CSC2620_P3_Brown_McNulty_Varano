@@ -146,7 +146,7 @@ public class NewEventForm extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Connection connection = null; // Initialize your database connection
+                Connection connection = null; // initialize your database connection
                 NewEventForm form = new NewEventForm(connection);
                 form.setVisible(true);
             }

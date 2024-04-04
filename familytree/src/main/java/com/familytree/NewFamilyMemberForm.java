@@ -337,6 +337,7 @@ public class NewFamilyMemberForm extends JFrame {
   private class FormDocumentListener
     implements javax.swing.event.DocumentListener {
 
+    
     @Override
     public void insertUpdate(javax.swing.event.DocumentEvent e) {
       updateSubmitButtonState();
@@ -384,12 +385,6 @@ public class NewFamilyMemberForm extends JFrame {
     }
     String text = currentResidenceField.getText().trim();
 
-    // If the field is empty, do nothing
-
-
-    // Split the text by comma
-
-
     if (true) {
       // Prepare and execute the SQL statement to insert the new family member
       String sql =
@@ -406,10 +401,7 @@ public class NewFamilyMemberForm extends JFrame {
 
       }
 
-
-      // death_date (null for now)
-      preparedStatement.setBoolean(5, isDead); // is_deceased (false for now)
-      // preparedStatement.setInt(6, 1); // client_id (assuming 1 for now)
+      preparedStatement.setBoolean(5, isDead); 
 
       // Execute the update
       int rowsAffected = preparedStatement.executeUpdate();

@@ -53,8 +53,6 @@ public class PopupMenuExample {
                 submitButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // Code to handle submit button action
-                        // For demonstration purposes, let's close the popup menu
                         popupMenu.setVisible(false);
                     }
                 });

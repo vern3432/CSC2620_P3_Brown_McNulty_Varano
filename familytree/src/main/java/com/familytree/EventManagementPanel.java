@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * represents panel for managing events
+ */
 public class EventManagementPanel extends JPanel {
 
     private final FamilyDatabase database;
@@ -23,10 +26,19 @@ public class EventManagementPanel extends JPanel {
         return connection;
     }
 
+    /**
+     * gets connection
+     * @param connection
+     */
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * constructor for event management mpanel
+     * 
+     * @param database
+     */
     public EventManagementPanel(FamilyDatabase database) {
         this.connection=FamilyDatabase.getConnection();
         this.database = database;
