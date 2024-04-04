@@ -21,7 +21,8 @@ public class FamilyMember {
     private int spouse = -1;
     private int stackLayer = -1;
 
-    
+    private int clientId;
+
     /** 
      * @return int
      */
@@ -60,6 +61,14 @@ public class FamilyMember {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(int clientId) {
+        this.clientId = clientId;
     }
 
     public void addParent(Integer id) {

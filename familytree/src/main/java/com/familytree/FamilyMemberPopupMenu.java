@@ -108,30 +108,52 @@ public class FamilyMemberPopupMenu extends JPopupMenu {
                 System.out.println("caugt");
                 e.printStackTrace();
             }
-
+            StringBuilder relationships=new StringBuilder();;
             // Fetch relationships
-            boolean found_spouse=true;
+            boolean found_spouse=false;
             query = "SELECT r.relation_type, fm.name FROM Relationships r JOIN FamilyMembers fm ON r.related_member_id = fm.member_id WHERE r.member_id = ?";
             try (PreparedStatement statement = connection.prepareStatement(query)) {
                 statement.setInt(1, memberId);
                 ResultSet resultSet = statement.executeQuery();
-                StringBuilder relationships = new StringBuilder();
                 while (resultSet.next()) {
                     String relationType = resultSet.getString("relation_type");
-                    if (relationType=="marriedto") {
+                    if (relationType.contains("marriedto")) {
                         found_spouse=true;
                     }
                     String relatedName = resultSet.getString("name");
                     relationships.append(relationType).append(": ").append(relatedName).append("\n");
-                
-                
-                
-                
-                
-                
+            
+                    
                 }
-                relationshipsArea.setText(relationships.toString());
             }
+            if(found_spouse==false){
+                System.out.println("First found not found");
+                query = "SELECT r.relation_type, fm.name FROM Relationships r JOIN FamilyMembers fm ON fm.member_id = r.member_id WHERE r.related_member_id = ?";
+                try (PreparedStatement statement2 = connection.prepareStatement(query)) {
+                    statement2.setInt(1, memberId);
+                    ResultSet resultSet = statement2.executeQuery();
+                    while (resultSet.next()) {
+                        String relationType = resultSet.getString("relation_type");
+                        if (relationType.contains("marriedto")) {
+                            String relatedName = resultSet.getString("name");
+                            relationships.append(relationType).append(": ").append(relatedName).append("\n"); 
+                            
+                        }
+
+                    }
+
+
+                    
+                }
+                
+            }
+            relationshipsArea.setText(relationships.toString());
+
+
+            found_spouse=false;
+
+
+
 
             // Disable edit and submit buttons initially
             editButton.setEnabled(true);

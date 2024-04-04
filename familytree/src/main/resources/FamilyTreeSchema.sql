@@ -27,6 +27,8 @@ CREATE TABLE IF NOT EXISTS Relationships (
   member_id INTEGER,
   related_member_id INTEGER,
   relation_type TEXT,
+  client_id INTEGER,
+  FOREIGN KEY (client_id) REFERENCES Clients(client_id),
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id),
   FOREIGN KEY (related_member_id) REFERENCES FamilyMembers(member_id)
 );
@@ -35,7 +37,8 @@ CREATE TABLE IF NOT EXISTS Addresses (
   city TEXT,
   state TEXT,
   member_id INTEGER,
-  PRIMARY KEY(member_id, city, state)
+  client_id INTEGER,
+  PRIMARY KEY(member_id, city, state),
   FOREIGN KEY (member_id) REFERENCES FamilyMembers(member_id)
 );
 

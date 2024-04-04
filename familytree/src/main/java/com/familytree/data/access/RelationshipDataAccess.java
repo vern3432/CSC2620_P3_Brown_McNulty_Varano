@@ -13,17 +13,20 @@ public class RelationshipDataAccess {
      * @return int
      * @throws SQLException
      */
-    public static int create(int memberId, int relatedMemberId, String relationType, Connection conn) throws SQLException {
+    public static int create(
+            int memberId, int relatedMemberId, String relationType, int clientId, Connection conn
+    ) throws SQLException {
         int nextRelationshipId = getNextRelationshipId(conn);
 
-        final String SQL = "INSERT INTO Relationships (relationship_id, member_id, related_member_id, relation_type) "
-                + "VALUES (?, ?, ?, ?)";
+        final String SQL = "INSERT INTO Relationships (relationship_id, member_id, related_member_id, relation_type, client_id) "
+                + "VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement pstmt = conn.prepareStatement(SQL)) {
             pstmt.setInt(1, nextRelationshipId);
             pstmt.setInt(2, memberId);
             pstmt.setInt(3, relatedMemberId);
             pstmt.setString(4, relationType);
+            pstmt.setInt(5, clientId);
             pstmt.executeUpdate();
         }
         return nextRelationshipId;

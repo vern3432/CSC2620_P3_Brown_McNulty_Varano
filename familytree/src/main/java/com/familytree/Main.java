@@ -20,17 +20,10 @@ public class Main {
         try {
             final Connection conn = SQLiteConnector.connect();
             SQLiteConnector.createSchema(conn);
-            loadInitialData(conn);
             SwingUtilities.invokeLater(() -> new LoginDialog(conn));
         } catch (Exception ex) {
             ex.printStackTrace();
             System.err.println("Failed to start application");
-        }
-    }
-
-    private static void loadInitialData(Connection connection) throws IOException, SQLException, ParseException {
-        try (InputStream inputStream = SQLiteConnector.class.getResourceAsStream("/data.txt")) {
-            TextFileParser.parse(inputStream, connection);
         }
     }
 }

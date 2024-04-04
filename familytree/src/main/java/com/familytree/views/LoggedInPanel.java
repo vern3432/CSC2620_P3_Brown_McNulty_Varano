@@ -40,6 +40,5 @@ public class LoggedInPanel extends JPanel {
         buttonPanel.add(logoutButton);
         add(buttonPanel, BorderLayout.EAST);
         setVisible(true);
-        System.out.println("************************* " + client.getName());
     }
 }

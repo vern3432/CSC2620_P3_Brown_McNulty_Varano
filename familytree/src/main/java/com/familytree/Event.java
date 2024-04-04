@@ -11,12 +11,15 @@ public class Event {
     private Date eventDate;
     private String eventType;
     private List<FamilyMember> attendees;
+    private List<Integer> attendees2;
 
     public Event(int eventId, Date eventDate, String eventType) {
         this.eventId = eventId;
         this.eventDate = eventDate;
         this.eventType = eventType;
         this.attendees = new ArrayList<>();
+        this.attendees2 = new ArrayList<>();
+
     }
 
     
@@ -57,14 +60,17 @@ public class Event {
     public void addAttendee(FamilyMember attendee) {
         attendees.add(attendee);
     }
+    public void addAttendee2(int attendee) {
+        attendees2.add(attendee);
+    }
 
     @Override
     public String toString() {
-        return "Event{" +
-                "eventId=" + eventId +
-                ", eventDate=" + eventDate +
-                ", eventType='" + eventType + '\'' +
-                ", attendees=" + attendees +
-                '}';
+        return "|" +
+                "eventId:" + eventId +
+                "| eventDate=" + eventDate.toString() +
+                "| Event Description:'" + eventType + '\'' +
+                "| Attendee Count:" + attendees2.size() +
+                '|';
     }
 }
