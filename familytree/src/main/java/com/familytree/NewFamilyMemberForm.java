@@ -40,19 +40,32 @@ public class NewFamilyMemberForm extends JFrame {
   private Connection connection;
 
   
-  /** 
-   * @return Connection
-   */
+  /**
+  * Retrieves the connection associated with this node.
+  *
+  * @return the connection associated with this node.
+  */
   public Connection getConnection() {
     return connection;
   }
 
+  /**
+   * Sets connection for a node
+   * 
+   * @param connection
+   */
   public void setConnection(Connection connection) {
     this.connection = connection;
   }
 
   private List<String> relationships;
 
+  /**
+  * Constructor a new instance of the NewFamilyMemberForm class
+  * Initializes and configures the GUI components for creating a new family member entry
+  *
+  * @param connection the database connection used for retrieving and updating data
+  */
   public NewFamilyMemberForm(Connection connection) {
     this.connection = connection;
 
@@ -201,6 +214,8 @@ public class NewFamilyMemberForm extends JFrame {
 
     return datePicker;
   }
+
+
 
   private void addSpouse(String added) {
     // Implement adding spouse functionality here
@@ -390,7 +405,9 @@ public class NewFamilyMemberForm extends JFrame {
         preparedStatement.setDate(4,null); 
 
       }
- // death_date (null for now)
+
+
+      // death_date (null for now)
       preparedStatement.setBoolean(5, isDead); // is_deceased (false for now)
       // preparedStatement.setInt(6, 1); // client_id (assuming 1 for now)
 
@@ -465,6 +482,12 @@ public class NewFamilyMemberForm extends JFrame {
     }
     return nextMemberId;
   }
+
+  /**
+   * 
+   * @return
+   * @throws SQLException
+   */
   private int getNextRelationshipId() throws SQLException {
     int nextMemberId = 1; // Assuming starting from 1
     String sql = "SELECT MAX(relationship_id) FROM Relationships";
@@ -478,6 +501,8 @@ public class NewFamilyMemberForm extends JFrame {
     }
     return nextMemberId;
   }
+
+
   public static void main(String[] args) {
     // You can test the form independently if needed
     SwingUtilities.invokeLater(

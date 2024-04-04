@@ -27,6 +27,11 @@ public class NewEventForm extends JFrame {
 
     private Connection connection;
 
+    /**
+    * Represents a form for creating a new event. This form allows users
+    * to enter the date and type of the event and submit it to the database
+    * @param connection
+    */
     public NewEventForm(Connection connection) {
         this.connection = connection;
 
