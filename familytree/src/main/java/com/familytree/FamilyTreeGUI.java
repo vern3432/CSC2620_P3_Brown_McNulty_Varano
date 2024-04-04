@@ -24,6 +24,10 @@ import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+* GUI for managing family tree data
+* This GUI provides functionality for viewing and editing family tree information
+*/
 public class FamilyTreeGUI extends JFrame {
 
     private final Connection connection;
@@ -48,8 +52,12 @@ public class FamilyTreeGUI extends JFrame {
 
     }
     
-
-
+    /**
+     * Creates family tree based off connection and client
+     * 
+     * @param connection 
+     * @param client 
+     */ 
     public FamilyTreeGUI(Connection connection, Client client) {
         this.client = client;
         this.connection = connection;
@@ -164,6 +172,11 @@ public class FamilyTreeGUI extends JFrame {
         return false;
     }
 
+    /**
+    * Prints the family tree represented by the provided list of rows to the console.
+    *
+    * @param familyTreeRows An ArrayList containing rows of FamilyMember objects representing the family tree.
+    */
     public static void printFamilyTree(ArrayList<ArrayList<FamilyMember>> familyTreeRows) {
         for (ArrayList<FamilyMember> row : familyTreeRows) {
             for (FamilyMember member : row) {
@@ -621,18 +634,29 @@ public class FamilyTreeGUI extends JFrame {
         return new GanttChartPanel(connection);
     }
 
+    /**
+     * creates family member list panel using database 
+     * 
+     * @param db
+     * @return panel containing family member list
+     */
     public JPanel createFamilyMemberListPanel(FamilyDatabase db) {
         JPanel panel = new JPanel(new BorderLayout());
-        // Initialize your database object here
+        
         FamilyMemberListPanel familyMemberListPanel = new FamilyMemberListPanel(db);
         panel.add(familyMemberListPanel, BorderLayout.CENTER);
         return panel;
     }
 
+    /**
+     * creates event management panel
+     * 
+     * @return panel containing event management
+     */
     public JPanel createEventManagementPanel() {
         JPanel panel = new JPanel(new BorderLayout());
-        // Initialize your database object here
-        FamilyDatabase database = new FamilyDatabase(); // Example initialization
+        
+        FamilyDatabase database = new FamilyDatabase(); 
         EventManagementPanel eventManagementPanel = new EventManagementPanel(database);
         panel.add(eventManagementPanel, BorderLayout.CENTER);
         return panel;

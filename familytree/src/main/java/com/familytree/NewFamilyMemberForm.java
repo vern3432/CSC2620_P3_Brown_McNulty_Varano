@@ -41,9 +41,9 @@ public class NewFamilyMemberForm extends JFrame {
 
   
   /**
-  * Retrieves the connection associated with this node.
+  * Retrieves the connection associated with this node
   *
-  * @return the connection associated with this node.
+  * @return the connection associated with this node
   */
   public Connection getConnection() {
     return connection;

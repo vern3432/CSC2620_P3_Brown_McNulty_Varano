@@ -15,10 +15,20 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * represents gantt chart panel that can be displayed to user, including
+ * bars to represent the span of time for both living and deceased
+ */
 public class GanttChartPanel extends JPanel {
 
     private static final String ERROR_FAILED_TO_RETRIEVE = "Failed to retrieve all family members, please try again later" ;
 
+    /**
+     * Makes new Gantt chart panel with specified connection by
+     * initializing the panel through retrieving family member data
+     *
+     * @param connection The database connection used to retrieve family member data.
+     */
     public GanttChartPanel(Connection connection) {
         try {
             initialize(connection);
@@ -29,10 +39,7 @@ public class GanttChartPanel extends JPanel {
     }
 
     
-    /** 
-     * @param connection
-     * @throws SQLException
-     */
+    
     private void initialize(Connection connection) throws SQLException {
         setLayout(new BorderLayout());
 

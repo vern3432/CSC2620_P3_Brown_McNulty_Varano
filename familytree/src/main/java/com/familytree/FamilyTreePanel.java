@@ -10,6 +10,11 @@ import java.awt.event.MouseEvent;
 public class FamilyTreePanel extends JPanel {
     private FamilyMember rootMember;
 
+    /**
+     * Constructor for family tree panel, uses specified member as root
+     * 
+     * @param rootMember member of family to be designated as root node of tree
+     */
     public FamilyTreePanel(FamilyMember rootMember) {
         this.rootMember = rootMember;
         initialize();
@@ -33,13 +38,13 @@ public class FamilyTreePanel extends JPanel {
 
     
     /** 
+     * paints specific component onto family tree GUI
+     * 
      * @param g
      */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Implement custom drawing logic to draw the family tree
-        // You may use Graphics2D for more advanced drawing operations
         drawFamilyTree(g, rootMember, getWidth() / 2, 50, true);
     }
 

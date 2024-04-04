@@ -4,6 +4,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/** 
+ * represents date conversation for month, day, year
+ */
 public class LocalDateConverter {
     
     /** 

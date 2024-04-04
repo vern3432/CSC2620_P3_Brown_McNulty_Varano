@@ -33,9 +33,9 @@ class Node {
     }
 
     /**
-    * Constructs a new Node object with the specified name.
+    * Constructs new node object with specified name
     *
-    * @param name the name of the node.
+    * @param name name of the node
     */
     public Node(String name) {
         this.name = name;

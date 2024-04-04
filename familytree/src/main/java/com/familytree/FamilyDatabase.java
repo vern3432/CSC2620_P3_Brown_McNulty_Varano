@@ -12,16 +12,28 @@ import java.util.List;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+
+/** 
+ * represents database that contains information of all families
+ * the database can be edited and saved for future executions of the program
+ */
 public class FamilyDatabase {
     private static Connection connection;
 
     /**
-     * @return Connection
+     * gets specified connection
+     * 
+     * @return connection
      */
     public static Connection getConnection() {
         return connection;
     }
 
+    /**
+     * sets specified connection
+     * 
+     * @param connection
+     */
     public static void setConnection(Connection connection) {
         FamilyDatabase.connection = connection;
     }
@@ -74,6 +86,11 @@ public class FamilyDatabase {
         }
     }
 
+    /**
+     * gets the hash ID of next client
+     * 
+     * @return ID of next client
+     */
     public static int getNextClientId() {
         int nextClientId = 1; // Start from ID 1
         try {
@@ -90,6 +107,12 @@ public class FamilyDatabase {
         return nextClientId;
     }
 
+
+    /**
+     * Retrieves all family members from database
+     * 
+     * @return list of all family members 
+     */
     public static List<FamilyMember> getAllFamilyMembers() {
         List<FamilyMember> familyMembers = new ArrayList<>();
         try {
@@ -124,6 +147,11 @@ public class FamilyDatabase {
         return familyMembers;
     }
 
+    /**
+    * Retrieves all events including their attendees from database
+    * 
+    * @return list of all events and their attendees 
+    */
     public static List<Event> getAllEventWithAttendees() {
         List<Event> Event = new ArrayList<>();
         try {
@@ -153,6 +181,12 @@ public class FamilyDatabase {
         return Event;
     }
 
+    /**
+    * Fetches attendees for a specific dated event
+     * 
+     * @param eventId  ID of the event.
+     * @return  list containing the attendees of the specified event
+    */
     private static List<FamilyMember> fetchAttendeesForEvent(int eventId) {
         List<FamilyMember> attendees = new ArrayList<>();
         try {
@@ -174,11 +208,14 @@ public class FamilyDatabase {
         return attendees;
     }
 
+    /**
+    * filters family members in database based on a given search term
+    * 
+    * @param searchTerm the string to compare against member's names
+    * @return list containing family members that match the term.
+    */
     public static List<FamilyMember> searchFamilyMembers(String searchTerm) {
         List<FamilyMember> searchResults = new ArrayList<>();
-        // Perform database query to search for family members matching the searchTerm
-        // Here, we simulate a search by filtering the list of all family members based
-        // on the searchTerm
         for (FamilyMember member : getAllFamilyMembers()) {
             if (member.getName().toLowerCase().contains(searchTerm.toLowerCase())) {
                 searchResults.add(member);
@@ -187,6 +224,12 @@ public class FamilyDatabase {
         return searchResults;
     }
 
+    /**
+    * Fetches specific family member from database based on their ID
+    * 
+    * @param memberId ID of the family member to fetch
+    * @return family member with the specified ID, or null if not found
+    */
     private static FamilyMember fetchFamilyMemberById(int memberId) {
         FamilyMember familyMember = null;
         try {
@@ -222,6 +265,14 @@ public class FamilyDatabase {
         return familyMember;
     }
 
+    /**
+    * Adds new event to the database
+    * 
+    * @param eventDate date of event
+    * @param eventType type of event
+    * @param memberId ID of the member associated with the event
+    * @return ID of the newly added event, or -1 if the insertion fails
+    */
     public static int addEvent(Date eventDate, String eventType, int memberId) {
         int eventId = getNextEventId();
         try {
@@ -241,6 +292,13 @@ public class FamilyDatabase {
         }
     }
 
+    /**
+    * Adds attendee to an event in the database
+    * 
+    * @param eventId ID of the event
+    * @param memberId ID of the member to be added as an attendee
+    * @return true if the attendee is added successfully, false otherwise
+    */
     public static boolean addAttendeeToEvent(int eventId, int memberId) {
         try {
             PreparedStatement statement = connection
@@ -257,6 +315,11 @@ public class FamilyDatabase {
         }
     }
 
+    /**
+    * Retrieves all deceased family members from the database
+    * 
+    * @return ArrayList containing all deceased family members
+    */
     public static ArrayList<FamilyMember> getAllDeceasedFamilyMembers() {
         ArrayList<FamilyMember> deceasedMembers = new ArrayList<>();
         try {
@@ -295,6 +358,11 @@ public class FamilyDatabase {
         return deceasedMembers;
     }
 
+    /**
+    * Retrieves all events from the database
+    * 
+    * @return list containing all events in the database
+    */
     public List<Event> getAllEvents() {
         List<Event> events = new ArrayList<>();
         try {
@@ -397,6 +465,12 @@ public class FamilyDatabase {
         }
     }
 
+    /**
+    * Adds parsed data to the database based on the provided list
+    * 
+    * @param parsedData list containing arrays of parsed data, where each array represents piece of parsed data
+    * @throws ParseException if error during parsing
+    */
     public void addParsedDataToDatabase(List<String[]> parsedData) throws ParseException {
         try {
             if (connection != null) {

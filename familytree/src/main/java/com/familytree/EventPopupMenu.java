@@ -22,6 +22,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.time.LocalDate;
 
+/** represents popup menu for managing events */
 public class EventPopupMenu extends JPopupMenu {
     private int eventId;
     private Connection connection;
@@ -33,6 +34,9 @@ public class EventPopupMenu extends JPopupMenu {
         return connection;
     }
 
+    /** 
+     * set connection
+     */
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
@@ -42,6 +46,12 @@ public class EventPopupMenu extends JPopupMenu {
     private JTextArea attendeesArea;
     private JButton addAttendeeButton;
 
+    /**
+     * Constructs new event popup menu with the specified event ID and connection
+     * 
+     * @param eventId    ID of the event
+     * @param connection database connection
+     */
     public EventPopupMenu(int eventId, Connection connection) {
         this.eventId = eventId;
         this.connection = connection;
@@ -51,16 +61,16 @@ public class EventPopupMenu extends JPopupMenu {
         attendeesArea = new JTextArea();
         addAttendeeButton = new JButton("Add Attendee");
 
-        // Populate data
+        // pupulates the data
         loadData();
 
-        // Add components to the popup menu
+        // adds components components to the popup menu
         add(dateLabel);
         add(typeLabel);
         add(new JScrollPane(attendeesArea));
         add(addAttendeeButton);
 
-        // Set action listener for add attendee button
+        // sets action listener for add attendee button
         addAttendeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -101,6 +111,8 @@ public class EventPopupMenu extends JPopupMenu {
             e.printStackTrace();
         }
     }
+
+    
     public void addAttendee2() {
         try {
             // Fetch all family members to populate the dropdown menu
@@ -155,23 +167,6 @@ public class EventPopupMenu extends JPopupMenu {
             e.printStackTrace();
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     private void addAttendee() {
         try {

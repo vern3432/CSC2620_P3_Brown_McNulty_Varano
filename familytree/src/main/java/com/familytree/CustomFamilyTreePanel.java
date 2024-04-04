@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * C
+ */
 public class CustomFamilyTreePanel extends JPanel {
     private final ArrayList<ArrayList<Node>> nodes;
     private static final int HORIZONTAL_GAP = 150;

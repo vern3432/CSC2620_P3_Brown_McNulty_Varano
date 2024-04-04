@@ -8,6 +8,9 @@ import java.awt.event.ActionListener;
 import java.sql.Connection;
 import java.util.List;
 
+/**
+* Represents panel for displaying list of family members and providing user interaction
+*/
 public class FamilyMemberListPanel extends JPanel {
 
     private final DefaultListModel<FamilyMember> listModel;
@@ -17,16 +20,26 @@ public class FamilyMemberListPanel extends JPanel {
 
     
     /** 
-     * @return Connection
+     * @return connection
      */
     public Connection getConnection() {
         return connection;
     }
 
+    /**
+     * sets connection in regards to family member list
+     * 
+     * @param connection
+     */
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Constructor for family member list panel
+     * 
+     * @param database
+     */
     public FamilyMemberListPanel(FamilyDatabase database) {
         this.setConnection(database.getConnection());
         this.listModel = new DefaultListModel<>();
@@ -34,6 +47,10 @@ public class FamilyMemberListPanel extends JPanel {
         this.searchField = new JTextField(20);
         initialize(this.connection);
     }
+
+    /**
+     * displays updated family member form which includes new changes
+     */
     public static void displayNewFamilyMemberForm(Connection connection) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {

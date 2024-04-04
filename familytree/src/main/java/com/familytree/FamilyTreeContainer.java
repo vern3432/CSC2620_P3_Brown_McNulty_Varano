@@ -5,6 +5,9 @@ import com.familytree.data.entities.FamilyMember;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Represents a container for managing family members and their relationships.
+ */
 public class FamilyTreeContainer {
     private HashMap<Integer, FamilyMember> members;
 
@@ -16,6 +19,12 @@ public class FamilyTreeContainer {
         return members;
     }
 
+    /**
+     * Constructor for family tree container 
+     * 
+     * @param members list of family members to include
+     * @param relationshipsMap hashmap of relationships, keys are member IDs
+     */
     public FamilyTreeContainer(List<FamilyMember> members, HashMap<Integer, Relationship> relationshipsMap) {
 
         this.members = new HashMap<Integer, FamilyMember>();
@@ -61,10 +70,17 @@ public class FamilyTreeContainer {
         }
     }
 
+    /**
+     * adds member's hash ID to member list
+     * @param member
+     */
     public void addMember(FamilyMember member) {
         members.put(member.hashCode(), member);
     }
 
+    /**
+     * removes member's hash ID from list
+     */
     public void removeMember(FamilyMember member) {
         members.remove(member.hashCode());
     }
@@ -73,9 +89,4 @@ public class FamilyTreeContainer {
     public String toString() {
         return "FamilyTreeContainer [members=" + members + "]";
     }
-
-    // Other methods as needed
-
-    // Database function to create the table for FamilyTreeContainer
-
 }
